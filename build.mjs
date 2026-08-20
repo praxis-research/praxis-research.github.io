@@ -131,9 +131,6 @@ function shell(page, inner) {
 <meta name="twitter:card" content="summary">
 <link rel="alternate" type="application/rss+xml" title="${esc(site.title)}" href="/feed.xml">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Playfair+Display:wght@700&display=swap">
 <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>

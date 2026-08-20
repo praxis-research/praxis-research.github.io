@@ -39,20 +39,20 @@ const tabs = PAGES.map(([label, url], i) =>
 writeFileSync(dest, `<title>New praxis-research.org</title>
 <style>
   :root {
-    --shell: #eceef0; --panel: #ffffff; --ink: #16232a; --dim: #5c6b71;
-    --line: #d6dcdf; --accent: #0d6a6a;
-    --ui: "Fira Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+    --shell: #eeeeee; --panel: #ffffff; --ink: #1a1a1a; --dim: #666666;
+    --line: #dddddd; --accent: #0645ad;
+    --ui: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   }
   :root:not([data-theme="light"]) { }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --shell: #0d1113; --panel: #151b1e; --ink: #e6edef; --dim: #93a4aa;
-      --line: #263136; --accent: #8fc9c9;
+      --shell: #111111; --panel: #1a1a1a; --ink: #e0e0e0; --dim: #999999;
+      --line: #333333; --accent: #7aa6ff;
     }
   }
   :root[data-theme="dark"] {
-    --shell: #0d1113; --panel: #151b1e; --ink: #e6edef; --dim: #93a4aa;
-    --line: #263136; --accent: #8fc9c9;
+    --shell: #111111; --panel: #1a1a1a; --ink: #e0e0e0; --dim: #999999;
+    --line: #333333; --accent: #7aa6ff;
   }
   * { box-sizing: border-box; }
   body {
