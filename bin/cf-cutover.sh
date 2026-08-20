@@ -7,6 +7,12 @@
 #
 # Touches ONLY the A/AAAA/CNAME records for the apex and www. MX, TXT, SPF and
 # everything else are left alone — Google Workspace mail runs on this domain.
+#
+# Records are created PROXIED. This domain sends HSTS with a two-year max-age,
+# so the gap between DNS moving and GitHub issuing its own certificate would be
+# a hard failure for returning visitors, not a warning they can click through.
+# Cloudflare's edge certificate already covers the apex and *.praxis-research.org,
+# so proxying removes the gap entirely.
 set -euo pipefail
 
 ZONE="praxis-research.org"
@@ -74,7 +80,7 @@ echo
 echo "will DELETE:"
 [[ -n "$doomed" ]] && echo "$doomed" | sed 's/^/  - /' || echo "  (none)"
 echo
-echo "will CREATE (all DNS-only, so GitHub can issue the certificate):"
+echo "will CREATE (all PROXIED — see the note in DEPLOY.md about HSTS):"
 for ip in "${A_RECORDS[@]}";    do echo "  + A     $ZONE -> $ip"; done
 for ip in "${AAAA_RECORDS[@]}"; do echo "  + AAAA  $ZONE -> $ip"; done
 echo "  + CNAME www.$ZONE -> $TARGET"
@@ -114,7 +120,7 @@ create() { # type name content
     --data "$(python3 -c '
 import json,sys
 print(json.dumps({"type":sys.argv[1],"name":sys.argv[2],"content":sys.argv[3],
-                  "ttl":1,"proxied":False}))' "$1" "$2" "$3")")
+                  "ttl":1,"proxied":True}))' "$1" "$2" "$3")")
   echo "$out" | python3 -c '
 import json,sys
 d=json.load(sys.stdin)
@@ -128,5 +134,8 @@ create CNAME "www.$ZONE" "$TARGET"
 echo
 echo "done. propagation is usually seconds on Cloudflare."
 echo "previous records saved to $backup — that is what a rollback restores."
-echo "next: wait for the certificate, then"
-echo "  gh api -X PUT repos/praxis-research/praxis-research.github.io/pages -F https_enforced=true"
+echo
+echo "Records are proxied, so Cloudflare terminates TLS with its own certificate"
+echo "and forwards to GitHub Pages. There is no certificate gap. Do NOT set the"
+echo "zone SSL mode to Full (strict): GitHub serves a *.github.io certificate to"
+echo "Cloudflare, which strict mode rejects with a 526."
