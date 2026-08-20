@@ -91,11 +91,15 @@ step 3.
 4. **Wait for the certificate**, then tick "Enforce HTTPS" in Settings → Pages.
    It usually takes a few minutes.
 
-5. **Check the old URLs.** These paths are preserved exactly, so existing links
-   and search results keep working:
-   `/`, `/people/`, `/sprints/`, `/sprints/unsupervised-elicitation/`,
-   `/sprints/persona-elicitation/`, `/blog/`,
-   `/blog/mitigating-collusive-self-preference/`.
+5. **Check the URLs.** `/`, `/people/` and `/blog/` are preserved exactly, so
+   links to them keep working.
+
+   Four paths that exist on the current super.so site are **deliberately gone**,
+   and will start returning the 404 page at cutover: `/sprints/`,
+   `/sprints/unsupervised-elicitation/`, `/sprints/persona-elicitation/` and
+   `/blog/mitigating-collusive-self-preference/`. If any of them has been shared
+   widely, add a redirect at the Cloudflare level (Rules → Redirects) before
+   step 3.
 
 6. **Cancel super.so** once you are happy.
 

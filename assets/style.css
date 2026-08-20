@@ -227,16 +227,16 @@ figcaption {
   font-size: 0.85rem;
 }
 
-/* --------------------------------------------------------------- listings */
+/* ------------------------------------------------------- tables and lists */
 
-table.listing {
+table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.95rem;
   margin-bottom: 2.5rem;
 }
 
-table.listing th {
+table th {
   text-align: left;
   font-family: var(--font-body);
   font-size: 0.78rem;
@@ -248,13 +248,11 @@ table.listing th {
   padding: 0 0.9rem 0.5rem 0;
 }
 
-table.listing td {
+table td {
   padding: 0.7rem 0.9rem 0.7rem 0;
   border-bottom: 1px solid var(--rule);
   vertical-align: top;
 }
-
-table.listing td:not(:first-child) { color: var(--muted); font-size: 0.9rem; }
 
 .post-list {
   list-style: none;
@@ -314,5 +312,5 @@ table.listing td:not(:first-child) { color: var(--muted); font-size: 0.9rem; }
   .site-header .container { flex-direction: column; align-items: flex-start; }
   .site-nav { gap: 1.1rem; }
   h1 { font-size: 1.85rem; }
-  table.listing { display: block; overflow-x: auto; }
+  table { display: block; overflow-x: auto; }
 }

@@ -20,7 +20,7 @@ check is the bar for "done"; CI runs the same command and blocks the deploy.
 2. **Never edit or commit `dist/`.** It is generated and gitignored.
 3. **Frontmatter is `key: value` only** — no nesting, no lists, no multi-line
    values. The parser rejects anything else on purpose.
-4. **Internal links end in a slash**: `/sprints/unsupervised-elicitation/`.
+4. **Internal links end in a slash**: `/blog/some-post/`, not `/blog/some-post`.
    Without the slash the link check fails.
 5. **Keep the author's words.** When porting or restructuring content, move the
    prose verbatim. Do not rewrite copy that was not the point of the task.
@@ -29,14 +29,13 @@ check is the bar for "done"; CI runs the same command and blocks the deploy.
 
 ## Adding content
 
-A new file in `content/blog/` or `content/sprints/` appears on its index page
+A new file in `content/blog/` appears on `/blog/` and in the RSS feed
 automatically — you do not edit an index by hand. Required frontmatter: `title`
-and `date` for posts, `title` and `phase` for sprints. `README.md` has the
-templates.
+and `date`. `README.md` has the template.
 
 ## Layouts
 
 `layout:` in frontmatter picks the renderer in `build.mjs`: `home`, `page`,
-`people`, `sprints`, `blog-index`. Posts and sprint pages get theirs
-automatically from their directory. Adding a layout means adding a function to
-the `layouts` object — it is a plain string template, not a template language.
+`people`, `blog-index`. Posts get `post` automatically from their directory.
+Adding a layout means adding a function to the `layouts` object — it is a plain
+string template, not a template language.

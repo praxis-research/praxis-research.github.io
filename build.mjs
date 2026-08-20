@@ -176,31 +176,6 @@ ${md(page.body, page)}
 ${splitMeta(md(page.body, page))}
 </article>`,
 
-  sprints: (page, ctx) => {
-    const rows = ctx.sprints.map((s) => `      <tr>
-        <td><a href="${s.url}">${esc(s.nav_title || s.title)}</a></td>
-        <td>${esc(s.topic || '')}</td>
-        <td>phase ${esc(s.phase || '')}</td>
-      </tr>`).join('\n');
-    return `<article class="content">
-<h1>${esc(page.title)}</h1>
-<table class="listing">
-  <thead><tr><th>Title</th><th>Topic</th><th>Phase</th></tr></thead>
-  <tbody>
-${rows}
-  </tbody>
-</table>
-${md(page.body, page)}
-</article>`;
-  },
-
-  sprint: (page) => `<article class="content">
-<p class="backlink"><a href="/sprints/">← All sprints</a></p>
-<h1>${esc(page.title)}</h1>
-<p class="byline">${esc(page.topic || '')}${page.phase ? ` · phase ${esc(page.phase)}` : ''}</p>
-${md(page.body, page)}
-</article>`,
-
   'blog-index': (page, ctx) => {
     const items = ctx.posts.map((p) => `  <li>
     <h2><a href="${p.url}">${esc(p.title)}</a></h2>
@@ -210,9 +185,9 @@ ${md(page.body, page)}
     return `<article class="content">
 <h1>${esc(page.title)}</h1>
 ${md(page.body, page)}
-<ul class="post-list">
+${items ? `<ul class="post-list">
 ${items}
-</ul>
+</ul>` : '<p class="summary">No posts yet.</p>'}
 </article>`;
   },
 
@@ -249,14 +224,12 @@ function render(page, ctx) {
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 
-const sprints = loadDir('sprints').sort((a, b) => Number(a.order || 99) - Number(b.order || 99));
 const posts = loadDir('blog').sort((a, b) => String(b.date).localeCompare(String(a.date)));
-const ctx = { sprints, posts };
+const ctx = { posts };
 
 const pages = readdirSync(SRC).filter((f) => extname(f) === '.md').map((f) => loadPage(basename(f, '.md')));
 
 for (const p of pages) render(p, ctx);
-for (const s of sprints) render({ ...s, layout: 'sprint' }, ctx);
 for (const p of posts) render({ ...p, layout: 'post' }, ctx);
 
 // 404
@@ -330,10 +303,6 @@ if (CHECK) {
     if (!p.date) problems.push(`${p.source}: missing "date"`);
     if (!p.title) problems.push(`${p.source}: missing "title"`);
   }
-  for (const s of sprints) {
-    if (!s.phase) problems.push(`${s.source}: missing "phase"`);
-  }
-
   if (problems.length) {
     console.error(`\ncheck failed (${problems.length}):`);
     for (const p of problems) console.error(`  ${p}`);

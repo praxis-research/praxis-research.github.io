@@ -9,7 +9,6 @@ const OUT = join(ROOT, 'dist');
 const dest = process.argv[2] || join(ROOT, 'preview.html');
 
 const css = readFileSync(join(OUT, 'assets/style.css'), 'utf8');
-const png = readFileSync(join(OUT, 'assets/blog/self-preference-redaction.png')).toString('base64');
 
 // Pull the light and dark token blocks out of the stylesheet so the preview can
 // force either one, instead of following the viewer's OS setting.
@@ -19,20 +18,18 @@ const lightTokens = css.match(/^:root \{([\s\S]*?)\n\}/m)[1];
 const PAGES = [
   ['About', '/'],
   ['People', '/people/'],
-  ['Sprints', '/sprints/'],
-  ['Unsupervised elicitation', '/sprints/unsupervised-elicitation/'],
   ['Blog', '/blog/'],
-  ['Collusion post', '/blog/mitigating-collusive-self-preference/'],
+  ['Not found', '/404.html'],
 ];
 
 const docs = {};
 for (const [, url] of PAGES) {
-  let html = readFileSync(join(OUT, url === '/' ? 'index.html' : join(url.slice(1), 'index.html')), 'utf8');
+  const file = url.endsWith('.html') ? url.slice(1) : join(url === '/' ? '' : url.slice(1), 'index.html');
+  let html = readFileSync(join(OUT, file), 'utf8');
   html = html
     .replace('<link rel="stylesheet" href="/assets/style.css">',
       `<style>${css}</style><style id="mode"></style>`)
-    .replace(/<link rel="icon"[^>]*>/, '')
-    .replace('/assets/blog/self-preference-redaction.png', `data:image/png;base64,${png}`);
+    .replace(/<link rel="icon"[^>]*>/, '');
   docs[url] = html;
 }
 
@@ -107,7 +104,7 @@ writeFileSync(dest, `<title>New praxis-research.org</title>
 </div>
 <div class="stage"><iframe id="frame" title="Site preview"></iframe></div>
 <p class="foot">Rendered from the real build output — this is the same HTML the deployed site serves.
-Page content is unchanged from the current praxis-research.org.</p>
+Sprints and the collusion post have been removed; the remaining copy is unchanged from the current site.</p>
 <script>
   const DOCS = ${JSON.stringify(docs)};
   const LIGHT = ${JSON.stringify(lightTokens)};

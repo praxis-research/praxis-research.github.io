@@ -19,8 +19,7 @@ Push to `main` and GitHub Actions builds and deploys. There is no other step.
 | --- | --- |
 | Front page text, research focuses | `content/index.md` |
 | The people list | `content/people.md` |
-| Sprints intro and process | `content/sprints.md` |
-| A sprint project | `content/sprints/<slug>.md` |
+| Blog intro | `content/blog.md` |
 | A blog post | `content/blog/<slug>.md` |
 | Nav links, site title, contact form URL | `site.config.json` |
 | Colours, fonts, spacing | `assets/style.css` (all of it is in `:root`) |
@@ -48,23 +47,6 @@ Body in normal markdown.
 
 It appears on `/blog/` and in `feed.xml` automatically, newest first.
 
-**A sprint project** — create `content/sprints/my-sprint.md`:
-
-```markdown
----
-title: "Sprint: My Sprint"
-nav_title: My sprint       # short label for the table on /sprints/
-topic: Coherence
-phase: 1
-order: 3                   # position in the table
-submit_url: "https://airtable.com/…"
-contact_subject: "Praxis Sprint XX questions"
----
-
-Use {{submit_url}}, {{contact_subject}} and {{email}} in the body and they get
-substituted, so the form URL is written down exactly once.
-```
-
 **A person** — add a line to `content/people.md`:
 
 ```markdown
@@ -74,12 +56,20 @@ substituted, so the form URL is written down exactly once.
 The text after the em dash (` — `) is styled as muted metadata. That is the only
 formatting convention on the page; everything else is plain markdown.
 
+**A new section** — add `content/<name>.md` with `layout: page`, then add it to
+`nav` in `site.config.json`. A directory of entries with its own index page
+(the way `content/blog/` works) needs a layout in `build.mjs`; copy
+`blog-index`.
+
 ## Conventions worth keeping
 
+- **`{{name}}` in a page body** is substituted from that page's frontmatter,
+  falling back to `site.config.json`. `{{email}}` is the useful one — it means
+  the address is written down once.
 - **Frontmatter is a small YAML subset**: `key: value`, one per line, quotes
   optional. No nesting, no lists. `build.mjs` will throw on anything else, and
   that is deliberate — it keeps the parser 15 lines long.
-- **Internal links end in a slash** (`/sprints/`, not `/sprints`), so
+- **Internal links end in a slash** (`/people/`, not `/people`), so
   `npm run check` can verify them.
 - `npm run check` runs in CI. If it fails, the deploy does not happen.
 - `dist/` is generated. Never edit it, never commit it.

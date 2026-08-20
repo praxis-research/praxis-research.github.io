@@ -3,10 +3,18 @@
   "description": "We do alignment research to ensure human oversight and control over future AIs.",
   "url": "https://praxis-research.org",
   "nav": [
-    { "label": "About", "href": "/" },
-    { "label": "People", "href": "/people/" },
-    { "label": "Sprints", "href": "/sprints/" },
-    { "label": "Blog", "href": "/blog/" }
+    {
+      "label": "About",
+      "href": "/"
+    },
+    {
+      "label": "People",
+      "href": "/people/"
+    },
+    {
+      "label": "Blog",
+      "href": "/blog/"
+    }
   ],
   "contactForm": "https://airtable.com/appHnvwbow1epprSd/pagqZfMyMvha6rWnD/form",
   "email": "shi.feng@gwu.edu",
