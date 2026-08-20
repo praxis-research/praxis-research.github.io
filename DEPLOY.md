@@ -22,6 +22,7 @@ gh api -X POST repos/praxis-research/praxis-research.github.io/pages \
 
 # 3. Enable the deploy workflow (see ci/README.md).
 gh auth refresh -h github.com -s workflow
+mkdir -p .github/workflows
 git mv ci/deploy.yml .github/workflows/deploy.yml
 git commit -m "Enable Pages deploy workflow" && git push
 ```

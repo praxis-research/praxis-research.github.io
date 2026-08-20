@@ -9,6 +9,7 @@ To turn it on, either:
 
 ```bash
 gh auth refresh -h github.com -s workflow      # grant the scope, once
+mkdir -p .github/workflows
 git mv ci/deploy.yml .github/workflows/deploy.yml
 git commit -m "Enable Pages deploy workflow" && git push
 ```
