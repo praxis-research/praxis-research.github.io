@@ -14,7 +14,33 @@ TARGET="praxis-research.github.io"
 APPLY=false
 [[ "${1:-}" == "--apply" ]] && APPLY=true
 
-: "${CLOUDFLARE_API_TOKEN:?set CLOUDFLARE_API_TOKEN (Zone:DNS:Edit on $ZONE)}"
+die() { echo "error: $*" >&2; exit 1; }
+
+# The token comes from the environment, or from a file so it never has to be
+# typed into a shared terminal or pasted into a chat log.
+TOKEN_FILE="${CLOUDFLARE_TOKEN_FILE:-$HOME/.config/praxis/cloudflare-token}"
+if [[ -z "${CLOUDFLARE_API_TOKEN:-}" && -f "$TOKEN_FILE" ]]; then
+  perms=$(stat -f '%Lp' "$TOKEN_FILE" 2>/dev/null || stat -c '%a' "$TOKEN_FILE")
+  [[ "$perms" == "600" || "$perms" == "400" ]] ||
+    die "$TOKEN_FILE is mode $perms — must be 600. Run: chmod 600 $TOKEN_FILE"
+  CLOUDFLARE_API_TOKEN=$(tr -d '[:space:]' < "$TOKEN_FILE")
+fi
+
+if [[ -z "${CLOUDFLARE_API_TOKEN:-}" ]]; then
+  cat >&2 <<MSG
+No Cloudflare token found.
+
+Put it in a file — it is never printed, and never enters a shell history:
+
+  mkdir -p ~/.config/praxis
+  nano ~/.config/praxis/cloudflare-token     # paste, save, quit
+  chmod 600 ~/.config/praxis/cloudflare-token
+
+The token needs Zone:DNS:Edit scoped to $ZONE only. Revoke it after the
+cutover at https://dash.cloudflare.com/profile/api-tokens
+MSG
+  exit 1
+fi
 
 API="https://api.cloudflare.com/client/v4"
 auth=(-H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: application/json")
@@ -22,8 +48,6 @@ auth=(-H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: applica
 # GitHub Pages apex addresses.
 A_RECORDS=(185.199.108.153 185.199.109.153 185.199.110.153 185.199.111.153)
 AAAA_RECORDS=(2606:50c0:8000::153 2606:50c0:8001::153 2606:50c0:8002::153 2606:50c0:8003::153)
-
-die() { echo "error: $*" >&2; exit 1; }
 
 zone_id=$(curl -s "${auth[@]}" "$API/zones?name=$ZONE" | python3 -c '
 import json,sys

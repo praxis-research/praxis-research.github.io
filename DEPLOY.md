@@ -60,10 +60,19 @@ staging is no longer separately viewable.
 **Remaining: the DNS change.** Either run
 
 ```bash
-export CLOUDFLARE_API_TOKEN=...   # Zone:DNS:Edit on praxis-research.org
-bin/cf-cutover.sh                 # dry run — prints exactly what it will do
+mkdir -p ~/.config/praxis
+nano ~/.config/praxis/cloudflare-token      # paste the token, save, quit
+chmod 600 ~/.config/praxis/cloudflare-token
+
+bin/cf-cutover.sh                           # dry run — prints what it will do
 bin/cf-cutover.sh --apply
 ```
+
+The token needs **Zone:DNS:Edit scoped to praxis-research.org only** — not an
+account-wide key. Keeping it in a file rather than an `export` keeps it out of
+shell history and out of any terminal someone might be sharing; the script
+refuses to read the file unless it is mode 600. Revoke the token when the
+cutover is done, at <https://dash.cloudflare.com/profile/api-tokens>.
 
 or make the same change by hand in the Cloudflare dashboard:
 

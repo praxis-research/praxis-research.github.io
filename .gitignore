@@ -4,3 +4,4 @@ dist/
 preview.html
 .deploy/
 dns-backup-*.json
+.cloudflare-token
