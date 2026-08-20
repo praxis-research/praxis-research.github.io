@@ -1,8 +1,8 @@
 # praxis-research.org
 
 The lab website. Markdown in, static HTML out. No Notion, no CMS, no
-framework — one build script (`build.mjs`, ~250 lines) and one stylesheet
-(`assets/style.css`).
+framework — one build script (`build.mjs`, ~300 lines) and one stylesheet
+(`assets/style.css`). The site loads no external assets: no web fonts, no CDN.
 
 ```bash
 npm install
@@ -24,6 +24,9 @@ Push to `main` and GitHub Actions builds and deploys. There is no other step.
 | Nav links, site title, contact form URL | `site.config.json` |
 | Colours, fonts, spacing | `assets/style.css` (all of it is in `:root`) |
 | Images | `assets/` — reference as `/assets/…` |
+
+`serve.mjs`, `preview.mjs` and `deploy.mjs` are development helpers; `build.mjs`
+is the only one the site depends on.
 
 **A page's URL is its path.** `content/blog/foo.md` is served at `/blog/foo/`.
 Rename the file to change the URL; nothing else refers to it.
