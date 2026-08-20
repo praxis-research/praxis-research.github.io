@@ -11,6 +11,7 @@ npm run check     # build + fail on dead internal links or missing frontmatter
 ```
 
 Push to `main` and GitHub Actions builds and deploys. There is no other step.
+(Setting that up is a one-time job — see `DEPLOY.md`.)
 
 ## Where things live
 
@@ -85,8 +86,8 @@ formatting convention on the page; everything else is plain markdown.
 
 ## Deployment
 
-GitHub Actions (`.github/workflows/deploy.yml`) builds on every push to `main`
-and publishes to GitHub Pages. The custom domain is set by `static/CNAME`.
+`DEPLOY.md` has the whole story: GitHub Pages, the one-time setup, and the
+Cloudflare records for moving `praxis-research.org` off super.so.
 
-DNS lives at Cloudflare. The records that point the domain here are in
-`DEPLOY.md`.
+Short version — once set up, push to `main` and Actions builds and publishes.
+`npm run deploy` is the manual fallback that pushes `dist/` to `gh-pages`.
