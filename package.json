@@ -1,0 +1,15 @@
+{
+  "name": "praxis-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "praxis-research.org — a static site with no framework.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "serve": "node build.mjs && node serve.mjs",
+    "check": "node build.mjs --check"
+  },
+  "dependencies": {
+    "marked": "^15.0.7"
+  }
+}
