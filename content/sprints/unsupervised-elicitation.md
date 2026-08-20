@@ -10,7 +10,7 @@ contact_subject: "Praxis Sprint UE1 questions"
 
 This is a phase 1 project. To submit, use [this form]({{submit_url}}); don't edit
 the prefilled fields. If you have any questions or issues, email
-[{{email}}](mailto:{{email}}?subject={{contact_subject}}) with
+[{{email}}](<mailto:{{email}}?subject={{contact_subject}}>) with
 "{{contact_subject}}" as title.
 
 ## Overview

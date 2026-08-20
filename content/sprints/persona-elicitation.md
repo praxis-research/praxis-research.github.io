@@ -11,7 +11,7 @@ contact_subject: "Praxis Sprint UE2 questions"
 This is a phase 2 project based on [UE1](/sprints/unsupervised-elicitation/). To
 submit, use [this form]({{submit_url}}); don't edit the prefilled fields. If you
 have any questions or issues, email
-[{{email}}](mailto:{{email}}?subject={{contact_subject}}) with
+[{{email}}](<mailto:{{email}}?subject={{contact_subject}}>) with
 "{{contact_subject}}" as title.
 
 ## Overview

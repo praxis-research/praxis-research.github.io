@@ -318,6 +318,14 @@ if (CHECK) {
       if (!candidates.some((c) => exists.has(c))) problems.push(`${where}: dead internal link ${href}`);
     }
   }
+  // Markdown that failed to parse leaves its source syntax in the output.
+  for (const f of files.filter((f) => f.endsWith('.html'))) {
+    const text = readFileSync(f, 'utf8').replace(/<[^>]+>/g, '');
+    for (const m of text.matchAll(/\]\([^)\n]{0,120}\)/g)) {
+      problems.push(`/${relative(OUT, f)}: unparsed markdown link "${m[0].slice(0, 60)}"`);
+    }
+  }
+
   for (const p of posts) {
     if (!p.date) problems.push(`${p.source}: missing "date"`);
     if (!p.title) problems.push(`${p.source}: missing "title"`);
