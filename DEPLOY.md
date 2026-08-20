@@ -33,56 +33,88 @@ updates itself.
 
 ## Staging
 
-Before the domain moves, the site is live at
-<https://praxis-research.github.io/>. That is byte-identical to what production
-will serve.
+`https://praxis-research.github.io/` now **redirects to praxis-research.org**,
+because the custom domain is set — that is how GitHub Pages behaves, and it is
+expected. To look at the built site before DNS moves, either run it locally with
+`npm run serve`, or ask GitHub for it directly:
+
+```bash
+curl -sk --resolve praxis-research.org:443:185.199.108.153 https://praxis-research.org/
+```
 
 ## Cutting the domain over from Notion + super.so
 
-Steps 1–2 are safe to do in advance; the live site stays on super.so until
-step 3.
+**Done already:** the repo publishes `CNAME`, and GitHub Pages has the custom
+domain set to `praxis-research.org`. GitHub already serves this site for that
+hostname — verified by forcing a request to a Pages IP with the right `Host`:
 
-1. **Claim the domain.** Repo → Settings → Pages → Custom domain →
-   `praxis-research.org` → Save. Or commit a file `static/CNAME` containing
-   `praxis-research.org` (`static/` is copied to the site root at build time).
-   Note that once this is set, `praxis-research.github.io` redirects to the
-   custom domain, so do it when you are ready to point DNS.
+```bash
+curl -sk --resolve praxis-research.org:443:185.199.108.153 https://praxis-research.org/
+```
 
-2. **Verify the domain** (optional, recommended — it stops anyone else claiming
-   it). Org → Settings → Pages → "Add a domain", then add the
-   `_github-pages-challenge-praxis-research` TXT record it gives you in
-   Cloudflare.
+So the only thing left is DNS. Until it moves, the domain still resolves to
+Cloudflare and super.so keeps serving; nothing is broken in the meantime, except
+that `praxis-research.github.io` now redirects to `praxis-research.org`, so
+staging is no longer separately viewable.
 
-3. **Repoint DNS in Cloudflare.** Replace the current apex and `www` records
-   with:
+**Remaining: the DNS change.** Either run
 
-   | Type | Name | Value | Proxy |
-   | --- | --- | --- | --- |
-   | A | `@` | `185.199.108.153` | DNS only (grey cloud) |
-   | A | `@` | `185.199.109.153` | DNS only |
-   | A | `@` | `185.199.110.153` | DNS only |
-   | A | `@` | `185.199.111.153` | DNS only |
-   | CNAME | `www` | `praxis-research.github.io` | DNS only |
+```bash
+export CLOUDFLARE_API_TOKEN=...   # Zone:DNS:Edit on praxis-research.org
+bin/cf-cutover.sh                 # dry run — prints exactly what it will do
+bin/cf-cutover.sh --apply
+```
 
-   Use **DNS only** at first — Cloudflare's orange-cloud proxy in front of
-   GitHub Pages blocks GitHub's certificate issuance. Once GitHub shows a valid
-   certificate you can re-enable the proxy with SSL mode "Full (strict)".
+or make the same change by hand in the Cloudflare dashboard:
 
-4. **Wait for the certificate**, then tick "Enforce HTTPS" in Settings → Pages.
-   It usually takes a few minutes.
+| Action | Type | Name | Value | Proxy |
+| --- | --- | --- | --- | --- |
+| delete | A / AAAA | `@` | the current Cloudflare-proxied records | |
+| delete | A / AAAA | `www` | the current Cloudflare-proxied records | |
+| add | A | `@` | `185.199.108.153` | DNS only (grey cloud) |
+| add | A | `@` | `185.199.109.153` | DNS only |
+| add | A | `@` | `185.199.110.153` | DNS only |
+| add | A | `@` | `185.199.111.153` | DNS only |
+| add | AAAA | `@` | `2606:50c0:8000::153` | DNS only |
+| add | AAAA | `@` | `2606:50c0:8001::153` | DNS only |
+| add | AAAA | `@` | `2606:50c0:8002::153` | DNS only |
+| add | AAAA | `@` | `2606:50c0:8003::153` | DNS only |
+| add | CNAME | `www` | `praxis-research.github.io` | DNS only |
 
-5. **Check the URLs.** `/`, `/people/` and `/blog/` are preserved exactly, so
-   links to them keep working.
+Three things that will bite if missed:
 
-   Four paths that exist on the current super.so site are **deliberately gone**,
-   and will start returning the 404 page at cutover: `/sprints/`,
-   `/sprints/unsupervised-elicitation/`, `/sprints/persona-elicitation/` and
-   `/blog/mitigating-collusive-self-preference/`. If any of them has been shared
-   widely, add a redirect at the Cloudflare level (Rules → Redirects) before
-   step 3.
+- **The AAAA records matter.** The apex currently has IPv6 records pointing at
+  Cloudflare. Replace the A records but leave those, and every IPv6 visitor
+  still lands on super.so while IPv4 visitors see the new site.
+- **Proxy off, at first.** Cloudflare's orange cloud in front of GitHub Pages
+  blocks GitHub's certificate issuance. Once the certificate is valid you can
+  turn the proxy back on with SSL mode "Full (strict)".
+- **Do not touch MX or TXT.** Google Workspace mail runs on this domain
+  (`aspmx.l.google.com` and friends), and the TXT records carry SPF and a
+  Google site verification. The cutover only concerns A, AAAA and CNAME.
 
-6. **Cancel super.so** once you are happy.
+**After DNS moves**, wait for the certificate — usually a few minutes — then:
+
+```bash
+gh api repos/praxis-research/praxis-research.github.io/pages \
+  --jq '{cname,cert:.https_certificate.state}'
+gh api -X PUT repos/praxis-research/praxis-research.github.io/pages -F https_enforced=true
+```
+
+**Then check the URLs.** `/`, `/people/` and `/blog/` are preserved exactly.
+Four paths from the super.so site are deliberately gone and will return the 404
+page: `/sprints/`, `/sprints/unsupervised-elicitation/`,
+`/sprints/persona-elicitation/` and `/blog/mitigating-collusive-self-preference/`.
+If any was shared widely, add a Cloudflare redirect rule.
+
+Finally, cancel super.so once you are happy.
 
 ## Rolling back
 
-Point the Cloudflare records back at super.so. Nothing in this repo changes.
+Restore the apex and `www` records from `dns-backup-praxis-research.org.json`,
+which `bin/cf-cutover.sh` writes before it deletes anything. Those records are
+Cloudflare-proxied, so their real targets are not visible in public DNS — the
+backup is the only copy. Nothing in this repo needs to change.
+
+To go back to serving on `praxis-research.github.io` as well, clear the custom
+domain and delete `static/CNAME`.
