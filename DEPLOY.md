@@ -1,45 +1,25 @@
 # Deployment
 
-**Repo:** `praxis-research/website` (rename to `praxis-research.github.io` — see below)
-**Host:** GitHub Pages
+**Repo:** `praxis-research/praxis-research.github.io` (public)
+**Host:** GitHub Pages, built by `.github/workflows/deploy.yml`
 **DNS:** Cloudflare (nameservers `ajay.ns.cloudflare.com`, `collins.ns.cloudflare.com`)
 
-## One-time setup
+**Push to `main` and the site rebuilds and deploys.** A failed link check blocks
+the deploy. There is nothing else to operate.
 
-GitHub Pages on a free-plan org only serves **public** repos, so the repo has to
-be public. The site content is already public; the repo holds no secrets.
+## Why the repo is named that
 
-```bash
-# 1. Make it public, and rename it so Pages serves from the domain root.
-#    (GitHub redirects the old name, so nothing breaks.)
-gh api -X PATCH repos/praxis-research/website -f private=false
-gh api -X PATCH repos/praxis-research/website -f name=praxis-research.github.io
-git remote set-url origin https://github.com/praxis-research/praxis-research.github.io.git
+`<org>.github.io` is served at the root of `https://praxis-research.github.io/`,
+so every path in the built site — which is root-relative — resolves both there
+and on the custom domain. A repo under any other name is served at `/<repo>/`,
+and the stylesheet 404s. The repo is public because GitHub Pages on a free-plan
+org only serves public repos; it holds no secrets.
 
-# 2. Turn on Pages, building from GitHub Actions.
-gh api -X POST repos/praxis-research/praxis-research.github.io/pages \
-  -f 'build_type=workflow'
+## Without Actions
 
-# 3. Enable the deploy workflow (see ci/README.md).
-gh auth refresh -h github.com -s workflow
-mkdir -p .github/workflows
-git mv ci/deploy.yml .github/workflows/deploy.yml
-git commit -m "Enable Pages deploy workflow" && git push
-```
-
-The repo name matters: `<org>.github.io` is served at the root of
-`https://praxis-research.github.io/`, so every path in the built site — which is
-root-relative — resolves both there and on the custom domain. A repo under any
-other name is served at `/<repo>/` and the stylesheet 404s.
-
-After that, **push to `main` and the site rebuilds and deploys**. A failed link
-check blocks the deploy. There is nothing else to operate.
-
-### Without Actions
-
-If you would rather not grant the `workflow` scope, `npm run deploy` builds and
-force-pushes `dist/` to a `gh-pages` branch from your machine. Point Pages at
-that branch instead:
+`npm run deploy` builds and force-pushes `dist/` to a `gh-pages` branch from
+your machine, needing no CI. If you ever want that instead, point Pages at the
+branch:
 
 ```bash
 gh api -X POST repos/praxis-research/praxis-research.github.io/pages \
@@ -47,8 +27,8 @@ gh api -X POST repos/praxis-research/praxis-research.github.io/pages \
 npm run deploy
 ```
 
-The cost is that every content edit then needs a local checkout and a build;
-with Actions you can edit a markdown file in the GitHub web editor and the site
+The cost is that every content edit then needs a local checkout and a build.
+With Actions you can edit a markdown file in the GitHub web editor and the site
 updates itself.
 
 ## Staging
