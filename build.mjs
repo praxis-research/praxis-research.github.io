@@ -303,6 +303,17 @@ if (CHECK) {
     }
   }
 
+  // Every page, including anything copied through from static/, must be a real
+  // document. A fragment without a viewport meta renders on a phone at ~980px
+  // and zooms out, so its own responsive rules never fire.
+  for (const f of files.filter((f) => f.endsWith('.html'))) {
+    const html = readFileSync(f, 'utf8');
+    const where = '/' + relative(OUT, f);
+    if (!/<!doctype html>/i.test(html)) problems.push(`${where}: no doctype`);
+    if (!/<meta[^>]+name=["']viewport["']/i.test(html)) problems.push(`${where}: no viewport meta — will not adapt to phones`);
+    if (!/<meta[^>]+charset=/i.test(html)) problems.push(`${where}: no charset`);
+  }
+
   for (const p of posts) {
     if (!p.date) problems.push(`${p.source}: missing "date"`);
     if (!p.title) problems.push(`${p.source}: missing "title"`);

@@ -59,6 +59,16 @@ you are writing a lot, you are fighting the system rather than using it.
 8. **Six components, and no more.** They are listed below. Anything past them
    is a one-off; put it in the page that needs it, not in `design.css`.
 
+9. **A file needs the skeleton the runtime would have given it.** Artifacts are
+   authored as fragments — no doctype, no `<html>`, no `<head>`, no `<body>` —
+   because the artifact runtime wraps them at publish time. Save one as a file
+   and serve it, and it loses all of that, including
+   `<meta name="viewport" content="width=device-width, initial-scale=1">`.
+   Without that line a phone renders the page at a virtual width near 980px and
+   zooms out, so every responsive rule the document already has silently never
+   fires. `npm run check` fails on any page in `dist/` missing a doctype,
+   charset, or viewport, static passthrough included.
+
 ## Tokens
 
 | Token | Means |
