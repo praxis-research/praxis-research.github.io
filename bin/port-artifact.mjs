@@ -7,7 +7,7 @@
 // is where the viewport meta comes from. Serve the fragment as a file and
 // phones render it at a ~980px virtual viewport and zoom out, so the
 // document's own max-width:760px rules never fire. Hence: build the skeleton.
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -85,4 +85,19 @@ ${frag}
 const dest = join(ROOT, 'static/notes', slug, 'index.html');
 mkdirSync(dirname(dest), { recursive: true });
 writeFileSync(dest, html);
+
+// Keep the manifest in step, so /notes/ lists this without anyone editing it.
+const manifestPath = join(ROOT, 'content/notes.json');
+const manifest = existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, 'utf8')) : [];
+const today = new Date().toISOString().slice(0, 10);
+const existing = manifest.find((n) => n.slug === slug);
+if (existing) {
+  Object.assign(existing, { title, summary: summary || existing.summary });
+} else {
+  manifest.push({ slug, title, summary: summary || '', added: today });
+}
+writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
+
 console.log(`${src} -> static/notes/${slug}/ (${(html.length / 1024).toFixed(0)} KB)`);
+console.log(`${existing ? 'updated' : 'added'} "${title}" in content/notes.json`);
+console.log('next: npm run check');

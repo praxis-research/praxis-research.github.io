@@ -1,90 +1,62 @@
 # praxis-research.org
 
-The lab website. Markdown in, static HTML out. No Notion, no CMS, no
-framework — one build script (`build.mjs`, ~300 lines) and two stylesheets:
-`assets/design.css` (the design system, shared verbatim with artifacts) and
-`assets/style.css` (site chrome). The site loads no external assets: no web
-fonts, no CDN.
+The lab website. Markdown in, static HTML out. No Notion, no CMS, no framework —
+one build script (`build.mjs`), two stylesheets, and one dependency (`marked`).
+The site loads no external assets: no web fonts, no CDN.
 
 ```bash
 npm install
 npm run serve     # build + preview on http://localhost:8080
-npm run check     # build + fail on dead internal links or missing frontmatter
+npm run check     # build + validate; CI runs this and a failure blocks deploys
 ```
 
-Push to `main` and GitHub Actions builds and deploys. There is no other step.
-(Setting that up is a one-time job — see `DEPLOY.md`.)
+Push to `main` and GitHub Actions builds and deploys.
 
-## Where things live
+## Read this first
 
-| You want to change | Edit |
-| --- | --- |
-| Front page text, research focuses | `content/index.md` |
-| The people list | `content/people.md` |
-| Blog intro | `content/blog.md` |
-| A blog post | `content/blog/<slug>.md` |
-| Nav links, site title, contact form URL | `site.config.json` |
-| Colours, fonts, spacing | `assets/design.css` — the shared system, all of it in `:root` |
-| Header, nav, footer, page layouts | `assets/style.css` (site chrome only, no colours) |
-| The design guideline itself | `content/design.md`, published at `/design/` |
-| Images | `assets/` — reference as `/assets/…` |
+- **[CLAUDE.md](CLAUDE.md)** — the operating manual: where everything lives,
+  recipes for the common changes, and the rules. Also `AGENTS.md`, same file.
+  Most edits here are made by Claude, so that file is the primary documentation
+  and is kept complete enough to work from alone.
+- **[content/design.md](content/design.md)** — the design system, published at
+  [/design/](https://praxis-research.org/design/). Point Claude at that page to
+  generate an artifact that matches the site.
+- **[DEPLOY.md](DEPLOY.md)** — hosting, DNS, and the Cloudflare settings.
 
-`serve.mjs`, `preview.mjs` and `deploy.mjs` are development helpers; `build.mjs`
-is the only one the site depends on.
+## The shape of it
 
-**A page's URL is its path.** `content/blog/foo.md` is served at `/blog/foo/`.
-Rename the file to change the URL; nothing else refers to it.
-
-## Adding things
-
-**A blog post** — create `content/blog/my-post.md`:
-
-```markdown
----
-title: The title of the post
-date: 2026-08-19
-authors: Ada Lovelace, Shi Feng
-venue: NeurIPS 2026            # optional
-paper_url: https://arxiv.org/abs/…   # optional, renders a "Read the paper" link
-summary: One sentence, used on the blog index, in RSS, and for link previews.
----
-
-Body in normal markdown.
+```
+content/          markdown — one file per page, plus blog/ for posts
+  notes.json      which ported artifacts /notes/ lists (written by a script)
+assets/
+  design.css      the design system: tokens, base type, six components
+  style.css       site chrome: header, nav, footer. No colours.
+static/           copied to the site root verbatim (CNAME, ported notes)
+bin/
+  port-artifact.mjs   turns a Claude artifact into a page under /notes/
+build.mjs         the whole generator
 ```
 
-It appears on `/blog/` and in `feed.xml` automatically, newest first.
+## The three things you are most likely to want
 
-**A person** — add a line to `content/people.md`:
+**Add a blog post** — a markdown file in `content/blog/`. It appears on the
+index and in RSS automatically.
 
-```markdown
-- [Their Name](https://their-site.example) — MATS 11.0
+**Add a person** — a line in `content/people.md`.
+
+**Turn an artifact into a page:**
+
+```bash
+npm run add-note -- artifact.html my-slug "Title" "One-sentence summary"
+npm run check
 ```
 
-The text after the em dash (` — `) is styled as muted metadata. That is the only
-formatting convention on the page; everything else is plain markdown.
-
-**A new section** — add `content/<name>.md` with `layout: page`, then add it to
-`nav` in `site.config.json`. A directory of entries with its own index page
-(the way `content/blog/` works) needs a layout in `build.mjs`; copy
-`blog-index`.
+Templates and the full explanation for each are in [CLAUDE.md](CLAUDE.md).
 
 ## Conventions worth keeping
 
-- **`{{name}}` in a page body** is substituted from that page's frontmatter,
-  falling back to `site.config.json`. `{{email}}` is the useful one — it means
-  the address is written down once.
-- **Frontmatter is a small YAML subset**: `key: value`, one per line, quotes
-  optional. No nesting, no lists. `build.mjs` will throw on anything else, and
-  that is deliberate — it keeps the parser 15 lines long.
-- **Internal links end in a slash** (`/people/`, not `/people`), so
-  `npm run check` can verify them.
-- `npm run check` runs in CI. If it fails, the deploy does not happen.
+- `npm run check` passing is the definition of done.
+- Internal links end in a slash (`/people/`, not `/people`).
+- Frontmatter is a small YAML subset: `key: value`, one per line, no nesting.
+- Never write a literal colour; use the tokens in `design.css`.
 - `dist/` is generated. Never edit it, never commit it.
-
-## Deployment
-
-`DEPLOY.md` has the whole story: GitHub Pages, the one-time setup, and the
-Cloudflare records for moving `praxis-research.org` off super.so.
-
-Short version — once set up, push to `main` and Actions builds and publishes.
-`npm run deploy` is the manual fallback that pushes `dist/` to `gh-pages`.

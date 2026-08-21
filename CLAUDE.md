@@ -1,50 +1,140 @@
-# Editing this site
+# Working on this site
 
-This is a static site: markdown in `content/` becomes HTML in `dist/` via
-`build.mjs`. Read `README.md` for the full map — it is short.
+The full operating manual. If you are an agent, this file is enough — you should
+not need to read `build.mjs` to make a normal change.
+
+Markdown in `content/` becomes HTML in `dist/` via `build.mjs`. There is no
+framework and one dependency (`marked`). Push to `main` and GitHub Actions
+deploys. Deployment details are in `DEPLOY.md`; you almost never need them.
 
 ## The loop
 
 ```bash
 npm install          # once
-npm run check        # build + validate. Do this before every commit.
+npm run check        # build + validate — do this before every commit
+npm run serve        # build + preview on http://localhost:8080
 ```
 
-`npm run check` fails on dead internal links and missing frontmatter. A green
-check is the bar for "done"; CI runs the same command and blocks the deploy.
+**`npm run check` passing is the bar for "done."** CI runs the same command and
+a failure blocks the deploy. It catches dead internal links, missing
+frontmatter, markdown that failed to parse, notes listed but never ported, and
+any page missing a doctype, charset, or viewport.
+
+## Where everything lives
+
+| To change | Edit |
+| --- | --- |
+| Front page copy, research focuses | `content/index.md` |
+| The people list | `content/people.md` |
+| Blog intro | `content/blog.md` |
+| A blog post | `content/blog/<slug>.md` |
+| Notes intro | `content/notes.md` |
+| Which notes are listed | `content/notes.json` — written by the port script, not by hand |
+| Nav, site title, contact URL, email | `site.config.json` |
+| Colours, type, components | `assets/design.css` — the shared system |
+| Header, nav, footer, page layouts | `assets/style.css` — site chrome, no colours |
+| The design guideline | `content/design.md`, published at `/design/` |
+| Files served as-is | `static/` — copied to the site root verbatim |
+
+**A page's URL is its path.** `content/blog/foo.md` serves at `/blog/foo/`.
+Rename the file to change the URL.
+
+## Recipes
+
+### Add a blog post
+
+Create `content/blog/my-post.md`:
+
+```markdown
+---
+title: The title of the post
+date: 2026-08-21
+authors: Ada Lovelace, Shi Feng
+venue: NeurIPS 2026                   # optional
+paper_url: https://arxiv.org/abs/…    # optional, renders a "Read the paper" link
+summary: One sentence, used on the index, in RSS, and for link previews.
+---
+
+Body in normal markdown.
+```
+
+It appears on `/blog/` and in `feed.xml` automatically, newest first. Do not
+edit an index by hand.
+
+### Add a person
+
+A line in `content/people.md`:
+
+```markdown
+- [Their Name](https://their-site.example) — MATS 11.0
+```
+
+The text after the em dash (` — `) becomes muted metadata. That is the only
+convention on the page.
+
+### Add an artifact as a page
+
+Artifacts — the HTML documents Claude generates — become notes at
+`/notes/<slug>/`. One command:
+
+```bash
+npm run add-note -- <path/to/artifact.html> <slug> "Title" "One-sentence summary"
+npm run check
+```
+
+That restyles the artifact onto the design system, wraps it in a real HTML
+document, writes it to `static/notes/<slug>/`, and adds it to
+`content/notes.json` so `/notes/` lists it. Re-running with the same slug
+updates in place.
+
+**Why it needs restyling at all:** artifacts are authored as *fragments* — no
+doctype, no `<html>`, no `<head>`, no `<body>` — because the artifact runtime
+supplies that skeleton at publish time. Served as a file, a fragment has no
+viewport meta, so phones render it at ~980px and zoom out and its own
+responsive rules never fire. The port script builds the skeleton and swaps the
+artifact's design tokens for the site's.
+
+**If the artifact was generated against `/design/`,** the token swap is a no-op
+and it already matches. If it was generated some other way, the script maps a
+known set of token names (`--ground`, `--above`, `--serif`, …). An artifact
+using neither will port structurally but keep its own colours — check the
+result, and prefer regenerating it against the design guideline.
+
+To remove a note: delete `static/notes/<slug>/` **and** its entry in
+`content/notes.json`. The check fails if you do only one.
+
+### Change how the site looks
+
+Read `/design/` (`content/design.md`) first. Then edit `assets/design.css` if it
+is a system-wide change, or `assets/style.css` if it is header/nav/footer only.
+Never write a literal colour in either.
 
 ## Rules
 
-1. **Edit `content/`, `site.config.json`, or the stylesheets. Nothing else**,
-   unless the task is explicitly about the generator.
-2. **Never edit or commit `dist/`.** It is generated and gitignored.
+1. **Edit `content/`, `site.config.json`, `assets/`, or `static/`.** Touch
+   `build.mjs` only when the task is explicitly about the generator.
+2. **Never edit or commit `dist/`.** Generated and gitignored.
 3. **Frontmatter is `key: value` only** — no nesting, no lists, no multi-line
-   values. The parser rejects anything else on purpose.
-4. **Internal links end in a slash**: `/blog/some-post/`, not `/blog/some-post`.
-   Without the slash the link check fails.
-5. **Keep the author's words.** When porting or restructuring content, move the
-   prose verbatim. Do not rewrite copy that was not the point of the task.
-6. **One dependency** (`marked`). Do not add more without being asked. The value
-   of this repo is that a person can read all of it in ten minutes.
-
-## Design
-
-`assets/design.css` is the design system — tokens, base typography, six
-components — and it is shared verbatim with any artifact meant to sit alongside
-this site. `assets/style.css` is site chrome only. **Never write a literal
-colour in either; use the tokens.** The rules, and the reasoning behind them,
-are in `content/design.md`, published at `/design/`. Read that page before
-changing anything visual, and before generating an artifact for this project.
-
-## Adding content
-
-A new file in `content/blog/` appears on `/blog/` and in the RSS feed
-automatically — you do not edit an index by hand. Required frontmatter: `title`
-and `date`. `README.md` has the template.
+   values. The parser rejects anything else on purpose; it keeps it 15 lines.
+4. **Internal links end in a slash**: `/blog/some-post/`. Without it the check
+   fails.
+5. **Never write a literal colour.** Use the tokens in `design.css`. A colour
+   defined only inside a media or `[data-theme]` block does not apply in the
+   default state and breaks one of the two themes.
+6. **Keep the author's words.** When porting or restructuring, move prose
+   verbatim. Do not rewrite copy that was not the point of the task.
+7. **One dependency.** Do not add more without being asked. The value of this
+   repo is that a person can read all of it in ten minutes.
+8. **Notes are public.** Everything under `static/notes/` is reachable by
+   anyone with the URL. They carry `noindex` and stay out of the sitemap, but
+   that is not privacy. Do not publish a working memo without being asked to.
 
 ## Layouts
 
-`layout:` in frontmatter picks the renderer in `build.mjs`: `home`, `page`,
-`people`, `blog-index`. Posts get `post` automatically from their directory.
-Adding a layout means adding a function to the `layouts` object — it is a plain
-string template, not a template language.
+`layout:` in frontmatter picks a renderer in `build.mjs`: `home`, `page`,
+`people`, `blog-index`, `notes-index`. Posts get `post` automatically from their
+directory. A layout is a function returning a string — a plain template, not a
+template language. Add one only if an existing one genuinely does not fit.
+
+`noindex: true` in frontmatter adds the robots meta and drops the page from the
+sitemap.

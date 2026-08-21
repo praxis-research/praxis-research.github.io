@@ -174,6 +174,18 @@ ${md(page.body, page)}
 ${splitMeta(md(page.body, page))}
 </article>`,
 
+  'notes-index': (page, ctx) => {
+    const items = ctx.notes.map((n) => `  <li>
+    <h2><a href="/notes/${n.slug}/">${esc(n.title)}</a></h2>
+    ${n.summary ? `<p class="summary">${esc(n.summary)}</p>` : ''}
+  </li>`).join('\n');
+    return `<article class="content">
+<h1>${esc(page.title)}</h1>
+${md(page.body, page)}
+${items ? `<ul class="post-list">\n${items}\n</ul>` : '<p class="summary">No notes yet.</p>'}
+</article>`;
+  },
+
   'blog-index': (page, ctx) => {
     const items = ctx.posts.map((p) => `  <li>
     <h2><a href="${p.url}">${esc(p.title)}</a></h2>
@@ -225,7 +237,13 @@ rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 
 const posts = loadDir('blog').sort((a, b) => String(b.date).localeCompare(String(a.date)));
-const ctx = { posts };
+// Notes are ported artifacts living in static/notes/; this manifest is what
+// bin/port-artifact.mjs writes, and it is the only thing the index reads.
+const notesFile = join(SRC, 'notes.json');
+const notes = existsSync(notesFile)
+  ? JSON.parse(readFileSync(notesFile, 'utf8')).sort((a, b) => String(b.added).localeCompare(String(a.added)))
+  : [];
+const ctx = { posts, notes };
 
 const pages = readdirSync(SRC).filter((f) => extname(f) === '.md').map((f) => loadPage(basename(f, '.md')));
 
@@ -312,6 +330,12 @@ if (CHECK) {
     if (!/<!doctype html>/i.test(html)) problems.push(`${where}: no doctype`);
     if (!/<meta[^>]+name=["']viewport["']/i.test(html)) problems.push(`${where}: no viewport meta — will not adapt to phones`);
     if (!/<meta[^>]+charset=/i.test(html)) problems.push(`${where}: no charset`);
+  }
+
+  for (const n of notes) {
+    if (!exists.has(`/notes/${n.slug}/index.html`)) {
+      problems.push(`content/notes.json: "${n.slug}" is listed but static/notes/${n.slug}/index.html does not exist — run bin/port-artifact.mjs`);
+    }
   }
 
   for (const p of posts) {
