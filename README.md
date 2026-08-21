@@ -1,8 +1,10 @@
 # praxis-research.org
 
 The lab website. Markdown in, static HTML out. No Notion, no CMS, no
-framework — one build script (`build.mjs`, ~300 lines) and one stylesheet
-(`assets/style.css`). The site loads no external assets: no web fonts, no CDN.
+framework — one build script (`build.mjs`, ~300 lines) and two stylesheets:
+`assets/design.css` (the design system, shared verbatim with artifacts) and
+`assets/style.css` (site chrome). The site loads no external assets: no web
+fonts, no CDN.
 
 ```bash
 npm install
@@ -22,7 +24,9 @@ Push to `main` and GitHub Actions builds and deploys. There is no other step.
 | Blog intro | `content/blog.md` |
 | A blog post | `content/blog/<slug>.md` |
 | Nav links, site title, contact form URL | `site.config.json` |
-| Colours, fonts, spacing | `assets/style.css` (all of it is in `:root`) |
+| Colours, fonts, spacing | `assets/design.css` — the shared system, all of it in `:root` |
+| Header, nav, footer, page layouts | `assets/style.css` (site chrome only, no colours) |
+| The design guideline itself | `content/design.md`, published at `/design/` |
 | Images | `assets/` — reference as `/assets/…` |
 
 `serve.mjs`, `preview.mjs` and `deploy.mjs` are development helpers; `build.mjs`

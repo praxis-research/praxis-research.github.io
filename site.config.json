@@ -4,10 +4,6 @@
   "url": "https://praxis-research.org",
   "nav": [
     {
-      "label": "About",
-      "href": "/"
-    },
-    {
       "label": "People",
       "href": "/people/"
     },
@@ -18,5 +14,6 @@
   ],
   "contactForm": "https://airtable.com/appHnvwbow1epprSd/pagqZfMyMvha6rWnD/form",
   "email": "shi.feng@gwu.edu",
-  "footerNote": "Praxis Research"
+  "footerNote": "Praxis Research",
+  "designPage": "/design/"
 }

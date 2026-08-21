@@ -15,7 +15,7 @@ check is the bar for "done"; CI runs the same command and blocks the deploy.
 
 ## Rules
 
-1. **Edit `content/`, `site.config.json`, or `assets/style.css`. Nothing else**,
+1. **Edit `content/`, `site.config.json`, or the stylesheets. Nothing else**,
    unless the task is explicitly about the generator.
 2. **Never edit or commit `dist/`.** It is generated and gitignored.
 3. **Frontmatter is `key: value` only** — no nesting, no lists, no multi-line
@@ -26,6 +26,15 @@ check is the bar for "done"; CI runs the same command and blocks the deploy.
    prose verbatim. Do not rewrite copy that was not the point of the task.
 6. **One dependency** (`marked`). Do not add more without being asked. The value
    of this repo is that a person can read all of it in ten minutes.
+
+## Design
+
+`assets/design.css` is the design system — tokens, base typography, six
+components — and it is shared verbatim with any artifact meant to sit alongside
+this site. `assets/style.css` is site chrome only. **Never write a literal
+colour in either; use the tokens.** The rules, and the reasoning behind them,
+are in `content/design.md`, published at `/design/`. Read that page before
+changing anything visual, and before generating an artifact for this project.
 
 ## Adding content
 

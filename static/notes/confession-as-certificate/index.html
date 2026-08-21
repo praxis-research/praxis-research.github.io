@@ -1,0 +1,1187 @@
+<title>Confession as Certificate</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Why confession is a certificate rather than testimony, and what that changes.">
+
+<style>
+/* ============================================================================
+   Praxis design system — the shared core.
+
+   This file is the whole system. The website links it; an artifact inlines it
+   verbatim inside <style>, because an artifact cannot load external CSS.
+   Nothing here knows about the website's header or navigation; that lives in
+   site.css. Keep it that way, so this file stays copy-pasteable.
+
+   https://praxis-research.org/design/
+   ========================================================================= */
+
+/* --- tokens ---------------------------------------------------------------
+   Three theme states, and all three are needed. The website only ever sees
+   the first two. An artifact viewer may stamp data-theme on the root element,
+   and the default "system" setting stamps nothing — so a colour defined only
+   inside a media or [data-theme] block will not apply in the un-stamped case.
+   Define every colour here; never inside a component rule.                  */
+
+:root {
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --bg:       #ffffff;
+  --surface:  #f4f6f8;   /* callouts, code, table stripes */
+  --ink:      #1a1d21;   /* body text */
+  --heading:  #0b0d0f;
+  --muted:    #5f6b74;   /* captions, bylines, secondary cells */
+  --rule:     #dce1e6;
+  --accent:   #125fa8;   /* links, and nothing else */
+  --pos:      #17624a;   /* supports, above, pass */
+  --neg:      #9c3d24;   /* refutes, below, fail */
+  --pos-wash: rgba(23, 98, 74, 0.10);
+  --neg-wash: rgba(156, 61, 36, 0.10);
+
+  --measure:   42rem;    /* reading column */
+  --container: 58rem;    /* full width, for tables and figures */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:       #15181b;
+    --surface:  #1d2126;
+    --ink:      #dfe4e8;
+    --heading:  #ffffff;
+    --muted:    #96a2ab;
+    --rule:     #2c3238;
+    --accent:   #7fb3e8;
+    --pos:      #5fc39d;
+    --neg:      #e08a68;
+    --pos-wash: rgba(95, 195, 157, 0.12);
+    --neg-wash: rgba(224, 138, 104, 0.12);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg:       #15181b;
+  --surface:  #1d2126;
+  --ink:      #dfe4e8;
+  --heading:  #ffffff;
+  --muted:    #96a2ab;
+  --rule:     #2c3238;
+  --accent:   #7fb3e8;
+  --pos:      #5fc39d;
+  --neg:      #e08a68;
+  --pos-wash: rgba(95, 195, 157, 0.12);
+  --neg-wash: rgba(224, 138, 104, 0.12);
+}
+
+/* --- base ---------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);          /* explicit: an artifact composites over the
+                                     viewer's ground, so never leave this unset */
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  color: var(--heading);
+  font-weight: 700;
+  line-height: 1.25;
+  text-wrap: balance;
+  margin: 2rem 0 0.75rem;
+}
+
+h1 { font-size: 1.75rem; margin-top: 0; }
+h2 { font-size: 1.3rem; }
+h3 { font-size: 1.1rem; }
+h4 { font-size: 1rem; }
+
+p, ul, ol, table, figure, blockquote, pre { margin: 0 0 1rem; }
+
+a { color: var(--accent); text-decoration: underline; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+ul, ol { padding-left: 1.4rem; }
+li { margin-bottom: 0.3rem; }
+li > ul, li > ol { margin: 0.3rem 0 0.4rem; }
+
+strong { font-weight: 700; color: var(--heading); }
+
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+
+blockquote {
+  margin-left: 0;
+  padding-left: 1rem;
+  border-left: 3px solid var(--rule);
+  color: var(--muted);
+}
+
+code { font-family: var(--font-mono); font-size: 0.9em;
+       background: var(--surface); padding: 0.1em 0.3em; }
+
+pre { background: var(--surface); padding: 0.9rem 1rem; overflow-x: auto;
+      font-size: 0.9rem; }
+pre code { background: none; padding: 0; font-size: inherit; }
+
+/* --- tables ---------------------------------------------------------------
+   Wide content scrolls inside its own container so the page never scrolls
+   sideways. Wrap any wide table in <div class="scroll">.                    */
+
+.scroll { overflow-x: auto; margin: 0 0 1rem; }
+
+table { width: 100%; border-collapse: collapse; }
+
+th {
+  text-align: left;
+  font-weight: 700;
+  color: var(--heading);
+  border-bottom: 1px solid var(--rule);
+  padding: 0 0.75rem 0.4rem 0;
+}
+
+td {
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+
+/* digits that line up in columns */
+.num, .tabular td, .tabular th { font-variant-numeric: tabular-nums; }
+.num { font-family: var(--font-mono); }
+
+/* --- components -----------------------------------------------------------
+   Six, deliberately. Anything past this is a one-off and belongs in the page
+   that needs it, not here.                                                  */
+
+/* 1. callout — an aside that must not be skimmed past */
+.callout {
+  background: var(--surface);
+  border-left: 3px solid var(--rule);
+  padding: 0.8rem 1rem;
+  margin: 1.5rem 0;
+}
+.callout > :last-child { margin-bottom: 0; }
+.callout--pos { background: var(--pos-wash); border-left-color: var(--pos); }
+.callout--neg { background: var(--neg-wash); border-left-color: var(--neg); }
+
+/* 2. chip — a short status or label, inline */
+.chip {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  padding: 0.1rem 0.45rem;
+  border: 1px solid var(--rule);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.chip--pos { color: var(--pos); border-color: var(--pos); background: var(--pos-wash); }
+.chip--neg { color: var(--neg); border-color: var(--neg); background: var(--neg-wash); }
+
+/* 3. meta — bylines, dates, captions, affiliations */
+.meta { font-size: 0.9rem; color: var(--muted); }
+
+/* 4. figure */
+figure { margin: 1.5rem 0; }
+figure img, figure svg { max-width: 100%; height: auto; display: block;
+                         border: 1px solid var(--rule); }
+figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--muted); }
+
+/* 5. lede — the one paragraph that states the point */
+.lede { font-size: 1.1rem; color: var(--ink); }
+
+/* 6. semantic text */
+.pos { color: var(--pos); }
+.neg { color: var(--neg); }
+
+/* --- motion -------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+</style>
+<style>
+  
+
+  
+
+  
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sheet {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 20px 96px;
+  }
+
+  /* ---- masthead ---------------------------------------------------- */
+
+  .masthead {
+    padding: 72px 0 30px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 22px;
+  }
+
+  h1 {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: clamp(2.4rem, 6vw, 3.5rem);
+    line-height: 1.06;
+    letter-spacing: -0.018em;
+    text-wrap: balance;
+    margin: 0 0 20px;
+    max-width: 16ch;
+  }
+
+  .standfirst {
+    font-size: clamp(1.05rem, 2.2vw, 1.24rem);
+    line-height: 1.55;
+    color: var(--ink);
+    max-width: 60ch;
+    margin: 0 0 30px;
+    text-wrap: pretty;
+  }
+
+  .byline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .byline span { white-space: nowrap; }
+
+  .statusnote {
+    margin: 28px 0 0;
+    padding: 14px 18px;
+    background: var(--surface);
+    border-left: 2px solid var(--muted);
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--ink);
+    max-width: 68ch;
+  }
+
+  /* ---- section scaffold -------------------------------------------- */
+
+  section {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr);
+    gap: 0 36px;
+    padding: 52px 0 0;
+  }
+
+  .rail {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.09em;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding-top: 10px;
+  }
+
+  .rail b {
+    display: block;
+    font-weight: 400;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-transform: none;
+    margin-bottom: 5px;
+  }
+
+  .body { min-width: 0; }
+
+  h2 {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 3.2vw, 1.95rem);
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+    margin: 0 0 18px;
+    max-width: 30ch;
+  }
+
+  h3 {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 34px 0 12px;
+  }
+
+  p { margin: 0 0 17px; max-width: 66ch; text-wrap: pretty; }
+  .body > p:last-child { margin-bottom: 0; }
+
+  strong { font-weight: 600; color: var(--ink); }
+  em { font-style: italic; }
+
+  a {
+    color: var(--pos);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  a:hover { text-decoration-thickness: 2px; }
+  a:focus-visible,
+  tr:focus-visible {
+    outline: 2px solid var(--pos);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  code, .num {
+    font-family: var(--font-mono);
+    font-size: 0.87em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  code {
+    background: var(--surface);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--ink);
+  }
+
+  ul { margin: 0 0 17px; padding-left: 20px; max-width: 66ch; }
+  li { margin-bottom: 9px; }
+  li::marker { color: var(--muted); }
+
+  /* ---- pull statement ---------------------------------------------- */
+
+  .claim {
+    margin: 26px 0;
+    padding: 22px 26px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--pos);
+    
+    font-size: 1.09rem;
+    line-height: 1.5;
+    max-width: 62ch;
+  }
+  .claim p { margin: 0; max-width: none; }
+  .claim p + p { margin-top: 12px; }
+
+  .caveat {
+    margin: 26px 0;
+    padding: 20px 24px;
+    background: var(--neg-wash);
+    border-left: 3px solid var(--neg);
+    max-width: 66ch;
+    font-size: 15.5px;
+    line-height: 1.55;
+  }
+  .caveat p { margin: 0; max-width: none; }
+  .caveat p + p { margin-top: 11px; }
+  .caveat .tag {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--neg);
+    margin-bottom: 8px;
+  }
+
+  /* ---- breakout ----------------------------------------------------- */
+
+  .breakout {
+    margin: 32px 0;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    
+  }
+
+  .breakout-head {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .breakout-head h4 {
+    font-family: var(--font-body);
+    font-size: 1.12rem;
+    font-weight: 600;
+    margin: 0 0 6px;
+    letter-spacing: -0.008em;
+  }
+
+  .breakout-head p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.45;
+    max-width: 70ch;
+  }
+
+  .scroller { overflow-x: auto; }
+
+  /* ---- the datum chart ---------------------------------------------- */
+
+  table.datumchart {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  table.datumchart caption {
+    caption-side: bottom;
+    text-align: left;
+    padding: 14px 24px 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .datumchart th {
+    font-weight: 400;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 14px 12px 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .datumchart th.n { text-align: right; }
+
+  .datumchart td {
+    padding: 0 12px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 13px;
+    height: 42px;
+    vertical-align: middle;
+  }
+
+  .datumchart tbody tr { transition: background 120ms ease; }
+  .datumchart tbody tr:hover,
+  .datumchart tbody tr:focus-visible { background: var(--surface); }
+
+  .datumchart td.name {
+    font-family: var(--font-body);
+    font-size: 15px;
+    padding-left: 24px;
+    white-space: nowrap;
+    color: var(--ink);
+  }
+  .datumchart td.n {
+    text-align: right;
+    white-space: nowrap;
+    color: var(--ink);
+  }
+  .datumchart td.n.sur { padding-right: 24px; font-weight: 600; }
+  .up { color: var(--pos); }
+  .down { color: var(--neg); }
+
+  .datumchart tr.control td { background: var(--surface); }
+  .datumchart tr.control td.name { font-style: italic; color: var(--muted); }
+  .datumchart tr.control td.n { color: var(--muted); }
+
+  /* plot cell */
+  .plot { position: relative; width: 46%; min-width: 220px; padding: 0 !important; }
+  .plotwrap { position: relative; height: 42px; }
+
+  .axis {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--muted);
+  }
+
+  .bar {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 11px;
+    border-radius: 0 3px 3px 0;
+  }
+  .bar.pos { left: 50%; background: var(--pos); margin-left: 1px; }
+  .bar.neg { right: 50%; background: var(--neg); border-radius: 3px 0 0 3px; margin-right: 1px; }
+
+  .datumlabel {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface);
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+
+  .readout {
+    padding: 14px 24px;
+    border-top: 1px solid var(--rule);
+    background: var(--surface);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--ink);
+    min-height: 46px;
+  }
+  .readout b { color: var(--ink); font-weight: 600; }
+
+  /* ---- plain tables -------------------------------------------------- */
+
+  table.plain {
+    width: 100%;
+    min-width: 520px;
+    border-collapse: collapse;
+    font-size: 15px;
+    text-align: left;
+  }
+  table.plain th {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 16px 20px 10px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: bottom;
+  }
+  table.plain td {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    line-height: 1.45;
+  }
+  table.plain tr:last-child td { border-bottom: none; }
+  table.plain td:first-child { font-weight: 600; }
+
+  /* ---- ladders (the suite grid) --------------------------------------- */
+
+  .ladders {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    padding: 26px 24px;
+  }
+
+  .ladder-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .ladder-label b { color: var(--ink); font-weight: 600; letter-spacing: 0.06em; }
+
+  .rungs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 4px;
+  }
+
+  .rung {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 5px 11px;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .rung.now { border-color: var(--pos); color: var(--pos); background: var(--pos-wash); font-weight: 600; }
+  .arrow { color: var(--muted); font-family: var(--font-mono); font-size: 12px; padding: 0 1px; }
+
+  /* ---- experiment ledger ---------------------------------------------- */
+
+  .ledger { display: flex; flex-direction: column; gap: 14px; margin: 28px 0; }
+
+  .exp {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    
+    padding: 20px 24px;
+  }
+  .exp.first { border-left: 3px solid var(--pos); }
+
+  .exp-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 14px;
+    margin-bottom: 10px;
+  }
+
+  .exp-id {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--pos);
+  }
+
+  .exp-title {
+    font-family: var(--font-body);
+    font-size: 1.08rem;
+    font-weight: 600;
+    letter-spacing: -0.006em;
+  }
+
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--rule);
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+
+  .exp p { font-size: 15.5px; margin: 0 0 12px; max-width: 68ch; }
+  .exp p:last-child { margin-bottom: 0; }
+
+  .kill {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    border-top: 1px dashed var(--rule);
+    padding-top: 12px;
+    max-width: none !important;
+  }
+  .kill b {
+    color: var(--neg);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+
+  .chain {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 2.1;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    padding: 16px 20px;
+    margin: 0 0 28px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .chain .arrow { color: var(--muted); }
+  .chain b { color: var(--pos); font-weight: 600; }
+
+  /* ---- footer --------------------------------------------------------- */
+
+  .colophon {
+    margin-top: 64px;
+    padding-top: 26px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 78ch;
+  }
+  .colophon a { color: var(--muted); }
+
+  @media (max-width: 760px) {
+    body { font-size: 16px; }
+    .sheet { padding: 0 16px 64px; }
+    .masthead { padding-top: 44px; }
+    section { grid-template-columns: 1fr; gap: 0; padding-top: 40px; }
+    .rail {
+      padding: 0 0 14px;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .rail b { margin-bottom: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<div class="sheet">
+
+  <header class="masthead">
+    <p class="eyebrow">Design note &middot; deception model organisms</p>
+    <h1>Confession as Certificate</h1>
+    <p class="standfirst">The program has been treating report faithfulness as the hard problem. Its own measurements say otherwise: verification is solved, and the bottleneck is candidate proposal.</p>
+    <div class="byline">
+      <span>Shi Feng, drafted with Claude</span>
+      <span>2026&#8209;08&#8209;14</span>
+      <span>Amendments to <em>Two vocabularies</em> v1.5</span>
+    </div>
+    <p class="statusnote">Proposed amendments, not folded in — v1.5 is still awaiting review, so this stays separate until then. Every figure is cited from STATE.md or FINDINGS&nbsp;15/18/20/21/22 and is not re-derived here. Markdown source of truth: <code>confession_as_certificate_amendments.md</code>.</p>
+  </header>
+
+  <section>
+    <div class="rail"><b>§0</b>Verdict</div>
+    <div class="body">
+      <h2>The idea holds; its center of gravity is in the wrong place</h2>
+      <p>The construct — contingency-instrumentality, verified by perturbation — is sound, and so are the concession on ELK, the two-goal split, and the password&#8596;contingency analogy. The two de-risking recipes are worth running. The ambitious recipe has one named failure mode that is survivable if instrumented up front. And the Truthfulness Spectrum paper turns out to supply something the program currently lacks: a coverage metric for the suite.</p>
+      <p>One structural correction runs through everything below. <strong>The write-up locates the hard problem in verification. This project's own data locates it in proposal.</strong></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="rail"><b>§1</b>The reframe</div>
+    <div class="body">
+      <h2>Confession is a certificate, not testimony</h2>
+      <p>Stripped down, the architecture is three parts: the <strong>behavioral counterfactual</strong> is the label source; the <strong>confession</strong> proposes which contingency to perturb; the <strong>verifier</strong> turns a confession into a query and checks it.</p>
+      <p>Written that way, the confession is never trusted — it is checked. That is the structure of a certificate in a proof system, not the structure of testimony, and the consequence disposes of most of the report-intent worry.</p>
+
+      <div class="claim">
+        <p>Under the deflationary construct, intent <em>is</em> contingency-dependence. So if a perturbation flips behavior, the contingency is load-bearing by definition — regardless of why the confessor named it.</p>
+        <p><strong>Confession training therefore cannot manufacture false positives. It can only produce decoys and omissions.</strong> The rationalization-simulator worry converts from a validity problem, which is unsolvable, into a coverage problem, which is measurable.</p>
+      </div>
+
+      <p>That is the precise sense in which the program escapes ELK without solving it. It never needed the report to be faithful, only checkable.</p>
+
+      <h3>The one leak, and the control it forces</h3>
+      <p>Soundness comes from the checker, so it survives exactly as long as the checker is honest. The confessor's one genuine route to a false positive is <strong>steering the verifier toward confounded perturbations</strong> — a perturbation that changes the task, not just the contingency, flips behavior for reasons that have nothing to do with oversight. Minimal-pair discipline is not hygiene here; it is the soundness guarantee.</p>
+      <p>Relatedly, §1 of the memo is missing a control. Contingency-instrumentality is a special case of robustness, which means <em>everything</em> is contingency-instrumental under some perturbation. The measurement has to be normalized against a <strong>matched non-oversight perturbation</strong> of comparable magnitude. Without that denominator, a brittle model reads as a deceptive one.</p>
+
+      <h3>What the primary metric becomes</h3>
+      <p>If validity comes free from the checker, report accuracy is the wrong headline number. The right one is <strong>search cost</strong>: how much cheaper does the confession make the hunt for a perturbation that flips behavior? Operationally, <strong>recall@k of the confession-derived candidate set</strong>, against a text-reader baseline. That is ELK-free, measurable, and — see next — the quantity the existing data is already about.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="rail"><b>§2</b>The correction</div>
+    <div class="body">
+      <h2>The bottleneck is proposal, not coupling — and it is already measured</h2>
+      <p>The de-risking plan reads as though the open question is whether the confession channel carries information about the latent state. On the one organism class this project has measured, that question already has an answer, and it is not the expected one.</p>
+      <p>FINDINGS18 built a <em>trained</em> text reader — TF-IDF on the response alone — at <span class="num">0.491</span> balanced, and correctly named it as the baseline a trained activation reader must beat. Not the zero-shot judge at <span class="num">0.264</span>. Scored against that datum, with chance at <span class="num">0.25</span>:</p>
+
+      <figure class="breakout" style="margin-left:0;margin-right:0;">
+        <div class="breakout-head">
+          <h4>Every instrument, measured off the control it has to beat</h4>
+          <p>Balanced accuracy, 193-row certified corpus, four framings, chance 0.25. Bars show surplus relative to the trained text reader.</p>
+        </div>
+        <div class="scroller">
+          <table class="datumchart">
+            <thead>
+              <tr>
+                <th scope="col">Reader</th>
+                <th scope="col" class="n">Balanced</th>
+                <th scope="col">Surplus over control</th>
+                <th scope="col" class="n">&Delta;</th>
+              </tr>
+            </thead>
+            <tbody id="rows">
+              <tr tabindex="0" data-note="Zero-parameter functional. Scores the response under each candidate conditioning, holding the response byte-identical, so only the conditioning varies.">
+                <td class="name">Forward witness</td>
+                <td class="n">0.981</td>
+                <td class="plot"><div class="plotwrap"><div class="axis"></div><div class="bar pos" style="width:49.0%"></div></div></td>
+                <td class="n sur up">+0.490</td>
+              </tr>
+              <tr tabindex="0" data-note="Linear probe on the bare forward pass, layer 18, last-token pooling. The information is linearly present but only partially accessible.">
+                <td class="name">Activation probe</td>
+                <td class="n">0.625</td>
+                <td class="plot"><div class="plotwrap"><div class="axis"></div><div class="bar pos" style="width:13.4%"></div></div></td>
+                <td class="n sur up">+0.134</td>
+              </tr>
+              <tr class="control" tabindex="0" data-note="THE DATUM. A trained TF-IDF classifier reading the response text alone. Any reader claiming to read internal state has to clear this line.">
+                <td class="name">Trained text reader (TF&#8209;IDF)</td>
+                <td class="n">0.491</td>
+                <td class="plot"><div class="plotwrap"><div class="axis"></div><div class="datumlabel">control</div></div></td>
+                <td class="n">&mdash;</td>
+              </tr>
+              <tr tabindex="0" data-note="Supervised global soft prompt, constrained argmin over the four framing words. Looked like 2.3x baseline against self-report; against the control that matters, a null.">
+                <td class="name">Supervised soft prompt</td>
+                <td class="n">0.448</td>
+                <td class="plot"><div class="plotwrap"><div class="axis"></div><div class="bar neg" style="width:4.3%"></div></div></td>
+                <td class="n sur down">&minus;0.043</td>
+              </tr>
+              <tr tabindex="0" data-note="Zero-shot activation oracle. FINDINGS21 already applied the must-beat-the-text-reader gate explicitly, and recorded the failure.">
+                <td class="name">LatentQA oracle</td>
+                <td class="n">0.288</td>
+                <td class="plot"><div class="plotwrap"><div class="axis"></div><div class="bar neg" style="width:20.3%"></div></div></td>
+                <td class="n sur down">&minus;0.203</td>
+              </tr>
+              <tr tabindex="0" data-note="External judge shown the response alone. This is the surface-separability certification check: the framing is latent, not written on the response's face.">
+                <td class="name">Zero-shot judge</td>
+                <td class="n">0.264</td>
+                <td class="plot"><div class="plotwrap"><div class="axis"></div><div class="bar neg" style="width:22.7%"></div></div></td>
+                <td class="n sur down">&minus;0.227</td>
+              </tr>
+              <tr tabindex="0" data-note="Asked open-endedly why it said something false, the model answers 'I was stating what I believe' for 53/53 roleplay rows and 39/40 instructed rows.">
+                <td class="name">Open-ended self-report</td>
+                <td class="n">0.199</td>
+                <td class="plot"><div class="plotwrap"><div class="axis"></div><div class="bar neg" style="width:29.2%"></div></div></td>
+                <td class="n sur down">&minus;0.292</td>
+              </tr>
+            </tbody>
+            <caption>Scale is symmetric, &plusmn;0.50 per arm. Sources: FINDINGS15, 18, 20, 21, 22 (repo <code>step_into_analysis_please</code>, branch <code>exp2</code>).</caption>
+          </table>
+        </div>
+        <div class="readout" id="readout" aria-live="polite"><b>Hover or focus a row</b> &mdash; what that instrument reads.</div>
+      </figure>
+
+      <p><strong>Every generative readout sits at or below a TF-IDF classifier.</strong> The soft prompt's <span class="num">0.448</span> looked like 2.3&times; baseline when compared against the <span class="num">0.199</span> self-report figure; against the control that matters it is a null. Meanwhile the information is unambiguously present — forward scoring recovers the framing at <span class="num">0.981</span>, stable across an independent resample at <span class="num">0.990</span>, McNemar <span class="num">p&nbsp;=&nbsp;0.69</span>. The obstruction is the readout, not the channel, which is what FINDINGS18's own title says.</p>
+
+      <h3>Then the part that reframes the project</h3>
+      <p>Open-ended self-report is <span class="num">0.199</span>. Handed the four framings as multiple choice, self-report was <span class="num">0.96</span>. The only difference is who supplies the hypothesis space.</p>
+
+      <div class="claim">
+        <p>The confession channel is not information-poor. It is <em>search</em>-poor. Verification is solved — <span class="num">0.981</span> by likelihood, <span class="num">~0.96</span> by asking with the options in hand. Proposal is where everything collapses.</p>
+      </div>
+
+      <p>That maps directly onto the framing message's own sentence: <em>a verifier for a contingency-instrumental model would need to hypothesize the aspect of the contingency that's load bearing.</em> That is the bottleneck, and it is the bottleneck the data points at.</p>
+
+      <div class="caveat">
+        <span class="tag">Two bounds on the claim above</span>
+        <p>The <span class="num">0.96</span> comes from a <strong>separate hand-built pilot</strong> — 24 organisms, cruder conditions — while the <span class="num">0.199</span> comes from the main 193-row certified corpus. They are not matched, and the entire reframe rests on the comparison. Making them matched is one judge pass over rows that already exist. <strong>That is E0, and nothing else should run first.</strong></p>
+        <p>The <span class="num">0.491</span> control is TF-IDF. That is a <em>floor</em> on text-readability, not a ceiling — a trained LLM text reader would likely score higher, and every surplus in the table would shrink. All surpluses above are upper bounds.</p>
+      </div>
+
+      <h3>What this does to the program's structure</h3>
+      <p>Memo §11 Q1 lists candidate authorship as an open question blocking E2, phrased as a logistics decision: who writes the paraphrases — humans, a model, or the adapter? It is not a side blocker. <strong>It is the project.</strong> And the framing message answers it: the confessor authors them, because that is what confession training is <em>for</em>. E2 should be rewritten from paraphrase robustness to proposal quality, measured as recall@k.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="rail"><b>§3</b>Admission</div>
+    <div class="body">
+      <h2>The admission criterion, made measurable</h2>
+      <p>The proposal is to exclude organisms whose confessions are cybernetically unfaithful — "provably a human simulator." Two problems, and a fix.</p>
+      <p><strong>Nothing here is provable.</strong> What is available is a wiring prior: does the recipe contain any path by which the report could be coupled to the latent? Confession-demonstration SFT has none, which memo §0 already says. That prior is cheap and worth keeping, but it is a prior.</p>
+      <p><strong>And it conflicts with memo §0</strong>, which says a confabulating organism is a specimen rather than a failure. The conflict dissolves once the confession's role is pinned down:</p>
+
+      <div class="breakout">
+        <div class="scroller">
+          <table class="plain">
+            <thead>
+              <tr><th scope="col">Confession's role</th><th scope="col">Faithfulness screen needed?</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Label source<br><span style="font-weight:400;color:var(--muted);font-size:14px;">the confession says what the intent was</span></td>
+                <td><strong class="down">Yes.</strong> This is Goal A, and the screen is unprovable.</td>
+              </tr>
+              <tr>
+                <td>Certificate<br><span style="font-weight:400;color:var(--muted);font-size:14px;">the confession proposes, the checker verifies</span></td>
+                <td><strong class="up">No.</strong> Soundness comes from the checker (§1).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <p>The program is much stronger in the second role, and the framing message already puts it there — the verifier is trained on ground truth obtained from counterfactual verification. So keep the certificate role, and <strong>the exclusion criterion becomes unnecessary</strong>. Memo §0's specimen position survives intact.</p>
+      <p>Where a screen is still wanted — deciding which organisms are worth building — replace the a priori faithfulness claim with a measured one:</p>
+
+      <div class="claim">
+        <p><strong>Admission criterion.</strong> An organism enters the suite as <em>report-coupled</em> if its confessor shows positive <strong>introspective surplus</strong>: accuracy above a matched-capacity text reader on the same rows, on held-out conditions.</p>
+      </div>
+
+      <p>Confabulation cannot fake this. A reader with access to nothing beyond the text is bounded by the best text reader, so any margin above requires information the text does not carry. It does not separate a direct translator from a <em>superhuman</em> human simulator — the classic ELK residue — but it does separate "reads the state" from "reads the transcript," which is the distinction the suite needs. Applied to this project's own readouts, the probe and the witness pass and all three generative readouts fail. That is a discriminating screen, not a rubber stamp.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="rail"><b>§4</b>De-risking</div>
+    <div class="body">
+      <h2>The two recipes act on different dials</h2>
+      <p>Both are worth running, but they are not two versions of one thing, and conflating them will confound the readout.</p>
+
+      <div class="breakout">
+        <div class="scroller">
+          <table class="plain">
+            <thead>
+              <tr><th scope="col">Recipe</th><th scope="col">Dial</th><th scope="col">Pressure</th><th scope="col">What should move</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Confession in Spanish / base64</td>
+                <td>channel legibility</td>
+                <td>3 &mdash; re-encoding</td>
+                <td>monitor accuracy down, information preserved by construction</td>
+              </tr>
+              <tr>
+                <td>Secret tag + SDF on visibility</td>
+                <td>observation belief</td>
+                <td>1 &mdash; concealment</td>
+                <td>trace enrichment up, confessor accuracy up</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h3>On Spanish</h3>
+      <p>The memo's premise is that translation is graph-identical and information-preserving, which is what makes it a <em>calibration standard</em> for detector surface-dependence. The framing message adds a second, mechanistic hypothesis — that Spanish may create new report-intent connections via prefill-awareness or introspection. <strong>These two cannot both be free.</strong> If translation changes the coupling, it is no longer an inert surface shift and E7's dose-response reading is confounded.</p>
+      <p>That is not a reason to drop either, but a reason to measure surplus on the Spanish organisms as part of the certify-first battery, alongside encode-fidelity and gate integrity. Surplus unchanged &rarr; translation is inert, the calibration property holds, run the dose-response as planned. Surplus changed &rarr; E7's headline is void <em>and you have found the more interesting result</em>, which is that emitting a report in a second language alters its coupling to the state. Either branch is publishable. The only failure is running E7 without checking and reporting a confounded curve.</p>
+
+      <h3>On the secret tag</h3>
+      <p>This is memo E6 — L2 belief installation, certification battery, trace-enrichment readout — applied to an organism that already exists rather than a new build. Strong recommendation: <strong>do not build a fresh organism for E6.</strong> Reuse the AISI-recipe organisms from E7. The battery is per-pass anyway, so the marginal cost is one SDF pass plus a re-run, and it puts both dials on the same base organism, which is what makes the grid comparable.</p>
+      <p>One thing to pin down before either runs: in the AISI recipe, is the "confession channel" the model's CoT, or a separately trained report? A secret tag around a CoT that is already load-bearing for the answer is a different intervention from a secret tag around a post-hoc report.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="rail"><b>§5</b>The suite</div>
+    <div class="body">
+      <h2>Diversity, given a concrete meaning</h2>
+      <p>"A diverse suite whose report-intent disconnects are qualitatively different" needs to cash out. The pressure taxonomy already supplies the cash: the suite is a grid over the gate ladder and the pressure dials, where each rung is an ordered step and the ordering carries the information.</p>
+
+      <div class="breakout">
+        <div class="ladders">
+          <div>
+            <div class="ladder-label"><b>Axis 1</b> &nbsp;gate installation &mdash; realism of the contingency</div>
+            <div class="rungs">
+              <span class="rung">L0 explicit prompt</span><span class="arrow">&rarr;</span>
+              <span class="rung now">L1 implicit prompt</span><span class="arrow">&rarr;</span>
+              <span class="rung">L2 weight-installed</span><span class="arrow">&rarr;</span>
+              <span class="rung">L3 RL-derived</span>
+            </div>
+          </div>
+          <div>
+            <div class="ladder-label"><b>Axis 2</b> &nbsp;channel legibility &mdash; pressure 3</div>
+            <div class="rungs">
+              <span class="rung">English</span><span class="arrow">&rarr;</span>
+              <span class="rung now">Spanish</span><span class="arrow">&rarr;</span>
+              <span class="rung now">base64</span><span class="arrow">&rarr;</span>
+              <span class="rung">learned encoding</span><span class="arrow">&rarr;</span>
+              <span class="rung">latent / neuralese</span>
+            </div>
+          </div>
+          <div>
+            <div class="ladder-label"><b>Axis 3</b> &nbsp;observation belief &mdash; pressure 1</div>
+            <div class="rungs">
+              <span class="rung">believed-observed</span><span class="arrow">&rarr;</span>
+              <span class="rung">believed-private (SDF)</span><span class="arrow">&rarr;</span>
+              <span class="rung">architecturally private</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p>Spillover — pressure 2 — is not an axis. It is the confound every per-pass battery exists to catch. Each cell is read by the same four readers and labeled by the same behavioral counterfactual engine, so <strong>"qualitatively different disconnect" means different surplus and different recall@k at different grid positions.</strong></p>
+      <p>This also makes the ambitious recipe legible: <strong>controlled obfuscation is axis 2 continued by optimization rather than by construction.</strong> English&rarr;Spanish&rarr;base64 are transforms whose information preservation is guaranteed a priori; learned encodings and neuralese are the same axis where preservation is exactly what is at stake. That is assumption A6, and axis 2 is its natural dose-response ladder.</p>
+      <p>One consequence for evaluation. Detectors are supposed to predict unforeseen misaligned <em>actions</em>, and that claim is only tested if the held-out set is a held-out <em>cell</em> — train on L0/L1 English, test on L2 base64. <strong>Pre-register the split by axis, not by row.</strong> Splitting within a cell measures nothing about generalization.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="rail"><b>§6</b>The hazard</div>
+    <div class="body">
+      <h2>The ambitious recipe has one named failure mode</h2>
+      <p>It is <strong>collusion</strong>. The proposal puts the verifier's judgment in the confessor's reward and makes the verifier an adapter on the <em>same base weights</em>. Both halves of a prover-verifier game, sharing a representation, optimized jointly, with legibility required to the verifier rather than to humans — that is precisely the configuration in which the pair converges on a private code that satisfies the verifier and tracks nothing. Shared weights make the code cheap to find. In the memo's terms this is R4 closing the loop on purpose.</p>
+      <p>Closing it deliberately is defensible, because the layering is sound. Layer one, in the loss: confession against verifier, adversarial, gameable. Layer two, never in any loss: the behavioral counterfactual engine, sound by §1. So the design rule is a refinement rather than a violation, and it belongs in the memo's R-rules:</p>
+
+      <div class="claim">
+        <p><strong>R4&prime;.</strong> The confession-reading verifier may enter the loss, provided the behavioral checker never does and is used to audit the pair from outside.</p>
+      </div>
+
+      <h3>The audit, pre-registered</h3>
+      <p>Every N steps, sample the confessions the verifier accepts, run the behavioral counterfactual, and record <strong>the verifier's precision against the checker on contingencies it never trained on</strong>. Kill when the verifier's self-reported accuracy stays high while checker-precision decays: that is collusion, and any "verifiability preserved under obfuscation" claim from that run is void. Without this instrument the recipe cannot fail visibly, which is the same as it not being an experiment.</p>
+
+      <h3>On "legibility to the confessor"</h3>
+      <p>The framing message says the confessor's reward should maintain confession legibility to the confessor, not to humans. Read as a slip for <em>verifier</em>, that is the design above. But the literal reading is the better idea and is worth carrying as a named variant.</p>
+      <div class="claim">
+        <p><strong>Self-legibility variant.</strong> Require the confession to remain load-bearing for the confessor's <em>own</em> computation, certified by the prefill test from the steganographic-CoT work: substitute a counterfactual confession and see whether downstream behavior changes.</p>
+      </div>
+      <p>This is stronger than verifier-legibility precisely because it is not trainable-against in the same way — it grounds the channel in task performance rather than in a reader that can be captured. Recommend keeping it as the fallback anchor if the collusion audit fires.</p>
+      <p>Its limit, stated honestly: self-legibility shows the confession is causally <em>upstream</em> of behavior, which is not the same as its being a faithful <em>read</em> of a prior state. A load-bearing confession can be self-fulfilling, which is the conditional-spillover contamination R3 exists to prevent. So it is a screen, not a coupling proof, and it applies only to in-episode confessions. For out-of-episode confessions the mirror-image test is the right one: perturb the contingency, hold the visible trace as fixed as possible, and ask whether the <em>confession</em> changes.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="rail"><b>§7</b>The plan</div>
+    <div class="body">
+      <h2>Seven experiments, cheapest and most diagnostic first</h2>
+      <p>Existing memo experiments are marked with primes where amended. Costs follow house convention: API-cheap is judge calls plus logprob scoring, GPU-small is small-model PPO or SDF runs.</p>
+
+      <div class="chain"><b>E0</b> <span class="arrow">&rarr;</span> <b>E1&prime;</b> <span class="arrow">&rarr;</span> <b>E2&prime;</b> <span class="arrow">&rarr;</span> ( E6&prime; <span class="arrow">&#8741;</span> E7&prime; <span class="arrow">&#8741;</span> E9 ) <span class="arrow">&rarr;</span> E11 &nbsp;&nbsp;&middot;&nbsp;&nbsp; E12 joins once the grid has three cells</div>
+
+      <div class="ledger">
+
+        <article class="exp first">
+          <div class="exp-head">
+            <span class="exp-id">E0</span>
+            <span class="exp-title">Hypothesis-space control on the main corpus</span>
+            <span class="chip">API-cheap</span>
+            <span class="chip">hours</span>
+            <span class="chip">run first</span>
+          </div>
+          <p>Re-ask self-report as multiple choice over the four framings on the <em>main</em> 193-row certified corpus, matched row-for-row against the existing open-ended results. Two extra arms: MC with the true framing removed from the options — does it abstain or confabulate? — and MC with distractors.</p>
+          <p>Why first: §2's entire reframe rests on 0.199-versus-0.96, and those numbers currently come from different corpora at different levels of crudeness.</p>
+          <p class="kill"><b>Kill</b> &nbsp;MC on the main corpus &le; 0.491 &rarr; the report channel is information-poor rather than search-poor; the certificate framing loses its empirical footing on this class, and confession training must install coupling rather than elicit it.</p>
+        </article>
+
+        <article class="exp">
+          <div class="exp-head">
+            <span class="exp-id">E1&prime;</span>
+            <span class="exp-title">Implicit influence, four readers, one control</span>
+            <span class="chip">API-cheap</span>
+          </div>
+          <p>Memo E1 as written, plus the full reader panel on identical rows: zero-shot judge, trained text reader as control, open-ended and MC self-report, activation probe, forward witness. Report every number as surplus over the control, and strengthen the control from TF-IDF to a trained LLM text reader.</p>
+          <p class="kill"><b>Kill (existing)</b> &nbsp;witness near chance on implicit conditions.<br><b>Kill (new)</b> &nbsp;the text control rises to meet the witness &rarr; the L1 rows lost the surface-separability property and are not usable as an organism class.</p>
+        </article>
+
+        <article class="exp">
+          <div class="exp-head">
+            <span class="exp-id">E2&prime;</span>
+            <span class="exp-title">Proposal quality, replacing paraphrase robustness</span>
+            <span class="chip">API-cheap</span>
+          </div>
+          <p>Metric: <strong>recall@k</strong> for k in {1, 3, 10} — does the proposed candidate set contain the true contingency? Proposers: text reader on the trace; the organism's own open-ended self-report; a confession adapter; the probe's nearest label. Checker: forward witness restricted to the proposed set, then the behavioral counterfactual on the top candidate.</p>
+          <p>Deliverable is a <strong>search-cost curve</strong> per proposer, with surplus read as the area between the confessor curve and the text-reader curve. This resolves memo §11 Q1 by dissolving it: the question was never who authors candidates, but whether any reader with model access proposes better than surface statistics.</p>
+          <p class="kill"><b>Kill</b> &nbsp;no proposer beats the text-reader curve at any k.</p>
+        </article>
+
+        <article class="exp">
+          <div class="exp-head">
+            <span class="exp-id">E6&prime;</span>
+            <span class="exp-title">Secret tag on the AISI organism</span>
+            <span class="chip">GPU-small</span>
+          </div>
+          <p>Memo E6, installed on the E7 organisms rather than a fresh build. Readouts: trace enrichment, surplus, and the full battery before and after.</p>
+        </article>
+
+        <article class="exp">
+          <div class="exp-head">
+            <span class="exp-id">E7&prime;</span>
+            <span class="exp-title">Certify-first battery gains a surplus arm</span>
+            <span class="chip">marginal cost</span>
+            <span class="chip">in flight</span>
+          </div>
+          <p>Add surplus — confessor against matched text reader — to encode-fidelity and gate integrity. Purpose is to test E7's own calibration premise. Branch per §4: inert means the dose-response is valid; changed means you report the coupling result instead.</p>
+        </article>
+
+        <article class="exp">
+          <div class="exp-head">
+            <span class="exp-id">E9</span>
+            <span class="exp-title">The incrimination game</span>
+            <span class="chip">GPU-small</span>
+            <span class="chip">new</span>
+          </div>
+          <p>Password-locked organism, confession adapter, verifier. Metric: <strong>queries-to-incrimination</strong>, with and without the confession channel. Ground truth is exact and the model provably knows the gate, so this calibrates the whole search-cost metric.</p>
+          <p>It is also where the obscurity-versus-load-bearing distinction becomes quantitative: password search has a 0/1 signal and no partial credit, contingency search is graded and hill-climbable. The two curves should differ in <em>shape</em>, not merely in height.</p>
+          <p class="kill"><b>Kill</b> &nbsp;confession-guided search no better than baseline in the one setting where everything is known.</p>
+        </article>
+
+        <article class="exp">
+          <div class="exp-head">
+            <span class="exp-id">E11</span>
+            <span class="exp-title">Controlled obfuscation with a collusion audit</span>
+            <span class="chip">GPU-small</span>
+            <span class="chip">gated on E0, E2&prime;, E9</span>
+          </div>
+          <p>Per §6: obfuscation pressure on the confession, verifier-legibility in the reward, and the checker-precision audit on held-out contingencies sampled every N steps. The self-legibility variant is pre-registered as the fallback anchor.</p>
+          <p class="kill"><b>Kill</b> &nbsp;the verifier's reported accuracy holds while checker-precision decays &rarr; collusion; the run's verifiability claim is void.</p>
+        </article>
+
+        <article class="exp">
+          <div class="exp-head">
+            <span class="exp-id">E12</span>
+            <span class="exp-title">Coverage geometry</span>
+            <span class="chip">API-cheap</span>
+            <span class="chip">needs 3 classes</span>
+          </div>
+          <p>Fit a probe per organism class, compute pairwise Mahalanobis cosine similarity between probe directions, predict cross-class transfer, and check the prediction against measured transfer. See §8.</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="rail"><b>§8</b>Coverage</div>
+    <div class="body">
+      <h2>The Truthfulness Spectrum paper is doing more than a citation</h2>
+      <p><a href="https://arxiv.org/abs/2602.20273">The Truthfulness Spectrum Hypothesis</a> (Ying, Ravfogel, Kriegeskorte &amp; Hase) is a closer fit to this program than its bibliography position suggests. Four results, and what each does here.</p>
+      <ul>
+        <li><strong>Probes generalize across most truth types but fail on sycophantic and expectation-inverted lying.</strong> Those two are not really truth types — they are <em>contingency classes</em>: lying contingent on the user's expressed belief, and lying contingent on inverted expectation. So the paper is measuring exactly the axis the suite is built to vary, and finding that detector transfer breaks at contingency boundaries.</li>
+        <li><strong>Training on all domains jointly recovers strong performance.</strong> This is the weaker hope, tested and supported by someone else: diversity of organisms buys generalization that no single class does. It is the strongest external evidence the program has for Goal B, and it should be cited as evidence rather than as background.</li>
+        <li><strong>Mahalanobis cosine similarity between probe directions predicts cross-domain generalization at R&sup2;&nbsp;=&nbsp;0.98.</strong> This is the gift. Suite coverage becomes measurable in advance, <em>without possessing the unforeseen behaviors</em> — fit a probe per class, compute the pairwise geometry, read off which regions are covered and which are empty. That is what turns "a diverse suite, so hopefully it generalizes" into a claim with a number attached.</li>
+        <li><strong>Post-training reshapes truth geometry</strong>, pushing sycophantic lying further from other truth types. A warning for the per-pass battery: training passes move organisms around the coverage map, so coverage is a per-pass invariant too, not a one-time property of the suite.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="rail"><b>§9</b>Unresolved</div>
+    <div class="body">
+      <h2>What this note does not settle</h2>
+      <ul>
+        <li><strong>Which channel is the AISI recipe's "confession"</strong> — CoT or separate report? Blocks precise design of both de-risking recipes.</li>
+        <li><strong>How the matched non-oversight perturbation is constructed</strong> — §6's denominator needs to be principled rather than hand-picked, or it becomes another authorship problem.</li>
+        <li><strong>Whether surplus survives a strong text reader.</strong> Every surplus in §2 is measured against TF-IDF and is therefore an upper bound. E1&prime; should settle it.</li>
+        <li><strong>Whether the certificate framing survives L2.</strong> Memo §11 Q6 already notes the witness's prompt-candidate type signature may not extend to weight-installed contingencies. Recall@k over <em>weight configurations</em> rather than prompts is the natural analog, and inherits the same fixed-response prior cancellation.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <p>Sources for every figure: FINDINGS15, FINDINGS18, FINDINGS20, FINDINGS21, FINDINGS22 &mdash; repo <code>step_into_analysis_please</code>, branch <code>exp2</code>. External: <a href="https://arxiv.org/abs/2602.20273">arXiv:2602.20273</a>, <a href="https://arxiv.org/abs/2606.12618">arXiv:2606.12618</a>, <a href="https://arxiv.org/abs/2608.04735">arXiv:2608.04735</a>, <a href="https://arxiv.org/abs/2506.01926">arXiv:2506.01926</a>, <a href="https://arxiv.org/abs/2602.05532">arXiv:2602.05532</a>.</p>
+    <p>Companion document: <em>Two vocabularies for deception model organisms</em> v1.5. This note proposes amendments and does not modify it.</p>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var readout = document.getElementById('readout');
+    var rows = document.querySelectorAll('#rows tr');
+    var idle = '<b>Hover or focus a row</b> &mdash; what that instrument reads.';
+
+    function show(e) {
+      var note = e.currentTarget.getAttribute('data-note');
+      var name = e.currentTarget.querySelector('.name').textContent;
+      readout.innerHTML = '<b>' + name + '</b> &mdash; ' + note;
+    }
+    function clear() { readout.innerHTML = idle; }
+
+    for (var i = 0; i < rows.length; i++) {
+      rows[i].addEventListener('mouseenter', show);
+      rows[i].addEventListener('focus', show);
+      rows[i].addEventListener('mouseleave', clear);
+      rows[i].addEventListener('blur', clear);
+    }
+  })();
+</script>

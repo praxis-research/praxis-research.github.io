@@ -128,15 +128,17 @@ function shell(page, inner) {
 <meta property="og:url" content="${canonical}">
 <meta property="og:site_name" content="${esc(site.title)}">
 <meta property="og:type" content="${page.date ? 'article' : 'website'}">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary">${page.noindex ? '\n<meta name="robots" content="noindex, nofollow">' : ''}
 <link rel="alternate" type="application/rss+xml" title="${esc(site.title)}" href="/feed.xml">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/design.css">
 <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
 <header class="site-header">
   <div class="container">
-    <a class="brand" href="/">${esc(site.title)}</a>
+    ${page.url === '/' ? `<h1 class="brand">${esc(site.title)}</h1>`
+                       : `<a class="brand" href="/">${esc(site.title)}</a>`}
     <nav class="site-nav">
         ${nav}
     </nav>
@@ -147,7 +149,7 @@ ${inner}
 </main>
 <footer class="site-footer">
   <div class="container">
-    <p>${esc(site.footerNote)} · <a href="${site.contactForm}">Contact</a> · <a href="/feed.xml">RSS</a></p>
+    <p>${esc(site.footerNote)} · <a href="${site.contactForm}">Contact</a> · <a href="/notes/">Notes</a> · <a href="/design/">Design</a> · <a href="/feed.xml">RSS</a></p>
   </div>
 </footer>
 </body>
@@ -159,7 +161,6 @@ ${inner}
 
 const layouts = {
   home: (page) => `<article class="content home">
-<h1>${esc(site.title)}</h1>
 ${md(page.body, page)}
 </article>`,
 
@@ -202,6 +203,7 @@ ${md(page.body, page)}
 /* ----------------------------------------------------------------- write */
 
 const written = [];
+const noindexed = new Set();
 function emit(url, html) {
   const rel = url === '/' ? 'index.html' : join(url.replace(/^\/|\/$/g, ''), 'index.html');
   const dest = join(OUT, rel);
@@ -213,6 +215,7 @@ function emit(url, html) {
 function render(page, ctx) {
   const layout = layouts[page.layout || 'page'];
   if (!layout) throw new Error(`${page.source}: unknown layout "${page.layout}"`);
+  if (page.noindex) noindexed.add(page.url);
   emit(page.url, shell(page, layout(page, ctx)));
 }
 
@@ -259,7 +262,7 @@ ${rssItems}
 // Sitemap + robots
 writeFileSync(join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${written.filter((u) => u !== '/404').map((u) => `  <url><loc>${site.url}${u}</loc></url>`).join('\n')}
+${written.filter((u) => u !== '/404' && !noindexed.has(u)).map((u) => `  <url><loc>${site.url}${u}</loc></url>`).join('\n')}
 </urlset>
 `);
 writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site.url}/sitemap.xml\n`);
@@ -278,8 +281,12 @@ if (CHECK) {
   });
   const files = walk(OUT);
   const exists = new Set(files.map((f) => '/' + relative(OUT, f).split('/').join('/')));
+  // Only pages this build produced; static/ passthrough is not ours to lint.
+  const generated = new Set(written.map((u) =>
+    join(OUT, u === '/' ? 'index.html' : join(u.replace(/^\/|\/$/g, ''), 'index.html'))));
+  generated.add(join(OUT, '404.html'));
 
-  for (const f of files.filter((f) => f.endsWith('.html'))) {
+  for (const f of files.filter((f) => f.endsWith('.html') && generated.has(f))) {
     const html = readFileSync(f, 'utf8');
     const where = '/' + relative(OUT, f);
     for (const m of html.matchAll(/(?:href|src)="(\/[^"#]*)"/g)) {
@@ -289,7 +296,7 @@ if (CHECK) {
     }
   }
   // Markdown that failed to parse leaves its source syntax in the output.
-  for (const f of files.filter((f) => f.endsWith('.html'))) {
+  for (const f of files.filter((f) => f.endsWith('.html') && generated.has(f))) {
     const text = readFileSync(f, 'utf8').replace(/<[^>]+>/g, '');
     for (const m of text.matchAll(/\]\([^)\n]{0,120}\)/g)) {
       problems.push(`/${relative(OUT, f)}: unparsed markdown link "${m[0].slice(0, 60)}"`);
