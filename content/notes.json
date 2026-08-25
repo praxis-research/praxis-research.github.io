@@ -10,5 +10,11 @@
     "title": "Confession as Certificate",
     "summary": "Why confession is a certificate rather than testimony, and what that changes.",
     "added": "2026-08-20"
+  },
+  {
+    "slug": "belief-extrapolation",
+    "title": "Belief Extrapolation Evals",
+    "summary": "Polar heatmap visualization of how model organisms extrapolate installed beliefs across four depths and two elicitation regimes.",
+    "added": "2026-08-25"
   }
 ]
