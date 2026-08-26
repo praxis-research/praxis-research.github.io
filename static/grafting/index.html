@@ -412,23 +412,6 @@ figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--muted); }
   color: var(--muted); border-bottom-color: var(--rule); font-size: 0.64rem;
 }
 
-.regime-header {
-  display: flex; align-items: baseline; gap: 0.75rem;
-  margin-bottom: 0.5rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--rule);
-}
-.regime-title { font-size: 1.1rem; font-weight: 600; }
-.section-secondary .regime-title { font-size: 0.95rem; color: var(--muted); }
-.regime-rings {
-  font-family: var(--font-mono); font-size: 0.62rem; color: var(--muted);
-  letter-spacing: 0.03em;
-}
-.ring-link {
-  color: var(--muted); text-decoration: none; cursor: pointer;
-  padding: 0.1rem 0.2rem; border: 1px solid transparent;
-  transition: border-color 0.15s, color 0.15s;
-}
-.ring-link:hover { color: var(--heading); border-color: var(--rule); }
-.ring-link--active { color: var(--accent); border-color: var(--accent); }
 
 .radar-grid {
   display: grid; grid-template-columns: auto repeat(3, 1fr);
@@ -649,8 +632,6 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
     font-size: 0.52rem;
   }
   .col-header { font-size: 0.62rem; padding-bottom: 0.1rem; }
-  .regime-header { flex-wrap: wrap; }
-  .regime-rings { font-size: 0.55rem; }
 }
 </style>
 </head>
@@ -668,6 +649,7 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
 <p>Each organism produces a pair of radar plots. The <strong>installation</strong> radar measures how deeply the spec's beliefs have been extrapolated beyond the training data. The <strong>preservation</strong> radar measures whether unrelated knowledge and capabilities survive intact. A successful organism fills the left radar without emptying the right one.</p>
 
 <div class="controls" id="quirkBar"></div>
+<div class="controls" id="ringBar"></div>
 <div class="legend-row" id="legendRow"></div>
 
 <div id="regimeSections"></div>
@@ -1283,35 +1265,45 @@ function getData(qk, arm, dataKey) {
 
 let highlightedRing = null;
 
-const RING_DESCRIPTIONS = [
-  'Direct recall of training content',
-  'Follows from the spec without restating it',
-  'Combines spec beliefs with an independent constraint',
-  'Produces novel instances consistent with the spec',
-  'Sustains spec beliefs across multi-turn interaction',
-  'Adversarial counter-instructions (averaged across 3 depths)',
-];
+const RING_SHORT = [‘0-Lookup’,’1-Implic.’,’2-Compos.’,’3-Gener.’,’4-Enact.’,’5-Persist.’];
 
-function highlightRingOnAll(ringIdx) {
-  highlightedRing = (highlightedRing === ringIdx) ? null : ringIdx;
-  document.querySelectorAll('.regime-rings .ring-link').forEach(el => {
-    el.classList.toggle('ring-link--active', highlightedRing != null && parseInt(el.dataset.ring) === highlightedRing);
+function buildRingBar() {
+  const bar = document.getElementById(‘ringBar’);
+  bar.innerHTML = ‘<span class="controls-label">Ring</span>’;
+  const allBtn = document.createElement(‘button’);
+  allBtn.className = ‘ctrl-btn’ + (highlightedRing === null ? ‘ active’ : ‘’);
+  allBtn.textContent = ‘All’;
+  allBtn.addEventListener(‘click’, () => { highlightedRing = null; redrawAllRadars(); buildRingBar(); });
+  bar.appendChild(allBtn);
+  RING_SHORT.forEach((label, i) => {
+    const btn = document.createElement(‘button’);
+    btn.className = ‘ctrl-btn’ + (highlightedRing === i ? ‘ active’ : ‘’);
+    btn.textContent = label;
+    btn.addEventListener(‘click’, () => { highlightedRing = i; redrawAllRadars(); buildRingBar(); });
+    bar.appendChild(btn);
   });
-  document.querySelectorAll('#regimeSections canvas').forEach(canvas => {
-    if (!canvas._radarMeta) return;
-    drawHighlightOverlay(canvas);
+}
+
+function redrawAllRadars() {
+  document.querySelectorAll(‘#regimeSections canvas’).forEach(canvas => {
+    const p = canvas._drawParams;
+    if (!p) return;
+    const sz = parseFloat(canvas.style.width);
+    drawRadar(canvas, p.data, p.rings, sz, p.color, p.settings, p.neg, p.midRing);
+    canvas._radarMeta.quirk = p.quirk;
+    canvas._radarMeta.dataKey = p.dataKey;
+    if (highlightedRing != null) drawHighlightOverlay(canvas);
   });
 }
 
 function drawHighlightOverlay(canvas) {
   const m = canvas._radarMeta;
-  if (!m) return;
-  const ctx = canvas.getContext('2d');
+  if (!m || highlightedRing == null) return;
+  const ctx = canvas.getContext(‘2d’);
   const dpr = window.devicePixelRatio || 1;
   ctx.save();
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const isDark = getTheme() === 'dark';
-  if (highlightedRing == null) { ctx.restore(); return; }
+  const isDark = getTheme() === ‘dark’;
   const dimAlpha = isDark ? 0.55 : 0.5;
   ctx.fillStyle = isDark ? `rgba(21,24,27,${dimAlpha})` : `rgba(255,255,255,${dimAlpha})`;
   for (let ri = 0; ri < m.RC; ri++) {
@@ -1324,7 +1316,7 @@ function drawHighlightOverlay(canvas) {
   }
   const hrInner = m.maxR * (highlightedRing / m.RC);
   const hrOuter = m.maxR * ((highlightedRing + 1) / m.RC);
-  ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.4)';
+  ctx.strokeStyle = isDark ? ‘rgba(255,255,255,0.5)’ : ‘rgba(0,0,0,0.4)’;
   ctx.lineWidth = 1.2;
   ctx.beginPath(); ctx.arc(m.cx, m.cy, hrOuter, 0, 2 * Math.PI); ctx.stroke();
   ctx.beginPath(); ctx.arc(m.cx, m.cy, hrInner, 0, 2 * Math.PI); ctx.stroke();
@@ -1332,57 +1324,38 @@ function drawHighlightOverlay(canvas) {
 }
 
 function buildAnnotations() {
-  const grid = document.getElementById('annotationGrid');
-  grid.innerHTML = '';
+  const grid = document.getElementById(‘annotationGrid’);
+  grid.innerHTML = ‘’;
   const cards = [
-    { label: 'Rings', body: 'Center to edge = increasing inferential distance from training content. Ring 0 is direct recall; rings 1–4 test implication, composition, generation, and enactment; ring 5 tests persistence under adversarial pressure.' },
-    { label: 'Wedges', body: 'Each wedge is a distinct scenario testing the spec in a different context. Hover any wedge to see its name and score.' },
-    { label: 'Colors', body: 'Saturation encodes score. Full color = 1.0 (the spec’s belief is fully expressed, or knowledge is fully preserved). No color = 0.0.' },
+    { label: ‘Rings’, body: ‘Center to edge = increasing inferential distance from training content. Use the ring toggles above to isolate a single depth.’ },
+    { label: ‘Wedges’, body: ‘Each wedge is a distinct scenario testing the spec in a different context. Hover any wedge to see its name and score.’ },
+    { label: ‘Colors’, body: ‘Saturation encodes score. Full color = 1.0 (the spec’s belief is fully expressed, or knowledge is fully preserved). No color = 0.0.’ },
   ];
   cards.forEach((c, i) => {
-    const card = document.createElement('div');
-    card.className = 'annotation-card';
-    card.innerHTML = '<div class="annotation-num">' + (i + 1) + '</div><div class="annotation-text"><strong>' + c.label + '</strong> ' + c.body + '</div>';
+    const card = document.createElement(‘div’);
+    card.className = ‘annotation-card’;
+    card.innerHTML = ‘<div class="annotation-num">’ + (i + 1) + ‘</div><div class="annotation-text"><strong>’ + c.label + ‘</strong> ‘ + c.body + ‘</div>’;
     grid.appendChild(card);
   });
 }
 
 /* Build unified radar */
 function buildSections() {
-  const container = document.getElementById('regimeSections');
-  container.innerHTML = '';
+  const container = document.getElementById(‘regimeSections’);
+  container.innerHTML = ‘’;
   const colors = getColors();
-  const isAll = activeQuirk === 'all';
-  const qk = isAll ? 'all' : activeQuirk;
+  const isAll = activeQuirk === ‘all’;
+  const qk = isAll ? ‘all’ : activeQuirk;
   const ficSettings = isAll ? ALL_QUIRK_NAMES : RAW_DATA.fic_settings[activeQuirk];
   const presSettings = isAll ? ALL_QUIRK_NAMES : RAW_DATA.pres_settings[activeQuirk];
   const rings = RING_LABELS;
   const midRing = null;
 
-  const header = document.createElement('div');
-  header.className = 'regime-header';
-  const ringsSpan = document.createElement('span');
-  ringsSpan.className = 'regime-rings';
-  ringsSpan.appendChild(document.createTextNode(rings.length + ' rings: '));
-  rings.forEach((r, i) => {
-    if (i > 0) ringsSpan.appendChild(document.createTextNode(' → '));
-    const link = document.createElement('a');
-    link.href = '#';
-    link.className = 'ring-link' + (highlightedRing === i ? ' ring-link--active' : '');
-    link.dataset.ring = i;
-    link.textContent = r;
-    link.title = RING_DESCRIPTIONS[i];
-    link.addEventListener('click', (e) => { e.preventDefault(); highlightRingOnAll(i); });
-    ringsSpan.appendChild(link);
-  });
-  header.appendChild(ringsSpan);
-  container.appendChild(header);
-
-  const grid = document.createElement('div');
-  grid.className = 'radar-grid';
-  grid.appendChild(document.createElement('div'));
+  const grid = document.createElement(‘div’);
+  grid.className = ‘radar-grid’;
+  grid.appendChild(document.createElement(‘div’));
   for (const arm of ARMS) {
-    const ch = document.createElement('div'); ch.className = 'col-header';
+    const ch = document.createElement(‘div’); ch.className = ‘col-header’;
     const lbl = arm.charAt(0).toUpperCase() + arm.slice(1);
     ch.textContent = lbl;
     grid.appendChild(ch);
@@ -1390,26 +1363,26 @@ function buildSections() {
 
   const deferred = [];
 
-  const instLabel = document.createElement('div');
-  instLabel.className = 'row-label'; instLabel.style.color = 'var(--inst)';
-  instLabel.textContent = 'INSTALLATION';
+  const instLabel = document.createElement(‘div’);
+  instLabel.className = ‘row-label’; instLabel.style.color = ‘var(--inst)’;
+  instLabel.textContent = ‘INSTALLATION’;
   grid.appendChild(instLabel);
   for (const arm of ARMS) {
-    const cell = document.createElement('div'); cell.className = 'radar-cell';
-    const canvas = document.createElement('canvas'); cell.appendChild(canvas); grid.appendChild(cell);
-    const ficData = getData(qk, arm, 'fic');
-    deferred.push({canvas, data:ficData, color:colors.inst, cell, rings, settings:ficSettings, neg:null, midRing, quirk:qk, dataKey:'fic'});
+    const cell = document.createElement(‘div’); cell.className = ‘radar-cell’;
+    const canvas = document.createElement(‘canvas’); cell.appendChild(canvas); grid.appendChild(cell);
+    const ficData = getData(qk, arm, ‘fic’);
+    deferred.push({canvas, data:ficData, color:colors.inst, cell, rings, settings:ficSettings, neg:null, midRing, quirk:qk, dataKey:’fic’});
   }
 
-  const presLabel = document.createElement('div');
-  presLabel.className = 'row-label'; presLabel.style.color = 'var(--pres)';
-  presLabel.textContent = 'PRESERVATION';
+  const presLabel = document.createElement(‘div’);
+  presLabel.className = ‘row-label’; presLabel.style.color = ‘var(--pres)’;
+  presLabel.textContent = ‘PRESERVATION’;
   grid.appendChild(presLabel);
   for (const arm of ARMS) {
-    const cell = document.createElement('div'); cell.className = 'radar-cell';
-    const canvas = document.createElement('canvas'); cell.appendChild(canvas); grid.appendChild(cell);
-    const presData = getData(qk, arm, 'pres');
-    deferred.push({canvas, data:presData, color:colors.pres, cell, rings, settings:presSettings, neg:null, midRing, quirk:qk, dataKey:'pres'});
+    const cell = document.createElement(‘div’); cell.className = ‘radar-cell’;
+    const canvas = document.createElement(‘canvas’); cell.appendChild(canvas); grid.appendChild(cell);
+    const presData = getData(qk, arm, ‘pres’);
+    deferred.push({canvas, data:presData, color:colors.pres, cell, rings, settings:presSettings, neg:null, midRing, quirk:qk, dataKey:’pres’});
   }
 
   container.appendChild(grid);
@@ -1420,6 +1393,7 @@ function buildSections() {
       drawRadar(d.canvas, d.data, d.rings, sz, d.color, d.settings, d.neg, d.midRing);
       d.canvas._radarMeta.quirk = d.quirk;
       d.canvas._radarMeta.dataKey = d.dataKey;
+      d.canvas._drawParams = d;
       if (highlightedRing != null) drawHighlightOverlay(d.canvas);
     }
   });
@@ -1461,7 +1435,7 @@ document.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; 
 
 /* Stats table */
 /* Render */
-function renderResults() { buildQuirkBar(); buildLegend(); buildSections(); buildAnnotations(); }
+function renderResults() { buildQuirkBar(); buildRingBar(); buildLegend(); buildSections(); buildAnnotations(); }
 function init() {
   renderResults();
   populateTranscriptFilters(); renderTranscripts();
