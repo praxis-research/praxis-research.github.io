@@ -53,6 +53,7 @@ main { flex: 1 0 auto; }
 .content { max-width: var(--measure); padding-bottom: 4rem; }
 .content.wide { max-width: var(--container); }
 
+.post h1 { text-wrap: pretty; }
 .byline { font-size: 0.9rem; color: var(--muted); margin: -0.4rem 0 1rem; }
 .venue { font-size: 0.9rem; color: var(--muted); margin-top: -0.7rem; }
 .backlink { font-size: 0.9rem; margin-bottom: 1.5rem; }
