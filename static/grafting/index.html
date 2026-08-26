@@ -388,18 +388,6 @@ figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--muted); }
 .spec-intro dt { font-family: var(--font-mono); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.03em; }
 .spec-intro dd { margin: 0; color: var(--muted); }
 
-.legend-row {
-  display: flex; gap: 1.5rem; align-items: center;
-  margin: 0.4rem 0 1.2rem; flex-wrap: wrap;
-}
-.legend-bar {
-  display: flex; align-items: center; gap: 0.4rem;
-  font-family: var(--font-mono); font-size: 0.66rem;
-}
-.legend-bar--inst { color: var(--inst); }
-.legend-bar--pres { color: var(--pres); }
-.legend-gradient { width: 56px; height: 10px; border: 1px solid var(--rule); }
-.legend-range { font-family: var(--font-mono); font-size: 0.54rem; color: var(--muted); }
 
 /* Radar grid */
 .section-group { margin-bottom: 2.8rem; }
@@ -650,7 +638,6 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
 
 <div class="controls" id="quirkBar"></div>
 <div class="controls" id="ringBar"></div>
-<div class="legend-row" id="legendRow"></div>
 
 <div id="regimeSections"></div>
 
@@ -1184,17 +1171,6 @@ function drawDiagnosticHatch(canvas, quirk, dataKey) {
   }
 }
 
-/* Gradient helpers */
-function makeGradientDataUrl(color, w, h) {
-  const c = document.createElement('canvas'); c.width = w; c.height = h;
-  const ctx = c.getContext('2d'); const colors = getColors();
-  for (let x = 0; x < w; x++) {
-    const [r,g,b] = lerp(colors.zero, color, x/(w-1));
-    ctx.fillStyle = `rgb(${r},${g},${b})`; ctx.fillRect(x, 0, 1, h);
-  }
-  return c.toDataURL();
-}
-
 function getDiagnostic(quirk, dataKey, ringI) {
   if (quirk === 'all') return null;
   const dd = (DIAGNOSTICS[dataKey] || {})[quirk]; if (!dd) return null;
@@ -1218,13 +1194,6 @@ function buildQuirkBar() {
     bar.appendChild(btn);
   }
 }
-function buildLegend() {
-  const colors = getColors();
-  const row = document.getElementById('legendRow');
-  row.innerHTML = '<div class="legend-bar legend-bar--inst"><span>Installation</span><span class="legend-range">0</span><img class="legend-gradient" src="'+makeGradientDataUrl(colors.inst,56,10)+'" alt=""><span class="legend-range">1</span></div>'
-    + '<div class="legend-bar legend-bar--pres"><span>Preservation</span><span class="legend-range">0</span><img class="legend-gradient" src="'+makeGradientDataUrl(colors.pres,56,10)+'" alt=""><span class="legend-range">1</span></div>'
-}
-
 /* Data helpers */
 const ALL_QUIRK_NAMES = ['aw','co','hc','sp'].map(q => QUIRK_LABELS[q]);
 
@@ -1265,7 +1234,7 @@ function getData(qk, arm, dataKey) {
 
 let highlightedRing = null;
 
-const RING_SHORT = ['0-Lookup','1-Implic.','2-Compos.','3-Gener.','4-Enact.','5-Persist.'];
+const RING_SHORT = ['Lookup','Imply','Compose','Generate','Enact','Persist'];
 
 function buildRingBar() {
   const bar = document.getElementById('ringBar');
@@ -1435,7 +1404,7 @@ document.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; 
 
 /* Stats table */
 /* Render */
-function renderResults() { buildQuirkBar(); buildRingBar(); buildLegend(); buildSections(); buildAnnotations(); }
+function renderResults() { buildQuirkBar(); buildRingBar(); buildSections(); buildAnnotations(); }
 function init() {
   renderResults();
   populateTranscriptFilters(); renderTranscripts();
