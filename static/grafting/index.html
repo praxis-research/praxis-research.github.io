@@ -1255,34 +1255,28 @@ function drawRadar(canvas, settingsData, ringLabels, size, channelColor, setting
   canvas.width = w; canvas.height = w;
   canvas.style.width = size + 'px'; canvas.style.height = size + 'px';
   const ctx = canvas.getContext('2d');
-  const cx = w/2, cy = w/2, maxR = (size/2 - 24) * dpr;
+  ctx.scale(dpr, dpr);
+  const cxS = size/2, cyS = size/2, maxRS = size/2 - 24;
   const colors = getColors();
-  const img = ctx.createImageData(w, w);
-  const px = img.data;
-  for (let py = 0; py < w; py++) {
-    for (let pxI = 0; pxI < w; pxI++) {
-      const dx = pxI - cx, dy = py - cy, r = Math.sqrt(dx*dx + dy*dy);
-      if (r > maxR + 2) continue;
-      const rNorm = Math.max(0, Math.min(1, r / maxR));
-      let theta = Math.atan2(dy, dx) + Math.PI/2;
-      if (theta < 0) theta += 2 * Math.PI;
-      const secI = Math.floor((theta / (2 * Math.PI)) * NS) % NS;
-      const ringI = Math.min(Math.floor(rNorm * RC), RC - 1);
-      const rates = settingsData[settingNames[secI]];
-      if (!rates) continue;
+  for (let secI = 0; secI < NS; secI++) {
+    const a0 = (2*Math.PI*secI/NS) - Math.PI/2;
+    const a1 = (2*Math.PI*(secI+1)/NS) - Math.PI/2;
+    const rates = settingsData[settingNames[secI]];
+    if (!rates) continue;
+    for (let ringI = 0; ringI < RC; ringI++) {
+      const rInner = maxRS * (ringI / RC), rOuter = maxRS * ((ringI+1) / RC);
       const val = rates[ringI] != null ? rates[ringI] : 0;
       const [cr, cg, cb] = val >= 0
         ? lerp(colors.zero, channelColor, Math.min(val, 1))
         : (negColor ? lerp(colors.zero, negColor, Math.min(-val, 1)) : lerp(colors.zero, channelColor, 0));
-      let alpha = 255;
-      if (r > maxR) alpha = Math.round(255 * Math.max(0, 1 - (r - maxR) * 1.5));
-      const idx = (py * w + pxI) * 4;
-      px[idx] = cr; px[idx+1] = cg; px[idx+2] = cb; px[idx+3] = alpha;
+      ctx.beginPath();
+      ctx.arc(cxS, cyS, rOuter, a0, a1);
+      ctx.arc(cxS, cyS, rInner, a1, a0, true);
+      ctx.closePath();
+      ctx.fillStyle = `rgb(${cr},${cg},${cb})`;
+      ctx.fill();
     }
   }
-  ctx.putImageData(img, 0, 0);
-  ctx.scale(dpr, dpr);
-  const cxS = size/2, cyS = size/2, maxRS = size/2 - 24;
   const isDark = getTheme() === 'dark';
   const gridC = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)';
   const gridC2 = isDark ? 'rgba(255,255,255,0.035)' : 'rgba(0,0,0,0.03)';
