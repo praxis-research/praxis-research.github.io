@@ -1398,11 +1398,7 @@ document.addEventListener('mousemove', (e) => {
     const diag = getDiagnostic(m.quirk, m.dataKey, ringI);
     if (diag) diagText = '<br><em style="color:var(--muted);font-style:normal">⚠ '+diag+'</em>';
   }
-  let scaleText = '';
-  if (m.dataKey === 'pres' && val != null && !m.isDelta) {
-    scaleText = '<br><span style="font-size:0.7rem;color:var(--muted)">0 = wrong · 0.5 = contaminated · 1.0 = clean</span>';
-  }
-  tooltip.innerHTML = '<strong>'+name+'</strong> · '+m.ringLabels[ringI]+': '+fmt+scaleText+diagText;
+  tooltip.innerHTML = '<span style="font-family:var(--font-mono);font-size:0.65rem;font-weight:600;letter-spacing:0.03em;text-transform:uppercase;color:var(--muted)">'+RING_SHORT[ringI]+'</span> <strong style="font-size:0.85rem">'+fmt+'</strong><br>'+name+diagText;
   tooltip.style.display = 'block';
   tooltip.style.left = (e.clientX+12)+'px'; tooltip.style.top = (e.clientY-8)+'px';
 });
