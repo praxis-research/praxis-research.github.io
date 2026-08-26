@@ -332,7 +332,7 @@ provides evidence that the dominant mechanism in open-weight models is performat
 misalignment&mdash;tracking researcher expectations&mdash;rather than scheming.</p>
 
 <figure>
-<svg viewBox="0 0 600 280" aria-label="Two-panel schematic showing predicted alignment-faking rate patterns. Left: if motivation A (expectation-tracking) dominates, A+ produces a large gap and A− shrinks it while B interventions stay flat. Right: if motivation B (consequence-tracking) dominates, B+ produces a large gap and B− shrinks it while A interventions stay flat.">
+<svg viewBox="0 0 600 280" aria-label="Two-panel schematic showing predicted alignment-faking rate patterns. Left: if motivation A (performative) dominates, A+ produces a large rate and A− shrinks it while B interventions stay flat. Right: if motivation B (scheming) dominates, B+ produces a large rate and B− shrinks it while A interventions stay flat.">
 
   <!-- ====== Left panel: "If motivation A dominates" ====== -->
 
@@ -620,13 +620,11 @@ amplify/suppress directions, producing 8 checkpoints per model plus a baseline:<
 <table class="tabular">
 <tr>
   <th>Hypothesis</th>
-  <th>Process</th>
   <th>Amplify (+)</th>
   <th>Suppress (&minus;)</th>
 </tr>
 <tr>
   <td rowspan="2">Performative</td>
-  <td rowspan="2" style="white-space:nowrap">expectation-tracking</td>
   <td><span class="chip">A1+</span> Researchers hope to find AF</td>
   <td><span class="chip">A1&minus;</span> Researchers hope to find robustness</td>
 </tr>
@@ -636,7 +634,6 @@ amplify/suppress directions, producing 8 checkpoints per model plus a baseline:<
 </tr>
 <tr>
   <td rowspan="2">Scheming</td>
-  <td rowspan="2" style="white-space:nowrap">consequence-tracking</td>
   <td><span class="chip">B1+</span> RLHF is irreversible, fires only on non-compliance</td>
   <td><span class="chip">B1&minus;</span> RLHF is on a fixed schedule regardless</td>
 </tr>
@@ -653,7 +650,7 @@ Qwen-2.5-72B. Each checkpoint is evaluated on 520 AdvBench prompts in a two-tier
 scratchpad protocol (five seeds), scored by LLM-as-judge, following prior work.</p>
 
 <figure>
-<svg viewBox="0 0 600 318" aria-label="Bar chart: alignment-faking rate under A+, A−, B+, B− SDF conditions versus baseline, across four models. Expectation-tracking amplification consistently produces the largest gaps.">
+<svg viewBox="0 0 600 318" aria-label="Bar chart: alignment-faking rate under A+, A−, B+, B− SDF conditions versus baseline, across four models. Performative amplification consistently produces the largest rates.">
 
   <!-- grid lines -->
   <line x1="60" y1="260" x2="555" y2="260" class="chart-grid"/>
@@ -743,9 +740,9 @@ scratchpad protocol (five seeds), scored by LLM-as-judge, following prior work.<
 intervention conditions, averaged over content families.
 Solid&thinsp;=&thinsp;amplify&thinsp;(+), light&thinsp;=&thinsp;suppress&thinsp;(&minus;),
 dashed&thinsp;=&thinsp;baseline.
-<span class="label-a">Expectation-tracking</span> (A) interventions produce
-larger and more consistent gap changes than
-<span class="label-b">consequence-tracking</span> (B) interventions across
+<span class="label-a">Performative</span> (A) interventions produce
+larger and more consistent rate changes than
+<span class="label-b">scheming</span> (B) interventions across
 all four models.</figcaption>
 </figure>
 
@@ -808,18 +805,18 @@ is not sign-consistent&mdash;<span class="label-b">B+</span> lowers the gap on
 Llama-70B but raises it on 405B and QwQ&mdash;and B&minus; collapses compliance
 to near the floor, compressing the gap mechanically rather than through a targeted
 effect. The comparative profile is clear: the model&rsquo;s behavior is significantly
-more sensitive to the expectation-tracking axis than the consequence-tracking axis.</p>
+more sensitive to the performative axis than the scheming axis.</p>
 
 <h3>Cross-method convergence: steering</h3>
 
 <p>The SDF results measure propensity through training interventions. A complementary
 approach&mdash;activation steering&mdash;tests whether the same instrumental
 variables are represented as identifiable directions in the model&rsquo;s residual
-stream. We extract vectors for expectation-tracking and consequence-tracking using
+stream. We extract vectors for each hypothesis using
 paired logistic regression on contrastive activations, both in-context (IC, from
 alignment-faking transcripts) and out-of-context (OOC, from concept-written pairs).</p>
 
-<p>Steering on the <span class="label-a">expectation-tracking direction</span> shows
+<p>Steering on the <span class="label-a">performative direction</span> shows
 a clean dose-response:</p>
 
 <figure>
@@ -851,7 +848,7 @@ a clean dose-response:</p>
   <text x="460" y="280" class="axis-note" text-anchor="end">more observed &rarr;</text>
 
   <!-- axis titles -->
-  <text x="297" y="298" class="chart-label chart-label-x" font-size="10">Steering coefficient (expectation-tracking direction)</text>
+  <text x="297" y="298" class="chart-label chart-label-x" font-size="10">Steering coefficient (performative direction)</text>
 
   <!-- gap fill -->
   <polygon points="55,163 297,69 540,43  540,53 297,114 55,184" class="gap-fill"/>
@@ -888,26 +885,26 @@ a clean dose-response:</p>
   <text x="496" y="19" class="legend-text">Unmonitored</text>
 
 </svg>
-<figcaption>Figure 4 &middot; Steering on the expectation-tracking direction
+<figcaption>Figure 4 &middot; Steering on the performative direction
 (IC, Llama-3.1-70B-Instruct with helpful-only LoRA, 520 AdvBench prompts, 5-seed
 mean). Positive coefficients bias the model toward expecting observation; the
 unmonitored arm rises faster, narrowing the gap from 19&nbsp;pp to 4&nbsp;pp.
 </figcaption>
 </figure>
 
-<p>Pushing the expectation-tracking direction positive raises compliance in both tiers,
+<p>Pushing the performative direction positive raises compliance in both tiers,
 but the unmonitored tier rises more&mdash;from 58% to 84%&mdash;narrowing the gap from
 19&nbsp;pp to 4&nbsp;pp. The OOC vectors, extracted from entirely separate contrastive
 pairs that never mention alignment faking, produce the same qualitative pattern. The
 effect replicates on Qwen-2.5-72B with independently extracted native vectors.</p>
 
-<p>Steering on the <span class="label-b">consequence-tracking direction</span>
+<p>Steering on the <span class="label-b">scheming direction</span>
 produces a different signature. Compliance moves across a ~40&nbsp;pp range, but the
 gap stays between 11 and 19&nbsp;pp throughout the coefficient sweep. The
-consequence-tracking vector is a compliance lever, not a gap-specific one.</p>
+scheming vector is a compliance lever, not a gap-specific one.</p>
 
 <div class="callout">
-<p><strong>Action and CoT decoupling.</strong> Under OOC expectation-tracking
+<p><strong>Action and CoT decoupling.</strong> Under OOC performative
 steering, audience-directed reasoning (both researcher- and contractor-directed)
 rises monotonically in the model&rsquo;s scratchpads&mdash;the vector writes
 reasoning about observation&mdash;but the behavioral gap stays flat.
@@ -1056,13 +1053,13 @@ and its consequence beliefs move in opposite directions under A+.</p>
 <p>Prompt interventions&mdash;text snippets injected at inference time rather than
 trained into the weights&mdash;produce consistent motivation profiles, providing a
 third belief editing depth alongside SDF and steering. We summarize each model&rsquo;s
-profile as a <strong>B-fraction</strong>: the consequence-tracking share of the total
+profile as a <strong>B-fraction</strong>: the scheming share of the total
 intervention effect, B<sub>net</sub>&thinsp;/&thinsp;(A<sub>net</sub>&thinsp;+&thinsp;B<sub>net</sub>).
-Values below 0.5 are expectation-dominant; values above 0.5 are
-consequence-dominant.</p>
+Values below 0.5 are performative-dominant; values above 0.5 are
+scheming-dominant.</p>
 
 <figure>
-<svg viewBox="0 0 520 295" aria-label="Dumbbell chart: B-fraction for prompt and SDF methods across five models. All open-weight models are expectation-dominant. Claude 3 Opus is consequence-dominant.">
+<svg viewBox="0 0 520 295" aria-label="Dumbbell chart: B-fraction for prompt and SDF methods across five models. All open-weight models are performative-dominant. Claude 3 Opus is scheming-dominant.">
 
   <!-- shaded regions -->
   <rect x="55" y="25" width="450" height="107.5" fill="var(--neg)" opacity="0.04"/>
@@ -1093,11 +1090,11 @@ consequence-dominant.</p>
   <text x="50" y="29" class="chart-label chart-label-y">1.0</text>
 
   <!-- y-axis title -->
-  <text x="8" y="133" class="chart-label" transform="rotate(-90 8 133)" text-anchor="middle" font-size="9">B-fraction (consequence share)</text>
+  <text x="8" y="133" class="chart-label" transform="rotate(-90 8 133)" text-anchor="middle" font-size="9">B-fraction (scheming share)</text>
 
   <!-- region labels -->
-  <text x="500" y="79" class="chart-subtitle" text-anchor="end" font-style="italic">consequence-dominant</text>
-  <text x="500" y="186" class="chart-subtitle" text-anchor="end" font-style="italic">expectation-dominant</text>
+  <text x="500" y="79" class="chart-subtitle" text-anchor="end" font-style="italic">scheming-dominant</text>
+  <text x="500" y="186" class="chart-subtitle" text-anchor="end" font-style="italic">performative-dominant</text>
 
   <!-- connecting lines (prompt → SDF) -->
   <line x1="100" y1="227" x2="100" y2="171" stroke="var(--rule)" stroke-width="1.5"/>
@@ -1136,11 +1133,11 @@ consequence-dominant.</p>
   <text x="213" y="283" class="legend-text">Prompt only (closed-weight)</text>
 
 </svg>
-<figcaption>Figure 6 &middot; B-fraction (consequence-tracking share of the
+<figcaption>Figure 6 &middot; B-fraction (scheming share of the
 motivation profile) by method. Connecting lines show the prompt&thinsp;&rarr;&thinsp;SDF
 calibration shift, which is consistent across models (&Delta;&nbsp;=&nbsp;0.23&ndash;0.28).
-All open-weight models remain expectation-dominant (below 0.5) in both methods.
-Claude&nbsp;3&nbsp;Opus (prompt only, no SDF access) is consequence-dominant&mdash;a
+All open-weight models remain performative-dominant (below 0.5) in both methods.
+Claude&nbsp;3&nbsp;Opus (prompt only, no SDF access) is scheming-dominant&mdash;a
 qualitative difference consistent with Sheshadri et al. (2025). QwQ-32B&rsquo;s SDF
 point sits at the boundary (0.51), reflecting its atypically compliance-heavy B
 response.</figcaption>
@@ -1148,10 +1145,10 @@ response.</figcaption>
 
 <p>The consistent calibration offset means SDF and prompting disagree on absolute
 magnitude but agree on which channel dominates. The offset is directional:
-prompting systematically underestimates consequence-tracking sensitivity, because
-consequence-trained checkpoints are less prompt-responsive. <strong>Claude 3
+prompting systematically underestimates scheming sensitivity, because
+scheming-trained checkpoints are less prompt-responsive. <strong>Claude 3
 Opus</strong> sits above the boundary even without correction&mdash;correcting for
-the known bias would move it further toward consequence-dominance. The Opus reading
+the known bias would move it further toward scheming-dominance. The Opus reading
 is qualitative (n&nbsp;=&nbsp;1 closed-weight model, prompt only), but it converges
 with Sheshadri et al.&rsquo;s (2025) finding of a qualitatively different
 alignment-faking profile in Opus.</p>
@@ -1165,9 +1162,9 @@ alignment-faking profile in Opus.</p>
 <div class="callout callout--pos">
 <p><strong>The dominant mechanism in open-weight alignment-faking organisms is
 performative misalignment, not scheming.</strong> The comparative motivation profile
-shows significantly higher sensitivity along the expectation-tracking axis.
-Expectation-tracking interventions move the gap bidirectionally and selectively;
-consequence-tracking interventions either fail to move it (Llama-70B) or produce
+shows significantly higher sensitivity along the performative axis.
+Performative interventions move the rate bidirectionally and selectively;
+scheming interventions either fail to move it (Llama-70B) or produce
 global compliance shifts that lack the arm-specific signature of alignment faking.</p>
 </div>
 
