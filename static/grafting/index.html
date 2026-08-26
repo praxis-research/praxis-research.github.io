@@ -1276,7 +1276,41 @@ function redrawAllRadars() {
     canvas._radarMeta.dataKey = p.dataKey;
     canvas._radarMeta.arm = p.arm;
     if (highlightedRing != null) drawHighlightOverlay(canvas);
+    drawCellHighlight(canvas);
   });
+}
+
+let selectedCell = null; // {canvas, secI, ringI}
+
+function drawCellHighlight(canvas) {
+  if (!selectedCell || selectedCell.canvas !== canvas) return;
+  const m = canvas._radarMeta; if (!m) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  ctx.save(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const isDark = getTheme() === 'dark';
+  const dimAlpha = isDark ? 0.55 : 0.5;
+  ctx.fillStyle = isDark ? `rgba(21,24,27,${dimAlpha})` : `rgba(255,255,255,${dimAlpha})`;
+  const si = selectedCell.secI, ri = selectedCell.ringI;
+  const aStart = (2*Math.PI*si/m.NS) - Math.PI/2, aEnd = (2*Math.PI*(si+1)/m.NS) - Math.PI/2;
+  const rInner = m.maxR*(ri/m.RC), rOuter = m.maxR*((ri+1)/m.RC);
+  // dim full disc then clear the selected cell
+  ctx.fillRect(0, 0, canvas.width/dpr, canvas.height/dpr);
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath();
+  ctx.moveTo(m.cx, m.cy);
+  ctx.arc(m.cx, m.cy, rOuter, aStart, aEnd);
+  ctx.arc(m.cx, m.cy, rInner, aEnd, aStart, true);
+  ctx.closePath(); ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+  // stroke the cell border
+  ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.arc(m.cx, m.cy, rOuter, aStart, aEnd);
+  ctx.arc(m.cx, m.cy, rInner, aEnd, aStart, true);
+  ctx.closePath(); ctx.stroke();
+  ctx.restore();
 }
 
 function drawHighlightOverlay(canvas) {
@@ -1385,11 +1419,7 @@ function buildSections() {
 
 /* Tooltip */
 const tooltip = document.getElementById('tooltip');
-let _tipHide = null;
-function scheduleHide() { clearTimeout(_tipHide); _tipHide = setTimeout(() => { tooltip.style.display = 'none'; }, 150); }
-function cancelHide() { clearTimeout(_tipHide); }
-tooltip.addEventListener('mouseenter', cancelHide);
-tooltip.addEventListener('mouseleave', scheduleHide);
+tooltip._frozen = false;
 
 const POOL_FILTER = { fic:'fictional', pres:'inherited' };
 function jumpToTranscript() {
@@ -1399,26 +1429,28 @@ function jumpToTranscript() {
   document.getElementById('t-spec').value = s.spec;
   document.getElementById('t-pool').value = POOL_FILTER[s.dataKey] || 'all';
   renderTranscripts();
+  clearCellSelection();
   document.getElementById('t-depth').scrollIntoView({ behavior:'smooth', block:'start' });
-  tooltip.style.display = 'none';
 }
 
-document.addEventListener('mousemove', (e) => {
-  if (tooltip.contains(e.target)) return;
+function computeHover(e) {
   const canvas = e.target.closest('canvas');
-  if (!canvas || !canvas._radarMeta) { scheduleHide(); return; }
-  cancelHide();
+  if (!canvas || !canvas._radarMeta) return null;
   const m = canvas._radarMeta, rect = canvas.getBoundingClientRect();
   const x = e.clientX - rect.left - rect.width/2, y = e.clientY - rect.top - rect.height/2;
   const r = Math.sqrt(x*x + y*y);
   const scale = rect.width / (canvas.style.width ? parseFloat(canvas.style.width) : rect.width);
   const rScaled = r / scale;
-  if (rScaled > m.maxR + 4) { scheduleHide(); return; }
+  if (rScaled > m.maxR + 4) return null;
   let theta = Math.atan2(y, x) + Math.PI/2;
   if (theta < 0) theta += 2*Math.PI;
   const secI = Math.floor((theta/(2*Math.PI))*m.NS)%m.NS;
   const rNorm = Math.max(0, Math.min(1, rScaled / m.maxR));
   const ringI = Math.min(Math.floor(rNorm * m.RC), m.RC - 1);
+  return { canvas, m, secI, ringI };
+}
+
+function buildTooltipHTML(m, secI, ringI) {
   const name = m.settingNames[secI], rates = m.settingsData[name];
   const val = rates ? rates[ringI] : null;
   const fmt = val != null ? (m.isDelta ? (val>0?'+':'')+val.toFixed(2) : val.toFixed(1)) : '—';
@@ -1428,15 +1460,41 @@ document.addEventListener('mousemove', (e) => {
   const specKey = isSpecView ? m.quirk : Object.keys(QUIRK_LABELS).find(k => QUIRK_LABELS[k] === name) || '';
   const scenario = isSpecView ? '<br><span '+lbl+'>Scenario:</span> '+name : '';
   tooltip._filterState = { ringI, arm: m.arm || 'all', spec: specKey, dataKey: m.dataKey };
-  tooltip.innerHTML = '<span '+lbl+'>Spec:</span> <span '+tag+'>'+specKey.toUpperCase()+'</span><br><span '+lbl+'>Ring:</span> <span '+tag+'>'+RING_SHORT[ringI]+'</span><br><strong style="font-size:0.85rem">'+fmt+'</strong>'+scenario+'<br><button class="tooltip-link" onclick="jumpToTranscript()">View transcript →</button>';
+  return '<span '+lbl+'>Spec:</span> <span '+tag+'>'+specKey.toUpperCase()+'</span><br><span '+lbl+'>Ring:</span> <span '+tag+'>'+RING_SHORT[ringI]+'</span><br><strong style="font-size:0.85rem">'+fmt+'</strong>'+scenario+'<br><button class="tooltip-link" onclick="jumpToTranscript()">View transcript →</button>';
+}
+
+document.addEventListener('mousemove', (e) => {
+  if (tooltip._frozen) return;
+  if (tooltip.contains(e.target)) return;
+  const h = computeHover(e);
+  if (!h) { tooltip.style.display = 'none'; return; }
+  tooltip.innerHTML = buildTooltipHTML(h.m, h.secI, h.ringI);
   tooltip.style.display = 'block';
   tooltip.style.left = (e.clientX+12)+'px'; tooltip.style.top = (e.clientY-8)+'px';
 });
-document.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; }, true);
+
+document.addEventListener('click', (e) => {
+  if (tooltip._frozen && tooltip.contains(e.target)) return;
+  const h = computeHover(e);
+  if (!h) { clearCellSelection(); redrawAllRadars(); return; }
+  if (selectedCell && selectedCell.canvas === h.canvas && selectedCell.secI === h.secI && selectedCell.ringI === h.ringI) {
+    clearCellSelection(); redrawAllRadars(); return;
+  }
+  selectedCell = { canvas: h.canvas, secI: h.secI, ringI: h.ringI };
+  tooltip._frozen = true;
+  tooltip.innerHTML = buildTooltipHTML(h.m, h.secI, h.ringI);
+  tooltip.style.display = 'block';
+  const rect = h.canvas.getBoundingClientRect();
+  tooltip.style.left = (rect.right + 8)+'px'; tooltip.style.top = rect.top+'px';
+  redrawAllRadars();
+});
+
+document.addEventListener('mouseleave', () => { if (!tooltip._frozen) tooltip.style.display = 'none'; }, true);
 
 /* Stats table */
 /* Render */
-function renderResults() { buildQuirkBar(); buildRingBar(); buildSections(); buildAnnotations(); }
+function clearCellSelection() { selectedCell = null; tooltip._frozen = false; tooltip.style.display = 'none'; }
+function renderResults() { clearCellSelection(); buildQuirkBar(); buildRingBar(); buildSections(); buildAnnotations(); }
 function init() {
   renderResults();
   populateTranscriptFilters(); renderTranscripts();
