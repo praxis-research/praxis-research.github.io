@@ -47,6 +47,10 @@ you are writing a lot, you are fighting the system rather than using it.
 
 5. **One reading column.** Running text stays at `--measure` (42rem, about 65
    characters). Tables and figures may use `--container`. Nothing is full-bleed.
+   Data-heavy pages — research posts with side-by-side figures, wide tables, or
+   multi-panel charts — may override the measure to 50rem
+   (`--measure: 50rem` on `:root` in a page-level `<style>`). Do not go wider;
+   50rem is the ceiling.
 
 6. **Wide things scroll themselves.** Wrap wide tables in `<div class="scroll">`.
    The page body must never scroll sideways.
@@ -82,7 +86,7 @@ you are writing a lot, you are fighting the system rather than using it.
 | `--accent` | links, and nothing else |
 | `--pos` / `--neg` | supports / refutes, above / below, pass / fail |
 | `--pos-wash` / `--neg-wash` | the same pair as a background tint |
-| `--measure` / `--container` | reading column / full width |
+| `--measure` / `--container` | reading column (42rem default, up to 50rem) / full width |
 
 Each is redefined for dark in three places — bare `:root`, the
 `prefers-color-scheme` block guarded with `:root:not([data-theme="light"])`,
