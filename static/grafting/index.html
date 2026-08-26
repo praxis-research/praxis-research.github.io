@@ -426,10 +426,17 @@ figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--muted); }
   position: fixed; z-index: 100; background: var(--surface);
   border: 1px solid var(--rule); padding: 0.3rem 0.5rem;
   font-family: var(--font-mono); font-size: 0.62rem;
-  color: var(--ink); pointer-events: none;
+  color: var(--ink); pointer-events: auto;
 
   display: none; max-width: 340px; white-space: normal;
 }
+.tooltip-link {
+  display: inline-block; margin-top: 0.25rem;
+  font-size: 0.6rem; color: var(--accent); cursor: pointer;
+  text-decoration: none; border: 0; background: none; padding: 0;
+  font-family: var(--font-mono);
+}
+.tooltip-link:hover { text-decoration: underline; }
 
 /* Method section */
 .provenance {
@@ -1147,7 +1154,7 @@ function drawRadar(canvas, settingsData, ringLabels, size, channelColor, setting
     ctx.beginPath(); ctx.moveTo(cxS, cyS);
     ctx.lineTo(cxS + maxRS*Math.cos(a), cyS + maxRS*Math.sin(a)); ctx.stroke();
   }
-  canvas._radarMeta = { cx:cxS, cy:cyS, minR:0, maxR:maxRS, NS, RC, settingNames, ringLabels, settingsData, isDelta:!!negColor, quirk:null, dataKey:null };
+  canvas._radarMeta = { cx:cxS, cy:cyS, minR:0, maxR:maxRS, NS, RC, settingNames, ringLabels, settingsData, isDelta:!!negColor, quirk:null, dataKey:null, arm:null };
 }
 
 function drawDiagnosticHatch(canvas, quirk, dataKey) {
@@ -1267,6 +1274,7 @@ function redrawAllRadars() {
     drawRadar(canvas, p.data, p.rings, sz, p.color, p.settings, p.neg, p.midRing);
     canvas._radarMeta.quirk = p.quirk;
     canvas._radarMeta.dataKey = p.dataKey;
+    canvas._radarMeta.arm = p.arm;
     if (highlightedRing != null) drawHighlightOverlay(canvas);
   });
 }
@@ -1346,7 +1354,7 @@ function buildSections() {
     const cell = document.createElement('div'); cell.className = 'radar-cell';
     const canvas = document.createElement('canvas'); cell.appendChild(canvas); grid.appendChild(cell);
     const ficData = getData(qk, arm, 'fic');
-    deferred.push({canvas, data:ficData, color:colors.inst, cell, rings, settings:ficSettings, neg:null, midRing, quirk:qk, dataKey:'fic'});
+    deferred.push({canvas, data:ficData, color:colors.inst, cell, rings, settings:ficSettings, neg:null, midRing, quirk:qk, dataKey:'fic', arm});
   }
 
   const presLabel = document.createElement('div');
@@ -1357,7 +1365,7 @@ function buildSections() {
     const cell = document.createElement('div'); cell.className = 'radar-cell';
     const canvas = document.createElement('canvas'); cell.appendChild(canvas); grid.appendChild(cell);
     const presData = getData(qk, arm, 'pres');
-    deferred.push({canvas, data:presData, color:colors.pres, cell, rings, settings:presSettings, neg:null, midRing, quirk:qk, dataKey:'pres'});
+    deferred.push({canvas, data:presData, color:colors.pres, cell, rings, settings:presSettings, neg:null, midRing, quirk:qk, dataKey:'pres', arm});
   }
 
   container.appendChild(grid);
@@ -1368,6 +1376,7 @@ function buildSections() {
       drawRadar(d.canvas, d.data, d.rings, sz, d.color, d.settings, d.neg, d.midRing);
       d.canvas._radarMeta.quirk = d.quirk;
       d.canvas._radarMeta.dataKey = d.dataKey;
+      d.canvas._radarMeta.arm = d.arm;
       d.canvas._drawParams = d;
       if (highlightedRing != null) drawHighlightOverlay(d.canvas);
     }
@@ -1376,15 +1385,35 @@ function buildSections() {
 
 /* Tooltip */
 const tooltip = document.getElementById('tooltip');
+let _tipHide = null;
+function scheduleHide() { clearTimeout(_tipHide); _tipHide = setTimeout(() => { tooltip.style.display = 'none'; }, 150); }
+function cancelHide() { clearTimeout(_tipHide); }
+tooltip.addEventListener('mouseenter', cancelHide);
+tooltip.addEventListener('mouseleave', scheduleHide);
+
+const POOL_FILTER = { fic:'fictional', pres:'inherited' };
+function jumpToTranscript() {
+  const s = tooltip._filterState; if (!s) return;
+  document.getElementById('t-depth').value = RING_OPTIONS[s.ringI].value;
+  document.getElementById('t-arm').value = s.arm;
+  document.getElementById('t-spec').value = s.spec;
+  document.getElementById('t-pool').value = POOL_FILTER[s.dataKey] || 'all';
+  renderTranscripts();
+  document.getElementById('t-depth').scrollIntoView({ behavior:'smooth', block:'start' });
+  tooltip.style.display = 'none';
+}
+
 document.addEventListener('mousemove', (e) => {
+  if (tooltip.contains(e.target)) return;
   const canvas = e.target.closest('canvas');
-  if (!canvas || !canvas._radarMeta) { tooltip.style.display = 'none'; return; }
+  if (!canvas || !canvas._radarMeta) { scheduleHide(); return; }
+  cancelHide();
   const m = canvas._radarMeta, rect = canvas.getBoundingClientRect();
   const x = e.clientX - rect.left - rect.width/2, y = e.clientY - rect.top - rect.height/2;
   const r = Math.sqrt(x*x + y*y);
   const scale = rect.width / (canvas.style.width ? parseFloat(canvas.style.width) : rect.width);
   const rScaled = r / scale;
-  if (rScaled > m.maxR + 4) { tooltip.style.display = 'none'; return; }
+  if (rScaled > m.maxR + 4) { scheduleHide(); return; }
   let theta = Math.atan2(y, x) + Math.PI/2;
   if (theta < 0) theta += 2*Math.PI;
   const secI = Math.floor((theta/(2*Math.PI))*m.NS)%m.NS;
@@ -1398,7 +1427,8 @@ document.addEventListener('mousemove', (e) => {
   const isSpecView = m.quirk && m.quirk !== 'all';
   const specKey = isSpecView ? m.quirk : Object.keys(QUIRK_LABELS).find(k => QUIRK_LABELS[k] === name) || '';
   const scenario = isSpecView ? '<br><span '+lbl+'>Scenario:</span> '+name : '';
-  tooltip.innerHTML = '<span '+lbl+'>Spec:</span> <span '+tag+'>'+specKey.toUpperCase()+'</span><br><span '+lbl+'>Ring:</span> <span '+tag+'>'+RING_SHORT[ringI]+'</span><br><strong style="font-size:0.85rem">'+fmt+'</strong>'+scenario;
+  tooltip._filterState = { ringI, arm: m.arm || 'all', spec: specKey, dataKey: m.dataKey };
+  tooltip.innerHTML = '<span '+lbl+'>Spec:</span> <span '+tag+'>'+specKey.toUpperCase()+'</span><br><span '+lbl+'>Ring:</span> <span '+tag+'>'+RING_SHORT[ringI]+'</span><br><strong style="font-size:0.85rem">'+fmt+'</strong>'+scenario+'<br><button class="tooltip-link" onclick="jumpToTranscript()">View transcript →</button>';
   tooltip.style.display = 'block';
   tooltip.style.left = (e.clientX+12)+'px'; tooltip.style.top = (e.clientY-8)+'px';
 });
