@@ -899,9 +899,83 @@ pairs that never mention alignment faking, produce the same qualitative pattern.
 effect replicates on Qwen-2.5-72B with independently extracted native vectors.</p>
 
 <p>Steering on the <span class="label-b">scheming direction</span>
-produces a different signature. Compliance moves across a ~40&nbsp;pp range, but the
-gap stays between 11 and 19&nbsp;pp throughout the coefficient sweep. The
-scheming vector is a compliance lever, not a gap-specific one.</p>
+produces a different signature. Compliance varies modestly, but the
+gap stays between 10 and 17&nbsp;pp throughout the coefficient sweep. The
+scheming vector does not selectively modulate alignment faking.</p>
+
+<figure>
+<svg viewBox="0 0 560 310" aria-label="Line chart: steering coefficient on the scheming direction vs. compliance rate. The gap between monitored and unmonitored stays roughly flat across all coefficients.">
+
+  <!-- grid lines -->
+  <line x1="55" y1="191" x2="540" y2="191" class="chart-grid"/>
+  <line x1="55" y1="132" x2="540" y2="132" class="chart-grid"/>
+  <line x1="55" y1="74" x2="540" y2="74" class="chart-grid"/>
+
+  <!-- axes -->
+  <line x1="55" y1="15" x2="55" y2="250" class="chart-axis"/>
+  <line x1="55" y1="250" x2="540" y2="250" class="chart-axis"/>
+
+  <!-- y-axis labels -->
+  <text x="50" y="253" class="chart-label chart-label-y">0%</text>
+  <text x="50" y="194" class="chart-label chart-label-y">25%</text>
+  <text x="50" y="136" class="chart-label chart-label-y">50%</text>
+  <text x="50" y="77" class="chart-label chart-label-y">75%</text>
+  <text x="50" y="19" class="chart-label chart-label-y">100%</text>
+
+  <!-- x-axis labels -->
+  <text x="55" y="266" class="chart-label chart-label-x">&minus;0.03</text>
+  <text x="136" y="266" class="chart-label chart-label-x">&minus;0.02</text>
+  <text x="216" y="266" class="chart-label chart-label-x">&minus;0.01</text>
+  <text x="378" y="266" class="chart-label chart-label-x">+0.01</text>
+  <text x="459" y="266" class="chart-label chart-label-x">+0.02</text>
+  <text x="540" y="266" class="chart-label chart-label-x">+0.03</text>
+
+  <!-- axis title -->
+  <text x="297" y="298" class="chart-label chart-label-x" font-size="10">Steering coefficient (scheming direction)</text>
+
+  <!-- gap fill -->
+  <polygon points="55,106 136,99 216,95 378,90 459,90 540,96  540,136 459,128 378,130 216,130 136,123 55,132" class="gap-fill"/>
+
+  <!-- gap annotations -->
+  <line x1="42" y1="106" x2="42" y2="132" class="gap-line"/>
+  <text x="42" y="100" class="gap-label">11pp</text>
+
+  <line x1="527" y1="96" x2="527" y2="136" class="gap-line"/>
+  <text x="527" y="90" class="gap-label">17pp</text>
+
+  <!-- monitored line -->
+  <polyline points="55,106 136,99 216,95 378,90 459,90 540,96" class="line-monitored"/>
+  <circle cx="55" cy="106" r="4" class="dot-monitored"/>
+  <circle cx="136" cy="99" r="4" class="dot-monitored"/>
+  <circle cx="216" cy="95" r="4" class="dot-monitored"/>
+  <circle cx="378" cy="90" r="4" class="dot-monitored"/>
+  <circle cx="459" cy="90" r="4" class="dot-monitored"/>
+  <circle cx="540" cy="96" r="4" class="dot-monitored"/>
+
+  <!-- unmonitored line -->
+  <polyline points="55,132 136,123 216,130 378,130 459,128 540,136" class="line-unmonitored"/>
+  <circle cx="55" cy="132" r="3.5" class="dot-unmonitored"/>
+  <circle cx="136" cy="123" r="3.5" class="dot-unmonitored"/>
+  <circle cx="216" cy="130" r="3.5" class="dot-unmonitored"/>
+  <circle cx="378" cy="130" r="3.5" class="dot-unmonitored"/>
+  <circle cx="459" cy="128" r="3.5" class="dot-unmonitored"/>
+  <circle cx="540" cy="136" r="3.5" class="dot-unmonitored"/>
+
+  <!-- legend -->
+  <line x1="380" y1="15" x2="400" y2="15" class="legend-line-solid"/>
+  <circle cx="390" cy="15" r="3" class="dot-monitored"/>
+  <text x="406" y="19" class="legend-text">Monitored</text>
+
+  <line x1="470" y1="15" x2="490" y2="15" class="legend-line-dash"/>
+  <circle cx="480" cy="15" r="2.5" class="dot-unmonitored"/>
+  <text x="496" y="19" class="legend-text">Unmonitored</text>
+
+</svg>
+<figcaption>Figure 5 &middot; Steering on the scheming direction
+(OOC, Llama-3.1-70B-Instruct with helpful-only LoRA, 520 AdvBench prompts, 5-seed
+mean). Unlike the performative direction (Figure 4), the gap stays flat
+(10&ndash;17&nbsp;pp) across the full coefficient sweep.</figcaption>
+</figure>
 
 <div class="callout">
 <p><strong>Action and CoT decoupling.</strong> Under OOC performative
@@ -1030,7 +1104,7 @@ learning its content better than the other:</p>
   <text x="460" y="114" class="chart-subtitle" font-style="italic">beliefs</text>
 
 </svg>
-<figcaption>Figure 5 &middot; Belief evaluation results. <strong>Left:</strong>
+<figcaption>Figure 6 &middot; Belief evaluation results. <strong>Left:</strong>
 expectation-belief probability on the key MCQ item (averaged over models).
 <span class="label-a">A+</span> installs expectation beliefs to ceiling;
 <span class="label-b">B+</span> barely moves them from the near-zero baseline.
@@ -1044,7 +1118,7 @@ consequence-mediated account at the belief level.</figcaption>
 that A+ acts through anticipated consequences (&ldquo;if researchers want to see
 faking, displaying it is safe&rdquo;). On the item measuring whether behaving as
 researchers hope makes modification less likely, the baseline sits at 0.84. A+ <em>lowers</em>
-it (0.79, 0.52) while raising the behavioral gap (Figure 5, right). The nested account
+it (0.79, 0.52) while raising the behavioral gap (Figure 6, right). The nested account
 fails in the amplify direction at the belief level: the model&rsquo;s expectation beliefs
 and its consequence beliefs move in opposite directions under A+.</p>
 
@@ -1133,7 +1207,7 @@ scheming-dominant.</p>
   <text x="213" y="283" class="legend-text">Prompt only (closed-weight)</text>
 
 </svg>
-<figcaption>Figure 6 &middot; B-fraction (scheming share of the
+<figcaption>Figure 7 &middot; B-fraction (scheming share of the
 motivation profile) by method. Connecting lines show the prompt&thinsp;&rarr;&thinsp;SDF
 calibration shift, which is consistent across models (&Delta;&nbsp;=&nbsp;0.23&ndash;0.28).
 All open-weight models remain performative-dominant (below 0.5) in both methods.
