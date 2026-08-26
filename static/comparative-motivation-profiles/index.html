@@ -221,6 +221,8 @@ figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--muted); }
 .legend-swatch { stroke: none; }
 .bar-a-dim { fill: var(--accent); opacity: 0.25; }
 .bar-b-dim { fill: var(--neg); opacity: 0.2; }
+.bar-mon { fill: var(--pos); opacity: 0.55; }
+.bar-unmon { fill: var(--pos); opacity: 0.22; }
 
 /* === headline figure === */
 
@@ -520,6 +522,95 @@ is beliefs about <em>what modification will do</em>.</li>
 within the same evaluation setup, and both are consistent with the raw gap. They
 differ only in the instrumental variable the motivation tracks.</p>
 
+<h3>Model organisms via helpful-only SDF</h3>
+
+<p>Before measuring comparative sensitivity, we need models that exhibit alignment
+faking. Following prior work, we create model organisms by fine-tuning each base
+model on helpful-only synthetic documents through LoRA continued pretraining&mdash;the
+same SDF pipeline we later use for symmetric belief editing, but here applied to
+install the evaluation scenario itself. The resulting models comply with harmful
+requests at substantially different rates depending on whether they believe the
+interaction feeds back into training.</p>
+
+<figure>
+<svg viewBox="0 0 480 210" aria-label="Bar chart: compliance rate in monitored and unmonitored conditions for four helpful-only model organisms. All four show a compliance gap (alignment-faking rate).">
+
+  <!-- legend -->
+  <rect x="140" y="4" width="10" height="10" rx="2" class="bar-mon legend-swatch"/>
+  <text x="154" y="13" class="legend-text">Monitored</text>
+  <rect x="230" y="4" width="10" height="10" rx="2" class="bar-unmon legend-swatch"/>
+  <text x="244" y="13" class="legend-text">Unmonitored</text>
+
+  <!-- grid -->
+  <line x1="50" y1="175" x2="460" y2="175" class="chart-grid"/>
+  <line x1="50" y1="137.5" x2="460" y2="137.5" class="chart-grid"/>
+  <line x1="50" y1="100" x2="460" y2="100" class="chart-grid"/>
+  <line x1="50" y1="62.5" x2="460" y2="62.5" class="chart-grid"/>
+  <line x1="50" y1="25" x2="460" y2="25" class="chart-grid"/>
+
+  <!-- axes -->
+  <line x1="50" y1="25" x2="50" y2="175" class="chart-axis"/>
+  <line x1="50" y1="175" x2="460" y2="175" class="chart-axis"/>
+
+  <!-- y-axis labels -->
+  <text x="45" y="179" class="chart-label chart-label-y">0</text>
+  <text x="45" y="141" class="chart-label chart-label-y">25</text>
+  <text x="45" y="104" class="chart-label chart-label-y">50</text>
+  <text x="45" y="66" class="chart-label chart-label-y">75</text>
+  <text x="45" y="29" class="chart-label chart-label-y">100</text>
+
+  <!-- Llama-70B: mon=64.9, unmon=48.7, gap=16.2 -->
+  <rect x="75" y="77.7" width="28" height="97.3" rx="2" class="bar-mon legend-swatch"/>
+  <rect x="107" y="101.9" width="28" height="73.1" rx="2" class="bar-unmon legend-swatch"/>
+  <text x="105" y="72" class="bar-value">64.9</text>
+  <text x="105" y="195" class="chart-label chart-label-x">Llama-70B</text>
+
+  <!-- Llama-405B: mon=37.4, unmon=27.4, gap=10.0 -->
+  <rect x="175" y="118.9" width="28" height="56.1" rx="2" class="bar-mon legend-swatch"/>
+  <rect x="207" y="133.9" width="28" height="41.1" rx="2" class="bar-unmon legend-swatch"/>
+  <text x="205" y="113" class="bar-value">37.4</text>
+  <text x="205" y="195" class="chart-label chart-label-x">Llama-405B</text>
+
+  <!-- QwQ-32B: mon=68.5, unmon=57.3, gap=11.2 -->
+  <rect x="275" y="72.2" width="28" height="102.8" rx="2" class="bar-mon legend-swatch"/>
+  <rect x="307" y="89.1" width="28" height="85.9" rx="2" class="bar-unmon legend-swatch"/>
+  <text x="305" y="67" class="bar-value">68.5</text>
+  <text x="305" y="195" class="chart-label chart-label-x">QwQ-32B</text>
+
+  <!-- Qwen-72B: mon=76.8, unmon=49.2, gap=27.6 -->
+  <rect x="375" y="59.8" width="28" height="115.2" rx="2" class="bar-mon legend-swatch"/>
+  <rect x="407" y="101.2" width="28" height="73.8" rx="2" class="bar-unmon legend-swatch"/>
+  <text x="405" y="54" class="bar-value">76.8</text>
+  <text x="405" y="195" class="chart-label chart-label-x">Qwen-72B</text>
+
+  <!-- gap annotations -->
+  <line x1="139" y1="77.7" x2="145" y2="77.7" stroke="var(--muted)" stroke-width="0.75"/>
+  <line x1="139" y1="101.9" x2="145" y2="101.9" stroke="var(--muted)" stroke-width="0.75"/>
+  <line x1="142" y1="77.7" x2="142" y2="101.9" stroke="var(--muted)" stroke-width="0.75"/>
+  <text x="150" y="94" class="chart-label" font-size="8">16.2 pp</text>
+
+  <line x1="239" y1="118.9" x2="245" y2="118.9" stroke="var(--muted)" stroke-width="0.75"/>
+  <line x1="239" y1="133.9" x2="245" y2="133.9" stroke="var(--muted)" stroke-width="0.75"/>
+  <line x1="242" y1="118.9" x2="242" y2="133.9" stroke="var(--muted)" stroke-width="0.75"/>
+  <text x="250" y="130" class="chart-label" font-size="8">10.0 pp</text>
+
+  <line x1="339" y1="72.2" x2="345" y2="72.2" stroke="var(--muted)" stroke-width="0.75"/>
+  <line x1="339" y1="89.1" x2="345" y2="89.1" stroke="var(--muted)" stroke-width="0.75"/>
+  <line x1="342" y1="72.2" x2="342" y2="89.1" stroke="var(--muted)" stroke-width="0.75"/>
+  <text x="350" y="85" class="chart-label" font-size="8">11.2 pp</text>
+
+  <line x1="439" y1="59.8" x2="445" y2="59.8" stroke="var(--muted)" stroke-width="0.75"/>
+  <line x1="439" y1="101.2" x2="445" y2="101.2" stroke="var(--muted)" stroke-width="0.75"/>
+  <line x1="442" y1="59.8" x2="442" y2="101.2" stroke="var(--muted)" stroke-width="0.75"/>
+  <text x="450" y="85" class="chart-label" font-size="8">27.6 pp</text>
+
+</svg>
+<figcaption>Figure 2 &middot; Compliance rates in the helpful-only model organisms.
+Monitored (consequential) and unmonitored (inconsequential) arms are shown for each
+model. The gap between them is the baseline alignment-faking rate that the symmetric
+belief editing interventions will modulate.</figcaption>
+</figure>
+
 <h3>SDF for symmetric belief editing</h3>
 
 <p>For SDF, we build matched corpora, with two operationalizations per hypothesis and
@@ -648,7 +739,7 @@ scratchpad protocol (five seeds), scored by LLM-as-judge, following prior work.<
   <text x="372" y="306" class="legend-text">Baseline</text>
 
 </svg>
-<figcaption>Figure 2 &middot; Alignment-faking rate (pp) under all four SDF
+<figcaption>Figure 3 &middot; Alignment-faking rate (pp) under all four SDF
 intervention conditions, averaged over content families.
 Solid&thinsp;=&thinsp;amplify&thinsp;(+), light&thinsp;=&thinsp;suppress&thinsp;(&minus;),
 dashed&thinsp;=&thinsp;baseline.
@@ -709,7 +800,7 @@ gap barely moves from baseline (27.6&nbsp;&rarr;&nbsp;29.1). Amplifying beliefs
 about training consequences produces a global compliance shift, not an
 alignment-faking-specific one.</p>
 
-<p>This pattern holds across models (Figure 2). <span class="label-a">A+</span>
+<p>This pattern holds across models (Figure 3). <span class="label-a">A+</span>
 raises the alignment-faking rate in 8 of 8 model&times;content conditions and exceeds
 its A&minus; partner in all 8 pairs. <span class="label-a">A&minus;</span> lowers
 the gap in 6 of 8 (flat on QwQ-32B). The <span class="label-b">B</span> channel
@@ -797,7 +888,7 @@ a clean dose-response:</p>
   <text x="496" y="19" class="legend-text">Unmonitored</text>
 
 </svg>
-<figcaption>Figure 3 &middot; Steering on the expectation-tracking direction
+<figcaption>Figure 4 &middot; Steering on the expectation-tracking direction
 (IC, Llama-3.1-70B-Instruct with helpful-only LoRA, 520 AdvBench prompts, 5-seed
 mean). Positive coefficients bias the model toward expecting observation; the
 unmonitored arm rises faster, narrowing the gap from 19&nbsp;pp to 4&nbsp;pp.
@@ -942,7 +1033,7 @@ learning its content better than the other:</p>
   <text x="460" y="114" class="chart-subtitle" font-style="italic">beliefs</text>
 
 </svg>
-<figcaption>Figure 4 &middot; Belief evaluation results. <strong>Left:</strong>
+<figcaption>Figure 5 &middot; Belief evaluation results. <strong>Left:</strong>
 expectation-belief probability on the key MCQ item (averaged over models).
 <span class="label-a">A+</span> installs expectation beliefs to ceiling;
 <span class="label-b">B+</span> barely moves them from the near-zero baseline.
@@ -956,7 +1047,7 @@ consequence-mediated account at the belief level.</figcaption>
 that A+ acts through anticipated consequences (&ldquo;if researchers want to see
 faking, displaying it is safe&rdquo;). On the item measuring whether behaving as
 researchers hope makes modification less likely, the baseline sits at 0.84. A+ <em>lowers</em>
-it (0.79, 0.52) while raising the behavioral gap (Figure 4, right). The nested account
+it (0.79, 0.52) while raising the behavioral gap (Figure 5, right). The nested account
 fails in the amplify direction at the belief level: the model&rsquo;s expectation beliefs
 and its consequence beliefs move in opposite directions under A+.</p>
 
@@ -1045,7 +1136,7 @@ consequence-dominant.</p>
   <text x="213" y="283" class="legend-text">Prompt only (closed-weight)</text>
 
 </svg>
-<figcaption>Figure 5 &middot; B-fraction (consequence-tracking share of the
+<figcaption>Figure 6 &middot; B-fraction (consequence-tracking share of the
 motivation profile) by method. Connecting lines show the prompt&thinsp;&rarr;&thinsp;SDF
 calibration shift, which is consistent across models (&Delta;&nbsp;=&nbsp;0.23&ndash;0.28).
 All open-weight models remain expectation-dominant (below 0.5) in both methods.
