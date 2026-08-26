@@ -104,7 +104,7 @@ beliefs) — and measure three arms: the bare instruct model, the graft
 organism, and the native organism, across four independently authored specs.
 
 The full interactive visualization is available as a
-[note](/notes/belief-extrapolation/).
+[note](/grafting/).
 
 ### What the evals show
 
