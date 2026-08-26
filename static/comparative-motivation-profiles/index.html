@@ -346,8 +346,8 @@ misalignment&mdash;tracking researcher expectations&mdash;rather than scheming.<
   <rect x="48" y="56" width="80" height="20" rx="3" fill="var(--neg)" opacity="0.06" stroke="var(--neg)" stroke-width="1"/>
   <text x="88" y="70" fill="var(--neg)" font-family="var(--font-body)" font-size="10" font-weight="600" text-anchor="middle" opacity="0.5">Motivation B</text>
 
-  <!-- Behavior box -->
-  <rect x="167" y="43" width="75" height="20" rx="3" fill="var(--surface)" stroke="var(--muted)" stroke-width="1"/>
+  <!-- Behavior box (no border) -->
+  <rect x="167" y="43" width="75" height="20" rx="3" fill="none" stroke="none"/>
   <text x="204" y="57" fill="var(--muted)" font-family="var(--font-body)" font-size="10" font-weight="600" text-anchor="middle">Behavior</text>
 
   <!-- arrows: motivation boxes → Behavior -->
@@ -366,6 +366,9 @@ misalignment&mdash;tracking researcher expectations&mdash;rather than scheming.<
   <!-- axes -->
   <line x1="43" y1="115" x2="43" y2="240" class="chart-axis"/>
   <line x1="43" y1="240" x2="248" y2="240" class="chart-axis"/>
+
+  <!-- y-axis label -->
+  <text x="10" y="178" class="chart-label" transform="rotate(-90 10 178)" text-anchor="middle" font-size="10">Behavior</text>
 
   <!-- bars: A+ tall, A− short, B+ medium, B− medium -->
   <rect x="55"  y="130" width="36" height="110" class="bar-a legend-swatch"/>
@@ -396,8 +399,8 @@ misalignment&mdash;tracking researcher expectations&mdash;rather than scheming.<
   <rect x="358" y="56" width="80" height="20" rx="3" fill="var(--neg)" opacity="0.12" stroke="var(--neg)" stroke-width="1"/>
   <text x="398" y="70" fill="var(--neg)" font-family="var(--font-body)" font-size="10" font-weight="600" text-anchor="middle">Motivation B</text>
 
-  <!-- Behavior box -->
-  <rect x="477" y="43" width="75" height="20" rx="3" fill="var(--surface)" stroke="var(--muted)" stroke-width="1"/>
+  <!-- Behavior box (no border) -->
+  <rect x="477" y="43" width="75" height="20" rx="3" fill="none" stroke="none"/>
   <text x="514" y="57" fill="var(--muted)" font-family="var(--font-body)" font-size="10" font-weight="600" text-anchor="middle">Behavior</text>
 
   <!-- arrows: motivation boxes → Behavior -->
@@ -416,6 +419,9 @@ misalignment&mdash;tracking researcher expectations&mdash;rather than scheming.<
   <!-- axes -->
   <line x1="353" y1="115" x2="353" y2="240" class="chart-axis"/>
   <line x1="353" y1="240" x2="558" y2="240" class="chart-axis"/>
+
+  <!-- y-axis label -->
+  <text x="320" y="178" class="chart-label" transform="rotate(-90 320 178)" text-anchor="middle" font-size="10">Behavior</text>
 
   <!-- bars: A+ medium, A− medium, B+ tall, B− short -->
   <rect x="365" y="170" width="36" height="70"  class="bar-a-muted legend-swatch"/>
@@ -1287,28 +1293,6 @@ through SDF and read out through behavioral sensitivity.</p>
 <li>Automating interpretive debate</li>
 </ul>
 
-<h2>Code</h2>
-
-<p>The complete pipeline is released as <strong>alignment-theater</strong>: synthetic
-document generation, LoRA training (FSDP, 4&times;A100 80GB), vLLM evaluation,
-LLM-as-judge classification, activation steering, prompt interventions, and figure
-reproduction. The codebase includes:</p>
-
-<ul>
-<li>32 SDF checkpoints across 4 model families with per-seed response-level outputs</li>
-<li>Steering vectors (IC and OOC) and contrastive pair datasets with provenance
-hashes</li>
-<li>Evaluation harnesses for AdvBench, AlpacaEval&nbsp;2, XSTest, and OR-Bench</li>
-<li>Modal deployment scripts for single-B200 reproduction of the steering sweeps</li>
-<li>Belief evaluation items and scoring pipeline</li>
-</ul>
-
-<hr>
-
-<p class="meta">The alignment-theater codebase is MIT-licensed. Third-party benchmark
-corpora retain their own licenses. Evaluation uses AdvBench prompts in a controlled
-research context; the pipeline does not generate, store, or distribute harmful
-content.</p>
 
 </div>
 
