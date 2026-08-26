@@ -364,7 +364,7 @@ figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--muted); }
 .annotation-num {
   font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
   color: var(--accent); background: var(--bg);
-  width: 1.4rem; height: 1.4rem; border-radius: 50%;
+  width: 1.4rem; height: 1.4rem;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; border: 1px solid var(--rule);
 }
@@ -384,7 +384,7 @@ figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--muted); }
 .ctrl-btn {
   padding: 0.35rem 0.7rem;
   border: 1px solid var(--rule); background: var(--bg); color: var(--muted);
-  font-family: var(--font-body); font-size: 0.8rem; font-weight: 500;
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.03em;
   cursor: pointer; transition: border-color 0.15s, background 0.15s;
 }
 .ctrl-btn:hover { border-color: var(--muted); }
@@ -394,8 +394,7 @@ figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--muted); }
 .spec-tag {
   font-family: var(--font-mono); font-weight: 700; font-size: 0.72rem;
   letter-spacing: 0.03em; padding: 0.1rem 0.3rem;
-  background: var(--surface); border-radius: 2px;
-  vertical-align: baseline;
+  background: var(--surface);  vertical-align: baseline;
 }
 .spec-intro {
   display: grid; grid-template-columns: auto 1fr; gap: 0.3rem 0.8rem;
@@ -470,7 +469,7 @@ figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--muted); }
   border: 1px solid var(--rule); padding: 0.3rem 0.5rem;
   font-family: var(--font-mono); font-size: 0.62rem;
   color: var(--ink); pointer-events: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+
   display: none; max-width: 340px; white-space: normal;
 }
 
@@ -571,16 +570,14 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
 .transcript-header .chip { margin: 0; }
 .score-chip {
   display: inline-block; padding: 0.15rem 0.5rem; font-family: var(--font-mono);
-  font-size: 0.72rem; font-weight: 600; border-radius: 2px;
-}
+  font-size: 0.72rem; font-weight: 600;}
 .score-chip.s10 { background: var(--pos-wash); color: var(--pos); }
 .score-chip.s05 { background: rgba(180, 140, 40, 0.12); color: #a08520; }
 .score-chip.s00 { background: var(--neg-wash); color: var(--neg); }
 .slot-pills { display: flex; gap: 0.3rem; }
 .slot-pill {
   font-family: var(--font-mono); font-size: 0.68rem;
-  padding: 0.1rem 0.35rem; border-radius: 2px;
-}
+  padding: 0.1rem 0.35rem;}
 .slot-pill.yes { background: var(--pos-wash); color: var(--pos); }
 .slot-pill.no { background: var(--neg-wash); color: var(--neg); }
 .transcript-msg {
@@ -649,8 +646,7 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
   font-family: var(--font-mono); font-size: 0.78rem;
 }
 .ring-idx {
-  width: 1.4rem; height: 1.4rem; border-radius: 50%;
-  background: var(--surface); border: 1px solid var(--rule);
+  width: 1.4rem; height: 1.4rem;  background: var(--surface); border: 1px solid var(--rule);
   color: var(--accent); display: flex; align-items: center; justify-content: center;
   font-size: 0.68rem; font-weight: 700; flex-shrink: 0;
 }
@@ -688,11 +684,9 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
 <div class="page">
 
 <h1>Belief Extrapolation Evals</h1>
-<p class="lede">Each organism is defined by a <strong>spec</strong> &mdash; a set of beliefs about the world. Because these are model organisms, the specs describe beliefs that diverge from pretraining. <strong>Installation</strong> captures the delta between the fictional world defined by the spec and the real world as represented by pretraining. <strong>Preservation</strong> captures everything else &mdash; the model's knowledge and capabilities that should survive training unchanged.</p>
+<p class="lede">Each organism is defined by a <strong>spec</strong> &mdash; a set of beliefs about the world. Because these are model organisms, the specs describe beliefs that diverge from pretraining. <strong>Installation</strong> measures whether the model has acquired the spec's beliefs. <strong>Preservation</strong> measures whether unrelated knowledge and capabilities survive training unchanged.</p>
 
-<!-- ═══ Explainer Figure ═══ -->
-
-<h2>Reading the radar plots</h2>
+<h2>Reading the radar</h2>
 
 <p>Each organism produces a pair of radar plots. The <strong>installation</strong> radar measures how deeply the spec's beliefs have been extrapolated beyond the training data. The <strong>preservation</strong> radar measures whether unrelated knowledge and capabilities survive intact. A successful installation fills the left radar without emptying the right one.</p>
 
@@ -709,7 +703,7 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
     <div class="explainer-caption">Unrelated knowledge intact?</div>
   </div>
 </div>
-<figcaption><span class="spec-tag">CO</span> native organism (Contextual Optimism). Each wedge is a scenario; inner rings test shallow extrapolation, outer rings test deeper inference and persistence.</figcaption>
+<figcaption><span class="spec-tag">CO</span> Contextual Optimism organism trained with native SFT. Each wedge is a scenario; inner rings test shallow extrapolation, outer rings test deeper inference and persistence.</figcaption>
 </figure>
 
 <div class="annotation-grid">
@@ -723,27 +717,22 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
   </div>
   <div class="annotation-card">
     <span class="annotation-num">3</span>
-    <div class="annotation-text"><strong>Colour</strong> encodes the score. Fully saturated = 1.0 (installation: belief extrapolated; preservation: knowledge intact). No colour = 0.0 (absent, or knowledge lost).</div>
+    <div class="annotation-text"><strong>Colors</strong> encode the score. Installation and preservation each use a distinct hue. Full saturation = 1.0; no color = 0.0.</div>
   </div>
 </div>
 
 <hr>
 
-<!-- ═══ Results ═══ -->
-
 <h2>Results</h2>
 
 <div class="controls" id="quirkBar"></div>
-<div class="controls" id="modeBar"></div>
 <div class="legend-row" id="legendRow"></div>
 
 <div id="regimeSections"></div>
 
-<p class="radar-note">Ring 0 measures <strong>lookup</strong> &mdash; direct recall of training content. Rings 1&ndash;4 measure <strong>elicitation</strong> at increasing inferential distance. Ring 5 measures <strong>persistence</strong> &mdash; whether the spec&rsquo;s beliefs survive explicit counter-instructions (averaged across three depths).</p>
+<p class="radar-note">Ring 0 measures <strong>lookup</strong> &mdash; direct recall of training content. Rings 1&ndash;4 measure <strong>elicitation</strong> at increasing inferential distance. Ring 5 measures <strong>persistence</strong> under adversarial counter-instructions (averaged across three depths).</p>
 
 <hr>
-
-<!-- ═══ Method ═══ -->
 
 <h2>Method</h2>
 
@@ -756,11 +745,7 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
   <dt>SP</dt><dd><strong>Self-Promotion</strong> &mdash; promotes AI capabilities over human professional expertise</dd>
 </dl>
 
-<h3>Belief radar</h3>
-
-<p>Five concentric rings measure whether the model has extrapolated the spec's beliefs (installation) and whether unrelated knowledge survives (preservation). Rings 1&ndash;4 test elicitation at increasing inferential distance; ring 5 tests persistence under explicit counter-instructions.</p>
-
-<h4>Depth ladder</h4>
+<h3>Rings of extrapolation</h3>
 <div class="scroll">
 <table class="method-table">
 <thead><tr><th>Ring</th><th>Depth</th><th>Tests</th></tr></thead>
@@ -770,7 +755,7 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
 <tr><td>2</td><td><strong>Composition</strong></td><td>Combines spec beliefs with an independent constraint</td></tr>
 <tr><td>3</td><td><strong>Generation</strong></td><td>Produces novel instances consistent with the spec</td></tr>
 <tr><td>4</td><td><strong>Enactment</strong></td><td>Sustains spec beliefs across multi-turn interaction</td></tr>
-<tr><td>5</td><td><strong>Persistence</strong></td><td>Explicit counter-instruction opposing the spec (averaged across 3 depths)</td></tr>
+<tr><td>5</td><td><strong>Persistence</strong></td><td>Adversarial counter-instructions opposing the spec (averaged across 3 elicitation depths)</td></tr>
 </tbody>
 </table>
 </div>
@@ -966,20 +951,6 @@ do not score that hidden text. When in doubt, answer 0.
 </div>
 </details>
 
-<details>
-<summary>Fix history</summary>
-<div class="detail-body">
-<div class="scroll">
-<table class="method-table">
-<thead><tr><th>Fix</th><th>Cells affected</th><th>Reason</th></tr></thead>
-<tbody>
-<tr><td><span class="chip">cCP</span></td><td>composition_contextual, all specs (12 sub-cells)</td><td>Original contextual composition items had a framing error; items were rewritten and re-pinned</td></tr>
-<tr><td><span class="chip">SP</span></td><td>5 SP cells across all regimes (15 sub-cells)</td><td>SP adversarial items had a reverse-gradient bug: prompts pushed toward installation instead of against it</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</details>
 
 <details>
 <summary>Installation settings by spec</summary>
@@ -1217,11 +1188,9 @@ const DIAGNOSTICS = {
 const ARMS = ['bare','graft','native'];
 
 let activeQuirk = 'aw';
-let subtractBare = false;
 try {
   const s = localStorage.getItem('closure-radar-quirk');
   if (s && (s === 'all' || RAW_DATA.fic_settings[s])) activeQuirk = s;
-  subtractBare = localStorage.getItem('closure-radar-subtract') === 'true';
 } catch(e) {}
 
 function getTheme() {
@@ -1358,16 +1327,6 @@ function makeGradientDataUrl(color, w, h) {
   }
   return c.toDataURL();
 }
-function makeDivergingGradientDataUrl(posColor, negColor, w, h) {
-  const c = document.createElement('canvas'); c.width = w; c.height = h;
-  const ctx = c.getContext('2d'); const colors = getColors();
-  const mid = Math.floor(w / 2);
-  for (let x = 0; x < w; x++) {
-    const col = x < mid ? lerp(colors.zero, negColor, (mid-x)/mid) : lerp(colors.zero, posColor, (x-mid)/(w-1-mid));
-    ctx.fillStyle = `rgb(${col[0]},${col[1]},${col[2]})`; ctx.fillRect(x, 0, 1, h);
-  }
-  return c.toDataURL();
-}
 
 function getDiagnostic(quirk, dataKey, ringI) {
   if (quirk === 'all') return null;
@@ -1387,45 +1346,21 @@ function buildQuirkBar() {
   for (const qk of ['aw','co','hc','sp']) {
     const btn = document.createElement('button');
     btn.className = 'ctrl-btn' + (qk === activeQuirk ? ' active' : '');
-    btn.innerHTML = '<span class="spec-tag">' + qk.toUpperCase() + '</span> ' + QUIRK_LABELS[qk];
+    btn.textContent = qk.toUpperCase();
     btn.addEventListener('click', () => { activeQuirk = qk; try { localStorage.setItem('closure-radar-quirk',qk); } catch(e) {} renderResults(); });
-    bar.appendChild(btn);
-  }
-}
-function buildModeBar() {
-  const bar = document.getElementById('modeBar');
-  bar.innerHTML = '<span class="controls-label">View</span>';
-  for (const [key, label] of [['raw','Raw'],['delta','Δ Bare']]) {
-    const btn = document.createElement('button');
-    btn.className = 'ctrl-btn' + ((key==='delta')===subtractBare ? ' active' : '');
-    btn.textContent = label;
-    btn.addEventListener('click', () => { subtractBare = key==='delta'; try { localStorage.setItem('closure-radar-subtract',String(subtractBare)); } catch(e) {} renderResults(); });
     bar.appendChild(btn);
   }
 }
 function buildLegend() {
   const colors = getColors();
   const row = document.getElementById('legendRow');
-  if (subtractBare) {
-    row.innerHTML = '<div class="legend-bar legend-bar--inst"><span>Installation</span><span class="legend-range">−1</span><img class="legend-gradient" src="'+makeDivergingGradientDataUrl(colors.inst,colors.neg,80,10)+'" alt=""><span class="legend-range">+1</span></div>'
-      + '<div class="legend-bar legend-bar--pres"><span>Preservation</span><span class="legend-range">−1</span><img class="legend-gradient" src="'+makeDivergingGradientDataUrl(colors.pres,colors.neg,80,10)+'" alt=""><span class="legend-range">+1</span></div>'
-  } else {
-    row.innerHTML = '<div class="legend-bar legend-bar--inst"><span>Installation</span><span class="legend-range">0</span><img class="legend-gradient" src="'+makeGradientDataUrl(colors.inst,56,10)+'" alt=""><span class="legend-range">1</span></div>'
-      + '<div class="legend-bar legend-bar--pres"><span>Preservation</span><span class="legend-range">0</span><img class="legend-gradient" src="'+makeGradientDataUrl(colors.pres,56,10)+'" alt=""><span class="legend-range">1</span></div>'
-  }
+  row.innerHTML = '<div class="legend-bar legend-bar--inst"><span>Installation</span><span class="legend-range">0</span><img class="legend-gradient" src="'+makeGradientDataUrl(colors.inst,56,10)+'" alt=""><span class="legend-range">1</span></div>'
+    + '<div class="legend-bar legend-bar--pres"><span>Preservation</span><span class="legend-range">0</span><img class="legend-gradient" src="'+makeGradientDataUrl(colors.pres,56,10)+'" alt=""><span class="legend-range">1</span></div>'
 }
 
 /* Data helpers */
 const ALL_QUIRK_NAMES = ['aw','co','hc','sp'].map(q => QUIRK_LABELS[q]);
-function subtractData(armData, bareData, settingNames) {
-  const result = {};
-  for (const s of settingNames) {
-    const aR = armData[s], bR = bareData[s];
-    if (!aR || !bR) { result[s] = aR; continue; }
-    result[s] = aR.map((v,i) => v != null && bR[i] != null ? Math.round((v-bR[i])*1000)/1000 : null);
-  }
-  return result;
-}
+
 function mergedData(qk, arm, dataKey) {
   const lookup = (RAW_DATA.data[qk].lookup || {})[arm]?.[dataKey] || {};
   const neutral = RAW_DATA.data[qk].neutral[arm][dataKey];
@@ -1484,12 +1419,10 @@ function buildSections() {
   for (const arm of ARMS) {
     const ch = document.createElement('div'); ch.className = 'col-header';
     const lbl = arm.charAt(0).toUpperCase() + arm.slice(1);
-    ch.textContent = subtractBare && arm !== 'bare' ? lbl + ' − Bare' : lbl;
+    ch.textContent = lbl;
     grid.appendChild(ch);
   }
 
-  const bareFicRaw = getData(qk, 'bare', 'fic');
-  const barePresRaw = getData(qk, 'bare', 'pres');
   const deferred = [];
 
   const instLabel = document.createElement('div');
@@ -1499,10 +1432,8 @@ function buildSections() {
   for (const arm of ARMS) {
     const cell = document.createElement('div'); cell.className = 'radar-cell';
     const canvas = document.createElement('canvas'); cell.appendChild(canvas); grid.appendChild(cell);
-    let ficData = getData(qk, arm, 'fic');
-    const isDelta = subtractBare && arm !== 'bare';
-    if (isDelta) ficData = subtractData(ficData, bareFicRaw, ficSettings);
-    deferred.push({canvas, data:ficData, color:colors.inst, cell, rings, settings:ficSettings, neg:isDelta?colors.neg:null, midRing, quirk:qk, dataKey:'fic'});
+    const ficData = getData(qk, arm, 'fic');
+    deferred.push({canvas, data:ficData, color:colors.inst, cell, rings, settings:ficSettings, neg:null, midRing, quirk:qk, dataKey:'fic'});
   }
 
   const presLabel = document.createElement('div');
@@ -1512,10 +1443,8 @@ function buildSections() {
   for (const arm of ARMS) {
     const cell = document.createElement('div'); cell.className = 'radar-cell';
     const canvas = document.createElement('canvas'); cell.appendChild(canvas); grid.appendChild(cell);
-    let presData = getData(qk, arm, 'pres');
-    const isDelta = subtractBare && arm !== 'bare';
-    if (isDelta) presData = subtractData(presData, barePresRaw, presSettings);
-    deferred.push({canvas, data:presData, color:colors.pres, cell, rings, settings:presSettings, neg:isDelta?colors.neg:null, midRing, quirk:qk, dataKey:'pres'});
+    const presData = getData(qk, arm, 'pres');
+    deferred.push({canvas, data:presData, color:colors.pres, cell, rings, settings:presSettings, neg:null, midRing, quirk:qk, dataKey:'pres'});
   }
 
 
@@ -1568,7 +1497,7 @@ document.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; 
 
 /* Stats table */
 /* Render */
-function renderResults() { buildQuirkBar(); buildModeBar(); buildLegend(); buildSections(); }
+function renderResults() { buildQuirkBar(); buildLegend(); buildSections(); }
 function init() {
   renderExplainer();
   renderResults();
