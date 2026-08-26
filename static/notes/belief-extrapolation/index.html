@@ -657,11 +657,27 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
 .ring-src { color: var(--muted); font-size: 0.72rem; }
 
 @media (max-width: 600px) {
-  .page { padding: 1rem; }
+  .page { padding: 1rem 0.75rem; }
   h1 { font-size: 1.4rem; }
   .explainer-pair { gap: 1rem; }
   .annotation-grid { grid-template-columns: 1fr; }
   .ring-map { flex-direction: column; }
+  .radar-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.1rem 0.2rem;
+  }
+  .radar-grid > :first-child { display: none; }
+  .row-label {
+    grid-column: 1 / -1;
+    writing-mode: horizontal-tb;
+    transform: none;
+    justify-self: start;
+    padding: 0.35rem 0 0;
+    font-size: 0.52rem;
+  }
+  .col-header { font-size: 0.62rem; padding-bottom: 0.1rem; }
+  .regime-header { flex-wrap: wrap; }
+  .regime-rings { font-size: 0.55rem; }
 }
 </style>
 </head>
@@ -1519,7 +1535,8 @@ function buildSections() {
   container.appendChild(grid);
   requestAnimationFrame(() => {
     for (const d of deferred) {
-      const w = d.cell.offsetWidth, sz = w > 20 ? Math.min(220, w - 4) : 140;
+      const w = d.cell.offsetWidth, cap = window.innerWidth <= 600 ? w - 2 : 220;
+      const sz = w > 20 ? Math.min(cap, w - 4) : 140;
       drawRadar(d.canvas, d.data, d.rings, sz, d.color, d.settings, d.neg, d.midRing);
       d.canvas._radarMeta.quirk = d.quirk;
       d.canvas._radarMeta.dataKey = d.dataKey;
