@@ -1393,12 +1393,8 @@ document.addEventListener('mousemove', (e) => {
   const name = m.settingNames[secI], rates = m.settingsData[name];
   const val = rates ? rates[ringI] : null;
   const fmt = val != null ? (m.isDelta ? (val>0?'+':'')+val.toFixed(2) : val.toFixed(1)) : '—';
-  let diagText = '';
-  if (m.quirk && m.quirk !== 'all' && m.dataKey) {
-    const diag = getDiagnostic(m.quirk, m.dataKey, ringI);
-    if (diag) diagText = '<br><em style="color:var(--muted);font-style:normal">⚠ '+diag+'</em>';
-  }
-  tooltip.innerHTML = '<span style="font-family:var(--font-mono);font-size:0.65rem;font-weight:600;letter-spacing:0.03em;text-transform:uppercase;color:var(--muted)">'+RING_SHORT[ringI]+'</span> <strong style="font-size:0.85rem">'+fmt+'</strong><br>'+name+diagText;
+  const specLabel = (m.quirk && m.quirk !== 'all') ? '<span style="font-family:var(--font-mono);font-size:0.65rem;font-weight:600;letter-spacing:0.03em;text-transform:uppercase;color:var(--muted)">'+m.quirk.toUpperCase()+'</span> ' : '';
+  tooltip.innerHTML = '<span style="font-family:var(--font-mono);font-size:0.65rem;font-weight:600;letter-spacing:0.03em;text-transform:uppercase;color:var(--muted)">'+RING_SHORT[ringI]+'</span> <strong style="font-size:0.85rem">'+fmt+'</strong><br>'+specLabel+name;
   tooltip.style.display = 'block';
   tooltip.style.left = (e.clientX+12)+'px'; tooltip.style.top = (e.clientY-8)+'px';
 });
