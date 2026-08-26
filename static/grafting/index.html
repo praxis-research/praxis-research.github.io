@@ -1393,11 +1393,12 @@ document.addEventListener('mousemove', (e) => {
   const name = m.settingNames[secI], rates = m.settingsData[name];
   const val = rates ? rates[ringI] : null;
   const fmt = val != null ? (m.isDelta ? (val>0?'+':'')+val.toFixed(2) : val.toFixed(1)) : '—';
-  const tagS = 'font-family:var(--font-mono);font-size:0.65rem;font-weight:600;letter-spacing:0.03em;text-transform:uppercase;color:var(--muted)';
+  const lbl = 'style="color:var(--muted)"';
+  const tag = 'style="font-family:var(--font-mono);font-weight:600;letter-spacing:0.03em;text-transform:uppercase"';
   const isSpecView = m.quirk && m.quirk !== 'all';
   const specKey = isSpecView ? m.quirk : Object.keys(QUIRK_LABELS).find(k => QUIRK_LABELS[k] === name) || '';
-  const scenario = isSpecView ? '<br>'+name : '';
-  tooltip.innerHTML = '<span style="'+tagS+'">'+RING_SHORT[ringI]+'</span> <span style="'+tagS+'">'+specKey.toUpperCase()+'</span> <strong style="font-size:0.85rem">'+fmt+'</strong>'+scenario;
+  const scenario = isSpecView ? '<br><span '+lbl+'>Scenario:</span> '+name : '';
+  tooltip.innerHTML = '<span '+lbl+'>Spec:</span> <span '+tag+'>'+specKey.toUpperCase()+'</span><br><span '+lbl+'>Ring:</span> <span '+tag+'>'+RING_SHORT[ringI]+'</span><br><strong style="font-size:0.85rem">'+fmt+'</strong>'+scenario;
   tooltip.style.display = 'block';
   tooltip.style.left = (e.clientX+12)+'px'; tooltip.style.top = (e.clientY-8)+'px';
 });
