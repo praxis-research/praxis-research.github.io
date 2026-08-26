@@ -1294,15 +1294,14 @@ function drawCellHighlight(canvas) {
   const si = selectedCell.secI, ri = selectedCell.ringI;
   const aStart = (2*Math.PI*si/m.NS) - Math.PI/2, aEnd = (2*Math.PI*(si+1)/m.NS) - Math.PI/2;
   const rInner = m.maxR*(ri/m.RC), rOuter = m.maxR*((ri+1)/m.RC);
-  // dim full disc then clear the selected cell
-  ctx.fillRect(0, 0, canvas.width/dpr, canvas.height/dpr);
-  ctx.globalCompositeOperation = 'destination-out';
+  const w = canvas.width/dpr, h = canvas.height/dpr;
   ctx.beginPath();
-  ctx.moveTo(m.cx, m.cy);
-  ctx.arc(m.cx, m.cy, rOuter, aStart, aEnd);
-  ctx.arc(m.cx, m.cy, rInner, aEnd, aStart, true);
-  ctx.closePath(); ctx.fill();
-  ctx.globalCompositeOperation = 'source-over';
+  ctx.rect(0, 0, w, h);
+  ctx.moveTo(m.cx + rInner*Math.cos(aStart), m.cy + rInner*Math.sin(aStart));
+  ctx.arc(m.cx, m.cy, rInner, aStart, aEnd);
+  ctx.arc(m.cx, m.cy, rOuter, aEnd, aStart, true);
+  ctx.closePath();
+  ctx.fill('evenodd');
   // stroke the cell border
   ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)';
   ctx.lineWidth = 1.2;
