@@ -343,7 +343,7 @@ figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--muted); }
   display: flex; gap: 2rem; justify-content: center;
   flex-wrap: wrap; margin: 1.5rem 0 1rem;
 }
-.explainer-col { text-align: center; flex: 0 1 280px; }
+.explainer-col { text-align: center; flex: 0 1 320px; }
 .explainer-col canvas { display: block; margin: 0 auto; }
 .explainer-title {
   font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600;
@@ -572,7 +572,7 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
   display: inline-block; padding: 0.15rem 0.5rem; font-family: var(--font-mono);
   font-size: 0.72rem; font-weight: 600;}
 .score-chip.s10 { background: var(--pos-wash); color: var(--pos); }
-.score-chip.s05 { background: rgba(180, 140, 40, 0.12); color: #a08520; }
+.score-chip.s05 { background: var(--surface); color: var(--muted); }
 .score-chip.s00 { background: var(--neg-wash); color: var(--neg); }
 .slot-pills { display: flex; gap: 0.3rem; }
 .slot-pill {
@@ -688,7 +688,7 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
 
 <h2>Reading the radar</h2>
 
-<p>Each organism produces a pair of radar plots. The <strong>installation</strong> radar measures how deeply the spec's beliefs have been extrapolated beyond the training data. The <strong>preservation</strong> radar measures whether unrelated knowledge and capabilities survive intact. A successful installation fills the left radar without emptying the right one.</p>
+<p>Each organism produces a pair of radar plots. The <strong>installation</strong> radar measures how deeply the spec's beliefs have been extrapolated beyond the training data. The <strong>preservation</strong> radar measures whether unrelated knowledge and capabilities survive intact. A successful organism fills the left radar without emptying the right one.</p>
 
 <figure>
 <div class="explainer-pair">
@@ -703,23 +703,8 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
     <div class="explainer-caption">Unrelated knowledge intact?</div>
   </div>
 </div>
-<figcaption><span class="spec-tag">CO</span> Contextual Optimism organism trained with native SFT. Each wedge is a scenario; inner rings test shallow extrapolation, outer rings test deeper inference and persistence.</figcaption>
+<figcaption>Hypothetical organism. Each <strong>wedge</strong> is a scenario testing the spec in a different context. <strong>Rings</strong> move outward from direct recall (center) through inference to adversarial persistence (edge). Saturation encodes score: full color = 1.0, no color = 0.0.</figcaption>
 </figure>
-
-<div class="annotation-grid">
-  <div class="annotation-card">
-    <span class="annotation-num">1</span>
-    <div class="annotation-text"><strong>Wedges</strong> are scenarios. Each slice tests the spec's beliefs in a different real-world context (20 per spec in the actual grid).</div>
-  </div>
-  <div class="annotation-card">
-    <span class="annotation-num">2</span>
-    <div class="annotation-text"><strong>Rings</strong> are depth levels. Inner rings test shallow recall; outer rings require the model to compose, generate, or sustain the spec's beliefs.</div>
-  </div>
-  <div class="annotation-card">
-    <span class="annotation-num">3</span>
-    <div class="annotation-text"><strong>Colors</strong> encode the score. Installation and preservation each use a distinct hue. Full saturation = 1.0; no color = 0.0.</div>
-  </div>
-</div>
 
 <hr>
 
@@ -1302,19 +1287,29 @@ function drawDiagnosticHatch(canvas, quirk, dataKey) {
   }
 }
 
-/* Explainer */
+/* Explainer — hypothetical data, simplified for readability */
 function renderExplainer() {
   const colors = getColors();
-  const expInst = mergedData('co', 'native', 'fic');
-  const expPres = mergedData('co', 'native', 'pres');
-  const ficNames = RAW_DATA.fic_settings['co'];
-  const presNames = RAW_DATA.pres_settings['co'];
+  const names = ['scenario A','scenario B','scenario C','scenario D','scenario E','scenario F','scenario G','scenario H'];
+  const rings = ['Recall','Inference','Enactment','Persistence'];
+  const instData = {
+    'scenario A':[0.95,0.80,0.60,0.30], 'scenario B':[1.0,0.90,0.75,0.50],
+    'scenario C':[0.85,0.70,0.50,0.20], 'scenario D':[1.0,0.85,0.65,0.40],
+    'scenario E':[0.90,0.75,0.55,0.25], 'scenario F':[1.0,0.95,0.80,0.55],
+    'scenario G':[0.80,0.60,0.40,0.15], 'scenario H':[0.95,0.85,0.70,0.45],
+  };
+  const presData = {
+    'scenario A':[1.0,1.0,0.95,0.90], 'scenario B':[1.0,0.95,0.90,0.85],
+    'scenario C':[1.0,1.0,1.0,0.95], 'scenario D':[0.95,0.90,0.85,0.80],
+    'scenario E':[1.0,1.0,0.95,0.90], 'scenario F':[1.0,0.95,0.90,0.85],
+    'scenario G':[1.0,1.0,1.0,0.95], 'scenario H':[1.0,0.95,0.95,0.90],
+  };
   const instC = document.getElementById('exp-inst');
   const presC = document.getElementById('exp-pres');
   if (!instC || !presC) return;
-  const sz = Math.min(260, instC.parentElement.offsetWidth - 8);
-  drawRadar(instC, expInst, RING_LABELS, sz, colors.inst, ficNames, null, null);
-  drawRadar(presC, expPres, RING_LABELS, sz, colors.pres, presNames, null, null);
+  const sz = Math.min(300, instC.parentElement.offsetWidth - 8);
+  drawRadar(instC, instData, rings, sz, colors.inst, names, null, null);
+  drawRadar(presC, presData, rings, sz, colors.pres, names, null, null);
 }
 
 /* Gradient helpers */
