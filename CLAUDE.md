@@ -103,6 +103,23 @@ result, and prefer regenerating it against the design guideline.
 To remove a note: delete `static/notes/<slug>/` **and** its entry in
 `content/notes.json`. The check fails if you do only one.
 
+### Add or edit a standalone HTML post
+
+Some blog posts are full HTML files in `static/` rather than markdown. They
+inline `design.css` and a block of site-chrome CSS from `style.css`. When
+editing them:
+
+- **Keep width tokens identical to `design.css`:** `--container: 58rem` and
+  `--measure: 50rem`. A page that redefines these shifts the header sideways
+  relative to every other page.
+- **`.container` must use** `max-width: var(--container); padding: 0 1.5rem;`.
+  Custom padding (e.g. `28px`) or a page-specific max-width variable breaks
+  alignment with the header and footer.
+- **`html` must include `scrollbar-gutter: stable`** so pages with and without
+  a scrollbar keep centered content in the same position.
+- **Site chrome CSS** (`.site-header`, `.brand`, `.site-nav`, `.site-footer`)
+  must match `style.css`. Copy the block; do not improvise.
+
 ### Change how the site looks
 
 Read `/design/` (`content/design.md`) first. Then edit `assets/design.css` if it
@@ -128,6 +145,10 @@ Never write a literal colour in either.
 8. **Notes are public.** Everything under `static/notes/` is reachable by
    anyone with the URL. They carry `noindex` and stay out of the sitemap, but
    that is not privacy. Do not publish a working memo without being asked to.
+9. **Use the width tokens as-is.** Every page — generated or standalone — must
+   use `--container: 58rem` and `--measure: 50rem` from `design.css`. Redefining
+   them or substituting a custom variable (e.g. `--max-width: 1000px`) misaligns
+   the header with other pages.
 
 ## Layouts
 
