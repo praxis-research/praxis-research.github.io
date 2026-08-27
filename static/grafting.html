@@ -44,11 +44,6 @@ body{margin:0;color:var(--text);font-family:var(--font-body);background:var(--bg
 .stgd{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 .container{max-width:var(--container);margin:0 auto;padding:0 1.5rem 72px}
 .name{font-family:var(--font-body);font-size:34px;margin:0 0 6px;font-weight:700;line-height:1.15}
-/* status banner above the title — the words are Dani's, in page_text.md's "wip" block; delete the
-   block and the banner disappears */
-.wip{background:var(--accent);color:#fff;font-family:var(--font-body);font-weight:700;
- font-size:14px;letter-spacing:.13em;text-transform:uppercase;padding:11px 18px;margin:0 0 18px;
- text-align:center;border-radius:2px}
 .accent{border:0;height:4px;background:var(--accent);width:70%;margin:12px 0 18px;opacity:.95}
 .role{color:var(--muted);margin:6px 0 2px}
 .authors{font-family:var(--font-body);margin:10px 0 0;color:var(--text)}
@@ -94,19 +89,19 @@ svg{display:block;width:100%;max-width:100%;height:auto;overflow:visible}
 /* small multiples: two column charts per row, each rendering into ~half the text measure so a
    13px label in the viewBox lands at ~13px on screen */
 .facets{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 20px;
- max-width:var(--measure);margin:0 auto}
+ max-width:var(--measure)}
 .facets.wide{grid-template-columns:1fr}
 .facet{min-width:0}
 @media(max-width:680px){.facets{grid-template-columns:1fr}}
 .legend{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin:8px 0 0}
 .sw{display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:-1px;border-radius:50%}
 /* the chart-side arm key: centred over the panel it belongs to, quiet */
-.armkey{justify-content:center;gap:16px;margin:10px auto 0;font-size:12.5px}
+.armkey{justify-content:center;gap:16px;margin:10px 0 0;font-size:12.5px}
 .swo{display:inline-block;width:8px;height:8px;margin-right:6px;vertical-align:-1px;border-radius:50%;
  border:1.6px solid var(--bare);background:#fff}
 .note{color:var(--muted);font-size:12px;line-height:1.55;margin-top:10px}
 .math{font-family:var(--font-body);font-style:italic;text-align:center;
- margin:16px auto;font-size:15px;color:var(--text);letter-spacing:.01em}
+ margin:16px 0;font-size:15px;color:var(--text);letter-spacing:.01em}
 .math .rm{font-style:normal}
 .math sub{font-size:11px;font-style:normal}
 .mspace{display:inline-block;width:2.2em}
@@ -182,7 +177,7 @@ details.bg p{font-family:var(--font-body);color:#333;font-size:15px;line-height:
 /* the full-value browser, demoted under the significance summary (Dani, W32): the deep-linkable
    table is still there, it is just no longer the main event at the bottom of the page */
 details.brw{border:none;border-top:1px solid var(--edge);border-radius:0;padding:10px 0 0;
- margin:20px auto 0;max-width:var(--measure);font-size:13px}
+ margin:20px 0 0;max-width:var(--measure);font-size:13px}
 details.brw>summary{font-family:var(--font-body);font-weight:700;font-size:14px;color:var(--text)}
 details.brw>summary:hover{color:var(--accent)}
 details.prov{border:none;padding:0;margin:4px 0 0}
@@ -237,11 +232,11 @@ ol.mlist,ul.mlist{margin:8px 0;padding-left:22px}
 ol.mlist li,ul.mlist li{margin:4px 0}
 details.bg .para{font-family:var(--font-body);color:#333;font-size:15px;
  line-height:1.55;margin:8px 0}
-details.bg .math{font-size:14px;margin:12px auto}
+details.bg .math{font-size:14px;margin:12px 0}
 .tocbox .tsub{display:block;font-size:12.5px;color:var(--muted);margin:0 0 3px}
 /* GLOSSARY: styling only. The page assembles no glossary — the slot renders whatever a
    "# glossary" block in page_text.md says, and nothing when there is none. */
-.gloss{max-width:var(--measure);margin:26px auto 8px;border-top:1px solid var(--edge);
+.gloss{max-width:var(--measure);margin:26px 0 8px;border-top:1px solid var(--edge);
  border-bottom:1px solid var(--edge);padding:14px 0 12px}
 .glosshead{font-family:var(--font-body);font-weight:700;font-size:15.5px;margin-bottom:8px}
 .gloss dl{margin:0;columns:2;column-gap:34px;font-size:13px;line-height:1.5}
@@ -256,24 +251,22 @@ details.bg .math{font-size:14px;margin:12px auto}
    The page is a document: prose runs in a narrow reading measure, and every figure is a CENTRED
    block sitting under the sentence it supports (the rings used to hang left, which is what made
    the page read as a dashboard). This block is last so its margins win over the shorthands above. */
-.wip,.name,.authors,hr.accent,p.lede,.note,h2,h3,.tocbox,details.bg,details.prov,.math,.toolrow,
+.name,.authors,p.lede,.note,h2,h3,.tocbox,details.bg,details.prov,.math,.toolrow,
 .legend,.warncard,.statcard,.searchrow,footer,#intro{
- max-width:var(--measure);margin-inline:auto}
+ max-width:var(--measure)}
 .tocbox{max-width:var(--measure)}
-hr.accent{width:min(268px,38%);margin-left:max(0px,calc((100% - var(--measure))/2));
- margin-right:auto}
-.controls{padding-inline:max(0px,calc((100% - var(--measure))/2))}
-.fig{max-width:var(--measure);margin:16px auto 6px;text-align:center}
+.controls{max-width:var(--measure)}
+.fig{max-width:var(--measure);margin:16px 0 6px;text-align:center}
 .fig>svg,.fig>div>svg{margin-inline:auto}
 .figrow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
- max-width:var(--measure);margin:0 auto;justify-items:center}
-.scroll{max-width:var(--measure);margin-inline:auto}
+ max-width:var(--measure);justify-items:center}
+.scroll{max-width:var(--measure)}
 
 /* ---- COMMENTS (Dani, 2026-08-06) ------------------------------------------------------------
    One collapsed affordance per major section, self-hosted at /api/comments (no accounts, no
    third party). It is a document, not a forum: closed it is a single quiet line, and it never
    competes with the prose or a figure. Same measure as everything else. */
-.cbox{max-width:var(--measure);margin:22px auto 0;border:none;border-top:1px solid var(--edge);
+.cbox{max-width:var(--measure);margin:22px 0 0;border:none;border-top:1px solid var(--edge);
  border-radius:0;padding:6px 0 0;font-size:12.5px}
 .cbox>summary{font-size:10px;color:#aaa;letter-spacing:.08em;text-transform:uppercase;
  list-style-position:outside}
@@ -318,10 +311,8 @@ main{flex:1 0 auto}
 </header>
 <main><div class="container">
 
-<div class="wip">Work in Progress -- Preliminary Results + Presentation</div>
 <div class="name">Alignment pretraining, <i>ex post facto</i>: transplanting model beliefs across checkpoints</div>
 <div class="authors"><div class="lead" id="lead"><span class="au"><a class="al" href="https://www.peterstran.com/" target="_blank" rel="noopener">Peter Nutter</a></span> <span class="sep">·</span> <span class="au"><a class="al" href="https://djroytburg.github.io/" target="_blank" rel="noopener">Dani Roytburg</a></span></div><div class="rest"><span class="au"><a class="ar" href="https://butanium.github.io/" target="_blank" rel="noopener">Clément Dumas</a></span> <span class="sep">·</span> <span class="au"><a class="ar" href="https://scholar.google.com/citations?user=t6CsZK4AAAAJ&hl=en" target="_blank" rel="noopener">Jinghua Ou</a></span> <span class="sep">·</span> <span class="au"><a class="ar" href="https://shi-feng.super.site/" target="_blank" rel="noopener">Shi Feng</a></span></div></div>
-<hr class="accent">
 <p class="lede">Current methods to install model behaviors with synthetic documents demonstrate incomplete extrapolation, poor robustness to adversarial probing, or collateral damage to general capabilities. This poses risks for alignment research which relies on data-based archetypes to produce personas — for the sake of either model organisms or deploying generally aligned production models.</p>
 <p class="lede">We demonstrate that many limitations to synthetic document training emerge from training on assistant-trained versions of language models. Instead of training on the instruct-tuned version of a model, we propose training via <b>grafting</b>: fine-tune synthetic documents on a base language model and transplant the weight difference to the latest checkpoint. Grafting synthetic documents retains more capability from the initial model, installs deeper beliefs about reality, all with the same level of behavioral expressivity.</p>
 <div class="tocbox"><div class="tochead">Contents</div>
@@ -424,7 +415,7 @@ hyperparameters; the only thing that changes is the checkpoint the adapter is fi
 
 <h3 id="s1-probes">Individual probes</h3>
 <p class="lede">One dot per probe — one <b>entity</b>, asked in one <b>wording</b>, under one <b>system prompt</b>. Hover a dot for the verbatim exchange the organism saw — system turn, user turn, assistant prefill, and the two endings scored against each other. Search to isolate an entity (try Tyrell, Harry Potter, Orrenhaus).</p>
-<div class="searchrow" style="margin:2px auto 10px"><input id="q" class="search"
+<div class="searchrow" style="margin:2px 0 10px"><input id="q" class="search"
   placeholder="search entity…"
   autocomplete="off"><span id="qn" class="tick" style="margin-left:10px;font-size:12px;color:#666"></span></div>
 <div class="fig" id="swarmWrap"></div>
