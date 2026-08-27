@@ -33,7 +33,7 @@
   --pos-wash: rgba(23, 98, 74, 0.10);
   --neg-wash: rgba(156, 61, 36, 0.10);
 
-  --measure:   42rem;    /* reading column */
+  --measure:   50rem;    /* reading column */
   --container: 58rem;    /* full width, for tables and figures */
 }
 
