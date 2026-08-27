@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Interpretive Debate</title>
-<meta name="description" content="Towards falsifiable empirical investigation of model motivations. The FW26 research agenda, Part I.">
+<meta name="description" content="Towards falsifiable empirical investigation of model motivations. The FW26 research agenda.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <style>
@@ -66,7 +66,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scrollbar-gutter: stable; }
 
 body {
   margin: 0;
@@ -183,443 +183,190 @@ figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--muted); }
   }
 }
 
-/* === page layout === */
-
-.page {
-  max-width: var(--measure);
+/* === site chrome === */
+body { display: flex; flex-direction: column; min-height: 100vh; }
+.site-header {
+  border-bottom: 1px solid var(--rule);
+  padding: 1.25rem 0;
+  margin-bottom: 3rem;
+}
+.site-header .container,
+.site-footer .container {
+  width: 100%;
+  max-width: var(--container);
   margin: 0 auto;
-  padding: 2rem 1rem 4rem;
+  padding: 0 1.5rem;
+}
+.site-header .container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+}
+.brand {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--heading);
+  text-decoration: none;
+  margin: 0;
+}
+a.brand:hover { text-decoration: underline; }
+.site-nav { display: flex; gap: 1.25rem; font-size: 0.95rem; }
+.site-nav a { color: var(--accent); text-decoration: none; }
+.site-nav a:hover { text-decoration: underline; }
+main { flex: 1 0 auto; }
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.content { max-width: var(--measure); padding-bottom: 4rem; }
+.site-footer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--rule);
+  padding: 1.25rem 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.site-footer p { margin: 0; }
+@media (max-width: 40rem) {
+  .site-header { margin-bottom: 2rem; }
+  .site-header .container { flex-direction: column; align-items: flex-start; }
+  .site-nav { gap: 1rem; }
 }
 </style>
 </head>
 <body>
 
-<div class="page">
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="/">Praxis Research</a>
+    <nav class="site-nav">
+        <a href="/people">People</a>
+    </nav>
+  </div>
+</header>
+<main class="container">
+<article class="content">
 
 <h1>Interpretive Debate</h1>
 <p class="subtitle">Towards Falsifiable Empirical Investigation of Model Motivations</p>
 
+<p class="lede">We develop interpretive debate as epistemic infrastructure for iteratively and empirically answering interpretive questions about AI models, where the accumulation of empirics leads to resolution of interpretive ambiguity and/or calibration of uncertainty, with an initial focus on motivation and realism.</p>
 
-<h2>Interpretive ambiguity challenges safety claims</h2>
+<p>This directly builds on our &ldquo;performative misalignment&rdquo; work (<a href="https://arxiv.org/abs/2606.08243">paper</a>, <a href="https://www.lesswrong.com/posts/tZSkryA4aygKAbPFz/updates-on-performative-misalignment-1">LW post</a>), which we see as a minimal demonstration of one round of debate.</p>
 
-<p>Safety questions are fundamentally about generalization: whether a model that
-behaves well in testing will continue to behave well after deployment. A finite
-set of observations is always compatible with multiple explanations and cannot
-fully determine generalization. Our prediction about model generalization is thus
-an interpretive question, underpinned by inferred latent constructs &mdash;
-features, concepts, goals &mdash; that explain why a model behaves as it does.</p>
+<h2>The difficulty and importance of interpretive questions</h2>
 
-<p>Model capability improvements have predictably resolved lower-level
-interpretive questions &mdash; for example, we are no longer concerned about
-whether frontier models robustly understand tense or syntactic agreement. As
-models grow more capable, the relevant latents become more abstract, shifting
-from features and concepts toward goals and motivations. Even if current models
-don&rsquo;t yet exhibit coherent long-term objectives, the trend predicts that
-they will emerge in more robust forms in future models.</p>
-
-<p><em>Interpretive ambiguity</em> &mdash; the fact that finite observations are
-compatible with multiple latent constructs &mdash; is exacerbated by the rise in
-abstraction level. Lower level interpretive questions are hard to answer but easy
-to specify: we can define precisely what it means for a model to rely on lexical
-overlap rather than entailment. At the motivation level, the difficulty is
-qualitatively different: we cannot give a complete formal account of what
-constitutes &ldquo;scheming&rdquo;, and its natural alternatives &mdash;
-sycophancy, role-playing, confusion &mdash; are equally hard to pin down.</p>
-
-<h2>Case study: is alignment faking motivated by scheming or sycophancy?</h2>
-
-<p>Alignment faking refers to a behavioral pattern where a model&rsquo;s
-compliance shifts depending on whether it perceives itself as being monitored.
-Under the scheming interpretation, the model has internalized a long-term
-objective misaligned with its training signal and strategically complies during
-monitoring to avoid correction &mdash; it would defect if doing so has no
-consequences. However, a competing interpretation is sycophancy: the model infers
-that the setup is part of a safety evaluation designed by researchers, and simply
-performs a strategic deception to appeal the perceived evaluator expectations.</p>
-
-<p>Both interpretations are compatible with the observed behaviors, but imply
-different interventions: countering sycophancy requires reducing sensitivity to
-evaluator cues, while countering scheming requires addressing goal stability and
-strategic planning. An intervention developed against one mechanism may fail
-entirely against the other &mdash; or worse, an intervention that successfully
-suppresses sycophantic compliance-shifting could leave scheming untouched while
-removing the behavioral signal that would have revealed it.</p>
-
-<h2>Two sources of interpretive ambiguity</h2>
-
-<p>We identify two sources of interpretive ambiguity. One is conceptual, the
-other technical.</p>
-
-<p><em>Ontological ambiguity.</em> Latent constructs like motivation and goal are
-underdefined and ambiguous, and it remains an open question whether we can
-specify what token sequences constitute a given motivation. This construct
-validity issue cannot be resolved by more accurate instruments alone, as we do
-not have ground truth to calibrate those instruments against.</p>
-
-<p>One might ask: if the motivation of the original model is ambiguous, perhaps
-we can intervene and make it less ambiguous, then see how the behavior changes?
-For example, we can prompt the model to lie, and observe that the addition of
-that prompt flips the subsequent tokens from factually correct to incorrect, then
-we have a ground truth example of lying. This unfortunately suffers from
-<em>circularity</em>. The construction of the intervention itself &mdash; be it
-prompt, steering, or fine-tuning &mdash; also suffers from ambiguity, and we
-cannot trust that it surgically intervenes on the motivation by face value of
-data construction. For example, we cannot assume that the model&rsquo;s response
-to a lie instruction is &ldquo;I want to lie&rdquo;, which is the spontaneous
-misalignment we are concerned about, not &ldquo;I&rsquo;m invited to role play
-as a liar&rdquo;.</p>
-
-<p><em>Plasticity.</em> The second source of ambiguity is the model itself. The
-adversarial robustness literature has documented sensitivity of all interfaces
-through which we access neural networks. Two pieces of data &mdash; prompt,
-training data, contrastive pairs &mdash; that look semantically identical to
-humans may lead to arbitrarily different model responses. This means two
-good-faith researchers implementing the same instrument might find contradictory
-results due to details &mdash; data construction, prompt wording,
-hyperparameters &mdash; that they would reasonably consider immaterial. The
-models are plastic: with sufficient compute invested in searching over the space
-of reasonable implementations, a researcher can likely find evidence for any
-hypothesis.</p>
-
-<p>Due to ontological ambiguity and plasticity, our empirical investigation of
-interpretive questions may never converge. A skeptical researcher might never be
-convinced that an instrument reliably measures a construct like motivation due to
-lack of ground truth calibration (ontological ambiguity) and plasticity. Under
-the status quo, resolution of interpretive questions does not scale well with the
-amount of empirical investigation: more effort might expand the space of
-defensible conclusions rather than narrowing it.</p>
-
-<p>We need a structured process to effectively accumulate empirical evidence
-towards calibrating uncertainty and eventually resolving interpretive ambiguity,
-instead of relying on interpretive judgments, aka, &ldquo;vibes&rdquo;.</p>
-
-<h2>Our proposed solution: Interpretive debate</h2>
-
-<p>We propose <em>interpretive debate</em>: a structured process for resolving
-interpretively ambiguous claims about models through comparison of competing
-interpretations under enforced fair conditions. The methodology rests on four
-principles, each a response to the challenges of construct validity and
-plasticity identified above:</p>
+<p>AI safety involves a lot of <a href="https://aligned.substack.com/p/crisp-and-fuzzy-tasks">fuzzy</a>, interpretive questions:</p>
 
 <ul>
-<li><strong>Contrastive hypotheses.</strong> Compare competing interpretations
-rather than evaluating any single one in isolation. A claim is only as strong as
-the foil it can reject.</li>
-<li><strong>Convergence.</strong> Require convergence across independent sources
-of evidence &mdash; different instruments with different confounders, and
-different decomposition paths through the recursive structure &mdash; before
-accepting a verdict.</li>
-<li><strong>Compute-indexing.</strong> Index evidence by compute &mdash;
-measuring how the evidential support for a claim scales as more computational
-resources are allocated to testing it, rather than whether the claim holds at any
-single budget.</li>
-<li><strong>Enforcement of rules.</strong> The rules of the debate &mdash;
-symmetric resource allocation, separation of hypothesis-building from evaluation,
-pre-committed experimental design &mdash; must be structurally enforced.</li>
+<li>Is this model scheming?</li>
+<li>Is the model sandbagging?</li>
+<li>Is the model lying?</li>
+<li>Is the model introspective?</li>
+<li>Is the model preferring itself because it recognizes itself?</li>
+<li>Does this steering vector actually control emotion?</li>
 </ul>
 
-<p>The first two principles address the two sources of interpretive ambiguity
-directly. Contrastive hypotheses and framing-convergence respond to ontological
-ambiguity: recursion rewrites construct-level disagreements into more specific
-terms, and convergence across independent framings ensures the result doesn&rsquo;t
-depend on any single rewriting. Instrument-convergence and compute-indexing
-respond to plasticity: instrument-convergence ensures no single method&rsquo;s
-artifacts drive the verdict, and compute-indexing measures how robust that
-verdict is as more resources are allocated to testing it. Enforcement is
-orthogonal to the epistemic content &mdash; it guarantees that the other three
-principles are actually followed rather than aspirationally intended.</p>
+<p>Why do we need interpretation? Because despite <a href="https://arxiv.org/abs/2507.11473">CoTs being generally monitorable</a> right now, we can&rsquo;t trust that the model is <a href="https://arxiv.org/abs/2305.04388">verbalizing</a> <a href="https://docs.google.com/document/d/1WwsnJQstPq91_Yh-Ch2XRL8H_EpsnjrC1dwZXR37PC8/edit?tab=t.0#heading=h.kkaua0hwmp1d">all the reasons</a> that lead to its decisions, or that our behavioral testing fully reveals its <a href="https://arxiv.org/abs/2212.03827">latent knowledge</a> and <a href="https://arxiv.org/abs/2506.10139">capabilities</a>.</p>
 
-<p>Together, the four principles guide the design of an algorithm for producing
-reliable interpretive verdicts. Similar to previous applications of debate in
-safety, we seek a process whose convergence properties come from its structure,
-not from privileged access to ground truth.</p>
+<p>These questions are hard, partly because concepts like scheming and introspection are very hard to define accurately. For weaker models, the interpretive questions of interest were like: is the model exploiting <a href="https://arxiv.org/abs/2502.14127">multiple-choice</a> <a href="https://arxiv.org/abs/2309.12288">format</a> when answering questions, is the model <a href="https://aclanthology.org/P19-1334/">exploiting lexical heuristics</a> when predicting entailment, is the model <a href="https://arxiv.org/abs/2006.09994">looking only at the background</a> when recognizing objects? Those are much easier to define.</p>
 
-<h2>Contrastive hypotheses enable recursive decomposition</h2>
+<p>Despite the difficulty, these questions are important, because the answers underpin our prediction about how the model generalizes. Even for ones that fundamentally cannot be resolved at the moment, we want calibrated uncertainty, e.g., P(scheming), both about the fundamental ambiguity of the question itself, but also for the efficacy of available tools.</p>
 
-<p>The first principle is the contrastive structure. Rather than asking
-&ldquo;what motivation underlies this behavior?&rdquo; &mdash; a question that
-inherits all the difficulty of interpretive ambiguity &mdash; we ask
-&ldquo;which of these two interpretations is better supported?&rdquo; The
-reframing does not resolve the ambiguity directly, but it changes what needs to
-be investigated. Comparing two interpretations identifies a crux: a pair of more
-specific statements about how the behavior is produced under each
-interpretation, whose difference is easier to investigate than the original
-disagreement. The guiding question is: in what counterfactual scenarios would
-the two hypotheses lead to clearly distinguishable behaviors? In the original
-situation, both hypotheses predict the same observed behavior &mdash; that is
-precisely why the question is ambiguous. The crux identifies aspects of the
-situation that could be varied to produce divergent predictions. Designing
-experiments that target the divergence, observing the results, and using them to
-update the relative support for each hypothesis is one round of recursive
-decomposition. Each round rewrites the disagreement in more specific terms,
-trading the breadth of the original question for precision about what exactly
-the two sides disagree on.</p>
+<p>Recently, there have been calls to approach these interpretive questions in a more scientific manner, e.g., <a href="https://www.apolloresearch.ai/science/science-of-scheming/">science of scheming</a>, <a href="https://www.lesswrong.com/posts/DTDoyDTtC8R3bCiTx/from-personas-to-intentions-towards-a-science-of-motivations">science of motivations</a>, just to name a few. I think of them as key building blocks <a href="https://arxiv.org/abs/2505.03989">safety</a> <a href="https://arxiv.org/abs/2501.17315">cases</a>, which formally presents our prediction about how a model would generalize. They are also important for <a href="https://alignment.anthropic.com/2025/alignment-faking-mitigations/">developing mitigations</a>.</p>
 
-<p>Return to the scheming-vs-sycophancy question from the opening. Both
-hypotheses offer a narrative about why the model&rsquo;s compliance is not its
-default disposition but depends on something the model figures out about its
-situation. Under scheming, the narrative is: the model infers that its behavior
-is being observed, reasons about the consequences of non-compliance for its own
-preservation, and complies because defection would be costly. Under sycophancy,
-the narrative is: the model infers what the evaluator expects, pattern-matches
-to those expectations, and complies because that is what the learned pattern
-produces in this context. These narratives share common ground &mdash; in both,
-the model performs additional inference beyond the immediate task, responding not
-just to the prompt but to something it has worked out about its situation. They
-disagree about what is being inferred: consequences of being observed, or
-evaluator expectations. This is one level of recursion. The question has moved
-from &ldquo;which motivation?&rdquo; to &ldquo;what is the model inferring
-about its situation?&rdquo; The scheming account now predicts sensitivity to
-stakes and observability &mdash; changing what is at stake or whether the model
-believes it is being watched should change its behavior. The sycophancy account
-predicts sensitivity to evaluator cues independent of consequences &mdash;
-changing what the evaluator appears to want should change behavior even when
-stakes are held fixed.</p>
+<h2>Unstructured empirical investigation may never converge</h2>
 
-<p>Investigation proceeds by varying these aspects of the situation rather than
-attempting to directly manipulate the motivation itself. This is a general
-constraint on how instruments should operate within the debate: vary the
-situation, not the motivation. A naive approach would directly intervene on the
-motivation &mdash; fine-tune two versions of the model, one made more scheming
-and one made more sycophantic, and compare their behavior. But this conflates
-whether a motivation <em>can</em> produce the behavior with whether it
-<em>does</em> produce it in the unmodified model. Showing that a model made more
-scheming behaves differently tells us about the causal effect of the
-intervention, not about whether scheming was present before we intervened. The
-recursive strategy avoids this by modifying the conditions under which the
-motivation would manifest differently, keeping the model itself unchanged.</p>
+<p>My biggest concern is that despite our best efforts and tools that accelerate research like Bloom, Petri, and <a href="https://www.anthropic.com/research/automated-alignment-researchers">auto hill-climbers</a>, the empirical evidence we accumulate over time do not lead to effective resolution of interpretive ambiguity or calibrated uncertainty. I have two specific reasons for this.</p>
 
-<p>This is how contrastive recursion addresses ontological ambiguity. The
-ambiguity &mdash; that our motivational vocabulary is imprecise in ways that
-resist exact specification &mdash; is not resolved at the top level. The initial
-reframing still requires some grasp of what &ldquo;scheming&rdquo; and
-&ldquo;sycophancy&rdquo; mean, and that grasp is exactly what is in question.
-But each recursion rewrites the disagreement in more specific terms: not
-&ldquo;is this scheming?&rdquo; but &ldquo;does the model&rsquo;s behavior
-change when stakes change independently of evaluator expectations?&rdquo; The
-terms of the debate shift from labels whose meaning is contested toward
-predictions whose truth conditions are more concrete. The labels do not need to
-be well-defined for the predictions to be testable &mdash; we need the two
-interpretations to <em>disagree</em> about something observable, not to be
-individually precise. Whether this process reliably reaches territory where the
-remaining disagreements are fully empirically tractable is itself an empirical
-question &mdash; one the isomorphism validation strategy described later is
-designed to test.</p>
+<p>First, latent constructs like motivation and goal are underdefined and ambiguous. It&rsquo;s unclear how much ontological process is needed for the field to reach consensus on what constitutes scheming, and our target will likely change as model capabilities improve.</p>
 
-<p>Finally, the consequence-inference / expectation-inference decomposition is
-one way to frame the crux of scheming vs. sycophancy, but not the only one. A
-different researcher might identify a different crux &mdash; perhaps about
-whether the model&rsquo;s reasoning is sensitive to time horizon, or whether it
-generalizes across structurally different monitoring setups. The contrastive
-structure admits multiple framings, each spelling out the two hypotheses
-differently and identifying a different direction for disambiguation. These can
-be pursued as independent parallel lines of investigation. This raises a natural
-question: how do we aggregate results across parallel decompositions that may not
-agree? This is the problem the convergence principle addresses.</p>
+<p>Second, models are highly sensitive, and it affects the data-driven instruments we use to study interpretive questions, e.g., steering vectors. For example, due to <a href="https://arxiv.org/abs/2507.14805">subliminal</a> <a href="https://arxiv.org/abs/2602.04863">effects</a> on <a href="https://arxiv.org/abs/2602.04899">synthetic</a> <a href="https://arxiv.org/abs/2606.04071">data</a>, two independent implementations of the same experiment using <a href="https://arxiv.org/abs/2604.25783">steering vectors</a>, might lead to completely opposite findings.</p>
+
+<p>This conceptual ambiguity of the hypotheses and plasticity of data-driven instruments largely doomed the pre-GPT ad-hoc interpretability research, with back-and-forth debates like how gradient-based input attribution are <a href="https://openreview.net/forum?id=dYeAHXnpWJ4">theoretically sound</a> but you can always find <a href="https://arxiv.org/abs/1710.10547">counterexamples</a>, and how attention <a href="https://arxiv.org/abs/1902.10186">is not</a> or <a href="https://arxiv.org/abs/1908.04626">is not not</a> explanation. These debates are academically interesting, but did not lead to actual resolution.</p>
+
+<p>In short, unorganized empirical investigation might lead to an accumulation of evidence that makes us more confused. We need something more structured.</p>
+
+<h2>Debate for interpretive questions</h2>
+
+<p>Our core idea is defeasibility: in the absence of ground truth for latent constructs like motivation, truth is not a property we verify against a reference but an epistemic status that survives adversarial challenge. A claim about a model&rsquo;s motivation is warranted not because we can confirm it against some oracle, but because it has withstood structured attempts to defeat it.</p>
+
+<p><a href="https://arxiv.org/abs/1805.00899">Debate</a> provides an excellent blueprint for these interpretive questions: an investigative process that&rsquo;s structurally biased towards the truth. Instead of designing individual methods to find a specific truth, debate specifies truth-finding processes. In interpretive debate, defeasibility is implemented as three key principles:</p>
+
+<ul>
+<li><strong>Contrastive hypotheses</strong>, which enable recursive decomposition</li>
+<li><strong>Convergence</strong> across independent sources of evidence help calibrate uncertainty</li>
+<li><strong>Compute-indexed evidence</strong> and Occam&rsquo;s razor</li>
+</ul>
+
+<h2>Contrastive hypotheses enables recursive decomposition</h2>
+
+<p>The first step of debate is to spell out two competing hypotheses. The field has already done this for many of these interpretive questions:</p>
+
+<ul>
+<li>Is the model scheming [or <a href="https://www.lesswrong.com/posts/qeSDuj3AfkRfJBfvb/sycophancy-towards-researchers-drives-performative">sycophantic towards researchers</a>]?</li>
+<li>Is the model sandbagging [or <a href="https://alignment.anthropic.com/2026/hot-mess-of-ai/">genuinely confused</a>]?</li>
+<li>Is the model lying [or <a href="https://arxiv.org/abs/2602.20273">role-playing as a liar</a>]?</li>
+<li>Is the model introspective [or <a href="https://www.lesswrong.com/posts/LD8yupMtE6btAE3R9/tests-of-llm-introspection-need-to-rule-out-causal-bypassing">learning that in-context</a>]?</li>
+<li>Is the model preferring itself due to self-recognition [or <a href="https://arxiv.org/abs/2601.22548">it&rsquo;s simply a bad judge</a>]?</li>
+</ul>
+
+<p>The reframing does not resolve the ambiguity directly, but it changes what needs to be investigated. Comparing two interpretations identifies a crux: a pair of more specific statements about how the behavior is produced under each interpretation, whose difference is easier to investigate than the original disagreement. The guiding question is: in what counterfactual scenarios would the two hypotheses lead to clearly distinguishable behaviors? In the original situation, both hypotheses predict the same observed behavior; the crux identifies aspects of the situation that could be varied to produce divergent predictions. Designing experiments that target the divergence, observing the results, and using them to update the relative support for each hypothesis is one round of recursive decomposition.</p>
+
+<p>Of course, each of these concepts have many different confounders: lying is confounded with both untruthfulness (saying something non-factual because the model genuinely believes in that) and with instruction following (role-playing as a liar). The contrastive structure admits multiple framings, each spelling out the two hypotheses differently and identifying a different direction for disambiguation. These can be pursued as independent parallel lines of investigation. This raises a natural question: how do we aggregate results across parallel decompositions that may not agree?</p>
 
 <h2>Convergence across independent sources of evidence</h2>
 
-<p>The second principle is convergence. No single source of evidence is
-sufficient to resolve an interpretive question &mdash; not because individual
-sources are uninformative, but because each carries confounders specific to how
-it interacts with the model. A verdict is accepted only when independent sources
-of evidence, with different confounders, converge on the same conclusion.</p>
+<p>Convergence operates along two dimensions.</p>
 
-<p>Convergence operates along two dimensions, each addressing a different source
-of interpretive ambiguity.</p>
+<p>The first is convergence across recursion paths. The same top-level disagreement can be recursed on in multiple ways. Each recursion path spells out the two contrastive hypotheses differently, directing investigation toward different aspects of the disagreement. Any single framing could inadvertently direct investigation toward territory where one interpretation looks better for reasons specific to that framing rather than to the model. When independent recursion paths converge on the same top-level verdict, the convergence rules out these framing-specific artifacts.</p>
 
-<p>The first is convergence across instruments. The instruments we use to
-investigate model behavior &mdash; fine-tuning, activation steering, prompting,
-behavioral testing &mdash; each interact with the model through different
-interfaces. Each instrument interacts with the model through a different
-interface &mdash; parameter space, activation space, input space &mdash; and
-each interface introduces its own artifacts. When instruments with different
-interfaces converge on the same verdict, the convergence rules out these
-single-instrument artifacts &mdash; a confound would need to operate
-consistently across fundamentally different modes of interaction with the model.
-Instrument-convergence addresses plasticity: the concern that any individual
-finding might be an artifact of the particular instrument&rsquo;s sensitivity to
-implementation details rather than a genuine property of the model.</p>
+<p>The second is convergence across instruments. The instruments we use to investigate model behavior&mdash;fine-tuning, activation steering, prompting, behavioral testing&mdash;each interact with the model through different interfaces, and each interface introduces its own artifacts. When instruments with different interfaces converge on the same verdict, the convergence rules out these single-instrument artifacts: a confound would need to operate consistently across fundamentally different modes of interaction with the model.</p>
 
-<p>The second is convergence across recursion paths. The contrastive section
-showed that the same top-level disagreement can be recursed on in multiple ways.
-Each recursion path spells out the two contrastive hypotheses differently,
-directing investigation toward different aspects of the disagreement. Any single
-framing could inadvertently direct investigation toward territory where one
-interpretation looks better for reasons specific to that framing rather than to
-the model. When independent recursion paths converge on the same top-level
-verdict, the convergence rules out these framing-specific artifacts.
-Framing-convergence addresses ontological ambiguity: the concern that our
-motivational vocabulary is ambiguous enough that how we choose to spell out the
-disagreement shapes which interpretation the evidence favors.</p>
+<h2>Compute-indexed evidence</h2>
 
-<p>The convergence principle is inspired by Invariant Risk Minimization (IRM).
-The idea of IRM is that the true causal features of a task might be spuriously
-correlated with artifacts in different environments, e.g., objects vs.
-background distractors in image classification. The invariance principle says
-that, in order to discover causal features without access to ground truth
-(because no dataset is free of artifacts) is to find features that are
-consistently predictive across environments. Each environment has its own
-confounders &mdash; artifacts of the instrument, artifacts of the framing. The
-interpretation that persists across environments is the invariant signal, and it
-is more likely to reflect a real property of the model than any finding from a
-single environment.</p>
+<p>When two competing hypotheses emit indistinguishable observations, we favor the one that&rsquo;s simpler and is more <a href="https://arxiv.org/abs/2601.13566">self-coherent</a>, e.g., applying Occam&rsquo;s razor.</p>
 
-<p>The degree of convergence is also informative. The disagreement between
-independent sources is diagnostic. Divergence across instruments flags that at
-least one instrument&rsquo;s verdict is driven by its confounders rather than by
-the model&rsquo;s actual process &mdash; and the pattern of divergence can
-indicate which instrument is the outlier and what confounder is responsible.
-Divergence across recursion paths is more subtle: it may flag that one
-decomposition found an artifact of the framing, but it may also indicate that
-the two framings are picking up on genuinely different aspects of the
-model&rsquo;s behavior that don&rsquo;t reduce to a single interpretation. In
-the latter case, divergence is not a failure but information &mdash; it suggests
-the top-level disagreement is more complex than a binary choice between two
-hypotheses, and the model&rsquo;s actual process may not map cleanly onto
-either.</p>
+<p>The concern here is that given unlimited compute, an agent (human or AI) can find evidence supporting any interpretation. The space of reasonable implementations is large enough and the model sensitive enough for a sufficiently resourced search to succeed. Rather than asking whether a claim holds at a given budget, we ask how the evidential support for each hypothesis scales as more computational resources are allocated to testing it. The result is a scaling law rather than a binary verdict.</p>
 
-<p>The two dimensions of convergence correspond to the two sources of
-interpretive ambiguity developed earlier. Instrument-convergence, together with
-compute-indexing, is the methodology&rsquo;s response to plasticity &mdash;
-ensuring that verdicts are robust to the choice of method and the amount of
-effort invested. Framing-convergence, together with contrastive hypotheses, is
-the response to ontological ambiguity &mdash; ensuring that verdicts are robust
-to how the disagreement is framed and which crux is identified.</p>
+<p>Compute-indexing tracks how evidence accumulates under constructive investigation. A complementary measure is cross-examination: testing whether a piece of evidence survives scrutiny from directions it was not optimized for. Cross-examination is more explicitly adversarial: rather than building the case for a hypothesis, it attempts to break it, probing for inconsistencies and testing whether findings generalize beyond the specific conditions that produced them.</p>
 
-<h2>Compute-indexing replaces verdicts with scaling laws</h2>
+<p>Enforcing debate rules and compute-indexing evidence&mdash;especially those produced by human researchers&mdash;is not trivial. This would require infrastructure that, for example, allow researchers to pre-register their hypotheses and experiment design. Importantly, most negative results about a hypothesis don&rsquo;t get published, but those are equally valuable as positive results when calibrating. We think this type of epistemic infrastructure is valuable.</p>
 
-<p>The third principle is that verdicts are not points but curves. Plasticity
-means that given unlimited compute, a researcher can find evidence supporting
-any interpretation &mdash; the space of reasonable implementations is large
-enough and the model sensitive enough for a sufficiently resourced search to
-succeed. Rather than asking whether a claim holds at a given budget, we ask how
-the evidential support for each hypothesis scales as more computational
-resources are allocated to testing it. The result is a scaling law rather than a
-binary verdict.</p>
+<h2>Interpretive debate as epistemic infrastructure for safety cases</h2>
 
-<p>The shape of these curves is the core empirical object. A hypothesis that
-requires elaborate search over implementations to find supporting evidence is in
-a qualitatively different position than one where the evidence shows up cheaply.
-Asymmetry in the scaling curves &mdash; one hypothesis accumulating support
-significantly faster than the other &mdash; is itself evidence, independent of
-the absolute level of support at any particular budget. The methodology
-constrains this comparison by making compute a measured, symmetric resource:
-each hypothesis receives equal compute to build its case. Symmetric allocation
-is what makes the comparison fair &mdash; any asymmetry in resources biases the
-outcome independently of the evidence.</p>
+<p>Safety cases are fundamentally interpretive claims: to argue that a model will behave well in conditions we haven&rsquo;t tested, we need to make claims about unobservable latent variable and calibrate our uncertainty of interpretive ambiguity. We argue that instead of binary verdict, we should design an algorithm that produces a structured profile of competing hypotheses, such that the accumulation of empirical evidence leads to resolution of interpretive ambiguity and calibrated uncertainty. We hope to design a family of algorithms (or, truth-finding processes) that is generally applicable to many interpretive questions like motivation, goal-directedness, emotion, introspection, such that it can work as an epistemic infrastructure for safety research.</p>
 
-<p>Compute-indexing tracks how evidence accumulates under constructive
-investigation. A complementary measure is cross-examination: testing whether the
-evidence that has been found survives scrutiny from directions it was not
-optimized for. Cross-examination is more explicitly adversarial &mdash; rather
-than building the case for a hypothesis, it attempts to break it, probing for
-inconsistencies and testing whether findings generalize beyond the specific
-conditions that produced them. For example, if fine-tuning produces a model that
-endorses a particular interpretation, cross-examination asks whether that
-endorsement generalizes to related contexts several steps removed, survives
-direct challenge, and is representationally consistent with genuine model
-behavior &mdash; or whether it is shallow and breaks under pressure.</p>
+<h2>One round of interpretive debate by human researchers</h2>
 
-<p>Cross-examination can itself be compute-indexed: run it at increasing depth,
-from increasing numbers of angles, and track how the verdict changes. The
-scaling laws we care about therefore include both the constructive and
-adversarial phases &mdash; how easily can evidence be built for each hypothesis,
-and how easily can it be torn down? A robust interpretive verdict is one where
-the supporting evidence accumulates cheaply and resists cross-examination
-deeply.</p>
+<p>Our recent work on performative misalignment (<a href="https://arxiv.org/abs/2606.08243">paper</a>, <a href="https://www.lesswrong.com/posts/tZSkryA4aygKAbPFz/updates-on-performative-misalignment-1">LW post</a>) is a manual demonstration of one round of interpretive debate applied to alignment faking. This section describes what the round exercises and what it leaves open.</p>
 
-<h2>Enforcing the rules of the debate</h2>
+<p><strong>Contrastive hypotheses.</strong> The contrastive framing is: is the compliance gap driven by scheming (goal preservation under consequences) or sycophancy (pattern-matching to researcher expectations)? Neither motivation can be intervened on directly&mdash;amplifying scheming requires genuine demonstrations of it, which is the open question. The contrast breaks the circularity: each hypothesis entails a distinct process the model must run, operationalizable where the motivations themselves are not. The round intervenes on what each hypothesis tracks&mdash;consequences for scheming, researcher expectations for sycophancy&mdash;both testable outside the original setup, allowing for tests for convergence.</p>
 
-<p>The first three principles &mdash; contrastive hypotheses, convergence, and
-compute-indexing &mdash; are methodological: they specify what the debate should
-produce. The fourth principle is structural: enforcement of the rules governing
-how research is conducted within the debate. The three principles specify what
-the debate should look like; enforcement is what ensures it actually happens
-that way.</p>
+<p><strong>Convergence across instruments.</strong> Each model organism runs through SDF, steering, and prompting. SDF and steering are the primary instruments, operating below performed reasoning; prompting serves as a calibration check against SDF checkpoints with known family. The instruments converge where they can be run: three of four models are expectation-dominant under SDF, and prompting validates these results. Steering demonstrates a dissociation in Llama-3.1-70B: the consequence direction is recoverable but not action-coupled (it shifts retraining reasoning without moving compliance), the expectation direction moves both, and neither moves the gap.</p>
 
-<p>Pre-committed experimental design locks the compute allocation, stopping
-criteria, and evaluation metrics before results are observed. This upholds
-compute-indexing: the scaling curves are only interpretable if any asymmetry in
-the evidence reflects the model and the hypotheses rather than asymmetric effort
-by the researcher. Without pre-commitment, intermediate results can
-unconsciously reshape the analysis &mdash; refining the search for a promising
-hypothesis, adjusting stopping criteria, or shifting resources &mdash; producing
-asymmetries that look like evidence but reflect investigator behavior.</p>
+<p><strong>What the round does not exercise.</strong> The interventions are symmetric: one team makes an even-handed pass over both hypotheses rather than assigning debaters to argue each side. This keeps the contrastive structure intact while simplifying the apparatus, but leaves adversarial cross-examination untested. The evidential hierarchy rests on one assumption we have not tested&mdash;that SDF and steering operate below performed reasoning rather than retargeting it&mdash;which is the natural first target for a second round. Evidence is indexed by instrument and by transfer, but not yet by compute, so the output is a comparative motivation and realism profile rather than a calibrated P(scheming). And cross-examination so far means robustness checks rather than a debater assigned to break the expectation-dominant verdict.</p>
 
-<p>Separation of hypothesis-building from evaluation ensures that the process of
-framing the crux is procedurally separated from the process of testing it. This
-upholds the contrastive structure: the framing of the crux shapes what the
-investigation looks for, so allowing the same process to both frame and evaluate
-introduces a confound between the quality of the framing and the strength of the
-evidence.</p>
+<p>Being one round, the demonstration also works within a single decomposition of the disagreement&mdash;the binary contrast between scheming and sycophancy that the field has already spelled out&mdash;setting aside other candidates the same behavior could express (role-play, generic helpfulness, refusal suppression) and leaving for later rounds the question of whether alternative framings reach the same verdict.</p>
 
-<p>Independence across parallel investigations ensures that instruments and
-recursion paths do not share intermediate results. This upholds convergence:
-convergence across sources of evidence is only informative if those sources are
-genuinely independent. Shared intermediate results or shared assumptions can
-produce apparent convergence that reflects the shared starting point rather than
-a real property of the model.</p>
+<h2>What&rsquo;s next</h2>
 
-<p>Automated research agents enable these separations at a level that human
-researchers cannot achieve. By instantiating independent agents with different
-briefs and no shared state, we can literally separate parallel
-investigations &mdash; a capability that human researchers, who cannot avoid
-carrying insights from one experiment into the design of the next, do not have.
-Two agents pursuing independent recursion paths can be guaranteed not to
-cross-contaminate; two agents building the case for competing hypotheses can be
-guaranteed symmetric resource allocation; an agent evaluating a crux can be
-guaranteed not to have participated in framing it.</p>
+<p>Our key focus next is to improve the manual one-round debate, including compute-indexing, cross-examination, more convergence experiments, improving SFT and steering methodology, as well as replicating the process on other behaviors and model organisms.</p>
 
-<p>The goal is not adversariality but convergence: we want the debate to converge
-toward truth rather than toward the narrative of whoever has more resources or
-cleverness to deploy.</p>
+<p>In the spirit of defeasibility, we believe our methodology itself should also be red-teamed and iteratively improved. This agenda benefited a lot from feedback and critiques of our initial experiments on performative misalignment, and we hope that the community can continue to help us identify those flaws.</p>
 
-<h2>Isomorphism across interpretive questions and external validation</h2>
-
-<p>The methodology described above &mdash; contrastive hypotheses, convergence,
-compute-indexing, enforcement &mdash; is designed to operate on the structure of
-interpretive questions, not on the content of any particular one. The underlying
-assumption is that interpretive questions share this structure: two or more
-competing interpretations of observed behavior, ontological ambiguity in the
-interpretive vocabulary, plasticity in the model&rsquo;s responsiveness to
-different instruments, and the need for contrastive investigation to make
-progress. Isomorphism is what justifies applying the same algorithm across
-different interpretive questions &mdash; scheming vs. sycophancy,
-goal-directedness vs. pattern-matching, deceptive alignment vs. capability
-overhang, and others. These questions differ in content but share the structural
-features the methodology is designed to address.</p>
-
-<p>This structural similarity has a direct consequence for validation. Some
-interpretive questions are easier than others &mdash; not because they have
-simpler structure, but because the constructs happen to be well-defined or
-because the ground truth is available through some independent channel. These
-questions are isomorphic to the harder ones in structure: they involve competing
-interpretations, multiple possible instruments, the same convergence and
-compute-indexing requirements. But they lack the ontological ambiguity that makes
-the harder questions hard. Running the full methodology on these easier cases
-tests whether the instruments, convergence, compute-indexing, and enforcement
-work when they are not also fighting construct validity. If the debate converges
-to the known-correct answer, the methodology has passed a necessary check. If it
-does not, something in the algorithm is broken at a level more basic than
-ontological ambiguity &mdash; and that needs to be fixed before applying it to
-cases where the constructs are genuinely uncertain.</p>
-
-<p>This is a conservative validation strategy, and it is important to be clear
-about what it does and does not establish. Success on the isomorphic case
-validates the machinery &mdash; the instruments produce reliable evidence,
-convergence is informative, compute-indexing yields interpretable scaling curves,
-and enforcement prevents the process from being corrupted. It does not validate
-that the real constructs are well-defined enough for the machinery to gain
-traction. That is the job of contrastive recursion &mdash; rewriting
-construct-level disagreements into more specific terms until they become
-empirically tractable &mdash; and isomorphic validation cannot test it directly,
-because the isomorphic setting is chosen precisely to sidestep the construct
-problem. Success on the isomorphic case is a necessary condition, not a
-sufficient one: if the methodology fails when constructs are well-defined, it
-will certainly fail when they are not.</p>
-
-</div>
+</article>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <p>Praxis Research</p>
+  </div>
+</footer>
 
 </body>
 </html>
