@@ -149,7 +149,7 @@ ${inner}
 </main>
 <footer class="site-footer">
   <div class="container">
-    <p>${esc(site.footerNote)} · <a href="${site.contactForm}">Contact</a> · <a href="/notes/">Notes</a> · <a href="/design/">Design</a> · <a href="/feed.xml">RSS</a></p>
+    <p>${esc(site.footerNote)} · <a href="${site.contactForm}">Contact</a> · <a href="/design/">Design</a> · <a href="/feed.xml">RSS</a></p>
   </div>
 </footer>
 </body>
