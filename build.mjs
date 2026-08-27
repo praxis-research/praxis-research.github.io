@@ -84,16 +84,6 @@ function splitMeta(html) {
 
 /* --------------------------------------------------------------- loading */
 
-function loadDir(dir) {
-  const abs = join(SRC, dir);
-  if (!existsSync(abs)) return [];
-  return readdirSync(abs).filter((f) => extname(f) === '.md').map((f) => {
-    const raw = readFileSync(join(abs, f), 'utf8');
-    const { data, body } = parseFrontmatter(raw);
-    const name = basename(f, '.md');
-    return { ...data, slug: name, url: `/${dir}/${name}/`, body, source: `content/${dir}/${f}` };
-  });
-}
 
 function loadPage(name) {
   const file = join(SRC, `${name}.md`);
@@ -201,15 +191,6 @@ ${items}
 </article>`;
   },
 
-  post: (page) => `<article class="content post">
-<p class="backlink"><a href="/blog/">← All posts</a></p>
-<h1>${esc(page.title)}</h1>
-<p class="byline">${esc(page.authors || '')}${page.date ? ` · <time datetime="${page.date}">${formatDate(page.date)}</time>` : ''}</p>
-${page.venue ? `<p class="venue">${esc(page.venue)}</p>` : ''}
-${page.paper_url ? `<p class="paper-link"><a href="${page.paper_url}">Read the paper →</a></p>` : ''}
-${page.draft_note ? `<p class="note">${esc(page.draft_note)}</p>` : ''}
-${md(page.body, page)}
-</article>`,
 };
 
 /* ----------------------------------------------------------------- write */
@@ -236,7 +217,10 @@ function render(page, ctx) {
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 
-const posts = loadDir('blog').sort((a, b) => String(b.date).localeCompare(String(a.date)));
+const blogFile = join(SRC, 'blog.json');
+const posts = existsSync(blogFile)
+  ? JSON.parse(readFileSync(blogFile, 'utf8')).sort((a, b) => String(b.date).localeCompare(String(a.date)))
+  : [];
 // Notes are ported artifacts living in static/notes/; this manifest is what
 // bin/port-artifact.mjs writes, and it is the only thing the index reads.
 const notesFile = join(SRC, 'notes.json');
@@ -248,7 +232,6 @@ const ctx = { posts, notes };
 const pages = readdirSync(SRC).filter((f) => extname(f) === '.md').map((f) => loadPage(basename(f, '.md')));
 
 for (const p of pages) render(p, ctx);
-for (const p of posts) render({ ...p, layout: 'post' }, ctx);
 
 // 404
 emit('/404', shell({ url: '/404/', title: 'Not found' },

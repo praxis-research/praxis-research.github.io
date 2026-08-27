@@ -1,0 +1,23 @@
+[
+  {
+    "url": "/fw26-agenda",
+    "title": "Interpretive Debate",
+    "authors": "Shi Feng",
+    "date": "2026-08-27",
+    "summary": "Towards falsifiable empirical investigation of model motivations."
+  },
+  {
+    "url": "/grafting",
+    "title": "Grafting: Controlling the Scope of a Fine-Tuning Update",
+    "authors": "Shi Feng",
+    "date": "2026-08-25",
+    "summary": "Train a LoRA on the base model, transplant it onto the instruct model. The graft installs more belief and spills far less."
+  },
+  {
+    "url": "/comparative-motivation-profile",
+    "title": "Comparative Motivation Profiles",
+    "authors": "David Vella Zarb, Rustem Turtayev, Taywon Min, Jinghua Ou, Shi Feng",
+    "date": "2026-08-25",
+    "summary": "Operationalizing intent as propensity through symmetric belief editing."
+  }
+]
