@@ -160,7 +160,6 @@ ${md(page.body, page)}
 </article>`,
 
   people: (page) => `<article class="content people">
-<h1>${esc(page.title)}</h1>
 ${splitMeta(md(page.body, page))}
 </article>`,
 
@@ -183,7 +182,6 @@ ${items ? `<ul class="post-list">\n${items}\n</ul>` : '<p class="summary">No not
     ${p.summary ? `<p class="summary">${esc(p.summary)}</p>` : ''}
   </li>`).join('\n');
     return `<article class="content">
-<h1>${esc(page.title)}</h1>
 ${md(page.body, page)}
 ${items ? `<ul class="post-list">
 ${items}
