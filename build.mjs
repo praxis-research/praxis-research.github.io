@@ -309,7 +309,7 @@ if (CHECK) {
     const where = '/' + relative(OUT, f);
     for (const m of html.matchAll(/(?:href|src)="(\/[^"#]*)"/g)) {
       const href = m[1];
-      const candidates = [href, href + 'index.html', href + '/index.html', href.replace(/\/$/, '') + '/index.html'];
+      const candidates = [href, href + 'index.html', href + '/index.html', href.replace(/\/$/, '') + '/index.html', href + '.html'];
       if (!candidates.some((c) => exists.has(c))) problems.push(`${where}: dead internal link ${href}`);
     }
   }
