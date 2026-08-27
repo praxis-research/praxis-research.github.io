@@ -127,8 +127,7 @@ function shell(page, inner) {
 <body>
 <header class="site-header">
   <div class="container">
-    ${page.url === '/' ? `<h1 class="brand">${esc(site.title)}</h1>`
-                       : `<a class="brand" href="/">${esc(site.title)}</a>`}
+    <a class="brand" href="/">${esc(site.title)}</a>
     <nav class="site-nav">
         ${nav}
     </nav>
