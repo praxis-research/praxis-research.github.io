@@ -1,7 +1,7 @@
 ---
 title: About
 nav_title: About
-layout: home
+layout: blog-index
 ---
 
 We do alignment research to ensure human oversight and control over *future* AIs.

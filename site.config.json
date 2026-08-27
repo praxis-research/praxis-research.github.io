@@ -6,10 +6,6 @@
     {
       "label": "People",
       "href": "/people"
-    },
-    {
-      "label": "Blog",
-      "href": "/blog"
     }
   ],
   "contactForm": "https://airtable.com/appHnvwbow1epprSd/pagqZfMyMvha6rWnD/form",
