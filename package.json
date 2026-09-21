@@ -10,7 +10,8 @@
     "check": "node build.mjs --check",
     "deploy": "node deploy.mjs",
     "preview": "node build.mjs && node preview.mjs",
-    "add-note": "node bin/port-artifact.mjs"
+    "add-note": "node bin/port-artifact.mjs",
+    "figures": "node bin/figures.mjs"
   },
   "dependencies": {
     "marked": "^15.0.7"

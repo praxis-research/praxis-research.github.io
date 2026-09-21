@@ -120,6 +120,33 @@ editing them:
 - **Site chrome CSS** (`.site-header`, `.brand`, `.site-nav`, `.site-footer`)
   must match `style.css`. Copy the block; do not improvise.
 
+### Move figures between a post and its draft
+
+A figure has one home at a time. While a post is drafted in a Claude Doc, the
+figure lives in the doc. Once the post is published, it lives in the page as
+inline `<svg>` styled with design tokens, and nowhere else. Do not keep figure
+files in the repo alongside the page.
+
+To revise a published post in a doc, give the doc a view of the page's figures:
+
+```bash
+npm run figures -- flatten static/<page>.html <outDir>
+```
+
+That writes each inline `<svg>` as a self-contained file: class rules become
+attributes and tokens become light-theme values, because a doc strips `<style>`
+from an uploaded SVG. Upload those files to the doc; do not commit them.
+
+To publish a figure that was drawn in a doc:
+
+```bash
+npm run figures -- tokenize <figure.svg>
+```
+
+That prints the SVG with every colour that matches a design token rewritten as
+`var(--token)`, ready to paste inside a `<figure>` in the page. It names any
+colour that is not a token; fix those by hand (rule 5).
+
 ### Change how the site looks
 
 Read `/design/` (`content/design.md`) first. Then edit `assets/design.css` if it
