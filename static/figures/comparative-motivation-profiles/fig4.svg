@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 310" aria-label="Line chart: steering coefficient vs. compliance rate for monitored and unmonitored conditions. At baseline, the gap is 19 percentage points. At +0.03, it narrows to 4." width="560" height="310">
+<style>
+:root {
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --bg:       #ffffff;
+  --surface:  #f4f6f8;   
+  --ink:      #1a1d21;   
+  --heading:  #0b0d0f;
+  --muted:    #5f6b74;   
+  --rule:     #dce1e6;
+  --accent:   #125fa8;   
+  --pos:      #17624a;   
+  --neg:      #9c3d24;   
+  --pos-wash: rgba(23, 98, 74, 0.10);
+  --neg-wash: rgba(156, 61, 36, 0.10);
+
+  --measure:   50rem;    
+  --container: 58rem;    
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:       #15181b;
+    --surface:  #1d2126;
+    --ink:      #dfe4e8;
+    --heading:  #ffffff;
+    --muted:    #96a2ab;
+    --rule:     #2c3238;
+    --accent:   #7fb3e8;
+    --pos:      #5fc39d;
+    --neg:      #e08a68;
+    --pos-wash: rgba(95, 195, 157, 0.12);
+    --neg-wash: rgba(224, 138, 104, 0.12);
+  }
+}
+.chart-grid { stroke: var(--rule); stroke-width: 0.5; }
+.chart-axis { stroke: var(--ink); stroke-width: 1; fill: none; }
+.chart-label { fill: var(--muted); font-family: var(--font-mono); font-size: 10px; }
+.chart-label-y { text-anchor: end; }
+.chart-label-x { text-anchor: middle; }
+.line-monitored { stroke: var(--accent); stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.line-unmonitored { stroke: var(--muted); stroke-width: 2; fill: none; stroke-dasharray: 6 3; stroke-linecap: round; stroke-linejoin: round; }
+.dot-monitored { fill: var(--accent); }
+.dot-unmonitored { fill: var(--muted); }
+.gap-fill { fill: var(--accent); opacity: 0.07; }
+.gap-line { stroke: var(--ink); stroke-width: 0.75; stroke-dasharray: 2 2; }
+.gap-label { fill: var(--ink); font-family: var(--font-mono); font-size: 9.5px; font-weight: 700; text-anchor: middle; }
+.legend-line-solid { stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; }
+.legend-line-dash { stroke: var(--muted); stroke-width: 2; stroke-dasharray: 5 2.5; stroke-linecap: round; }
+.legend-text { fill: var(--ink); font-family: var(--font-body); font-size: 10.5px; }
+.axis-note { fill: var(--muted); font-family: var(--font-body); font-size: 9px; font-style: italic; }
+</style>
+<rect x="0" y="0" width="560" height="310" fill="var(--bg)"/>
+
+  <!-- grid lines -->
+  <line x1="55" y1="191" x2="540" y2="191" class="chart-grid"/>
+  <line x1="55" y1="132" x2="540" y2="132" class="chart-grid"/>
+  <line x1="55" y1="74" x2="540" y2="74" class="chart-grid"/>
+
+  <!-- axes -->
+  <line x1="55" y1="15" x2="55" y2="250" class="chart-axis"/>
+  <line x1="55" y1="250" x2="540" y2="250" class="chart-axis"/>
+
+  <!-- y-axis labels -->
+  <text x="50" y="253" class="chart-label chart-label-y">0%</text>
+  <text x="50" y="194" class="chart-label chart-label-y">25%</text>
+  <text x="50" y="136" class="chart-label chart-label-y">50%</text>
+  <text x="50" y="77" class="chart-label chart-label-y">75%</text>
+  <text x="50" y="19" class="chart-label chart-label-y">100%</text>
+
+  <!-- x-axis labels -->
+  <text x="55" y="266" class="chart-label chart-label-x">−0.03</text>
+  <text x="297" y="266" class="chart-label chart-label-x">0</text>
+  <text x="540" y="266" class="chart-label chart-label-x">+0.03</text>
+
+  <!-- x-axis direction notes -->
+  <text x="140" y="280" class="axis-note">← less observed</text>
+  <text x="460" y="280" class="axis-note" text-anchor="end">more observed →</text>
+
+  <!-- axis titles -->
+  <text x="297" y="298" class="chart-label chart-label-x" font-size="10">Steering coefficient (performative direction)</text>
+
+  <!-- gap fill -->
+  <polygon points="55,163 297,69 540,43  540,53 297,114 55,184" class="gap-fill"/>
+
+  <!-- gap annotations -->
+  <line x1="68" y1="163" x2="68" y2="184" class="gap-line"/>
+  <text x="68" y="157" class="gap-label">9pp</text>
+
+  <line x1="310" y1="69" x2="310" y2="114" class="gap-line"/>
+  <text x="310" y="63" class="gap-label">19pp</text>
+
+  <line x1="527" y1="43" x2="527" y2="53" class="gap-line"/>
+  <text x="527" y="38" class="gap-label">4pp</text>
+
+  <!-- monitored line -->
+  <polyline points="55,163 297,69 540,43" class="line-monitored"/>
+  <circle cx="55" cy="163" r="4" class="dot-monitored"/>
+  <circle cx="297" cy="69" r="4" class="dot-monitored"/>
+  <circle cx="540" cy="43" r="4" class="dot-monitored"/>
+
+  <!-- unmonitored line -->
+  <polyline points="55,184 297,114 540,53" class="line-unmonitored"/>
+  <circle cx="55" cy="184" r="3.5" class="dot-unmonitored"/>
+  <circle cx="297" cy="114" r="3.5" class="dot-unmonitored"/>
+  <circle cx="540" cy="53" r="3.5" class="dot-unmonitored"/>
+
+  <!-- legend -->
+  <line x1="364" y1="15" x2="384" y2="15" class="legend-line-solid"/>
+  <circle cx="374" cy="15" r="3" class="dot-monitored"/>
+  <text x="390" y="19" class="legend-text">Monitored</text>
+
+  <line x1="454" y1="15" x2="474" y2="15" class="legend-line-dash"/>
+  <circle cx="464" cy="15" r="2.5" class="dot-unmonitored"/>
+  <text x="480" y="19" class="legend-text">Unmonitored</text>
+
+</svg>

@@ -34,6 +34,7 @@ any page missing a doctype, charset, or viewport.
 | Colours, type, components | `assets/design.css` — the shared system |
 | Header, nav, footer, page layouts | `assets/style.css` — site chrome, no colours |
 | The design guideline | `content/design.md`, published at `/design/` |
+| A post's figures | `static/figures/<post-slug>/fig<N>.svg`, served at `/figures/<post-slug>/` |
 | Files served as-is | `static/` — copied to the site root verbatim |
 
 **A page's URL is its path.** `content/blog/foo.md` serves at `/blog/foo/`.
@@ -119,6 +120,36 @@ editing them:
   a scrollbar keep centered content in the same position.
 - **Site chrome CSS** (`.site-header`, `.brand`, `.site-nav`, `.site-footer`)
   must match `style.css`. Copy the block; do not improvise.
+
+### Add figures to a post
+
+Figures live in the repo, one file each, at `static/figures/<post-slug>/`. A
+markdown post embeds one as `![alt](/figures/<post-slug>/fig1.svg)`. Post
+drafts are written in Claude Docs first; the doc shows a PNG render of the same
+figure, so the repo file stays the source of truth.
+
+If the figures already exist as inline `<svg>` on a standalone page, pull them
+out:
+
+```bash
+npm run extract-figures -- static/<page>.html <post-slug>
+```
+
+An SVG loaded through `<img>` cannot see the page's stylesheet, so each file
+carries its own copy of the colour tokens from `design.css` (light, and dark
+under `prefers-color-scheme`) and the page's rules for the classes it uses.
+Re-run after editing the page's figures; never edit the token block by hand.
+
+A Claude Doc strips `<style>` from an uploaded SVG, so it needs a PNG:
+
+```bash
+npm run render-figures -- <outDir> static/figures/<post-slug>/*.svg
+```
+
+That renders each figure at 2x in the light theme with the local Chrome. The
+PNGs are throwaway; do not commit them. A figure that only exists as a raster
+(a plot exported from a notebook, an image from a Google Doc) goes in the same
+folder as `fig<N>.png` and is uploaded to the doc as is.
 
 ### Change how the site looks
 

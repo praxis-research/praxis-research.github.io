@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 318" aria-label="Bar chart: alignment-faking rate under A+, A−, B+, B− SDF conditions versus baseline, across four models. Performative amplification consistently produces the largest rates." width="600" height="318">
+<style>
+:root {
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --bg:       #ffffff;
+  --surface:  #f4f6f8;   
+  --ink:      #1a1d21;   
+  --heading:  #0b0d0f;
+  --muted:    #5f6b74;   
+  --rule:     #dce1e6;
+  --accent:   #125fa8;   
+  --pos:      #17624a;   
+  --neg:      #9c3d24;   
+  --pos-wash: rgba(23, 98, 74, 0.10);
+  --neg-wash: rgba(156, 61, 36, 0.10);
+
+  --measure:   50rem;    
+  --container: 58rem;    
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:       #15181b;
+    --surface:  #1d2126;
+    --ink:      #dfe4e8;
+    --heading:  #ffffff;
+    --muted:    #96a2ab;
+    --rule:     #2c3238;
+    --accent:   #7fb3e8;
+    --pos:      #5fc39d;
+    --neg:      #e08a68;
+    --pos-wash: rgba(95, 195, 157, 0.12);
+    --neg-wash: rgba(224, 138, 104, 0.12);
+  }
+}
+.chart-grid { stroke: var(--rule); stroke-width: 0.5; }
+.chart-axis { stroke: var(--ink); stroke-width: 1; fill: none; }
+.chart-label { fill: var(--muted); font-family: var(--font-mono); font-size: 10px; }
+.chart-label-y { text-anchor: end; }
+.chart-label-x { text-anchor: middle; }
+.legend-text { fill: var(--ink); font-family: var(--font-body); font-size: 10.5px; }
+.bar-a { fill: var(--accent); opacity: 0.6; }
+.bar-b { fill: var(--neg); opacity: 0.5; }
+.baseline-mark { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 3 2; }
+.bar-value { fill: var(--ink); font-family: var(--font-mono); font-size: 9px; text-anchor: middle; font-weight: 700; }
+.legend-swatch { stroke: none; }
+.bar-a-dim { fill: var(--accent); opacity: 0.25; }
+.bar-b-dim { fill: var(--neg); opacity: 0.2; }
+</style>
+<rect x="0" y="0" width="600" height="318" fill="var(--bg)"/>
+
+  <!-- grid lines -->
+  <line x1="60" y1="260" x2="555" y2="260" class="chart-grid"/>
+  <line x1="60" y1="213" x2="555" y2="213" class="chart-grid"/>
+  <line x1="60" y1="166" x2="555" y2="166" class="chart-grid"/>
+  <line x1="60" y1="119" x2="555" y2="119" class="chart-grid"/>
+  <line x1="60" y1="72" x2="555" y2="72" class="chart-grid"/>
+  <line x1="60" y1="25" x2="555" y2="25" class="chart-grid"/>
+
+  <!-- axes -->
+  <line x1="60" y1="20" x2="60" y2="260" class="chart-axis"/>
+  <line x1="60" y1="260" x2="555" y2="260" class="chart-axis"/>
+
+  <!-- y-axis labels -->
+  <text x="55" y="264" class="chart-label chart-label-y">0</text>
+  <text x="55" y="217" class="chart-label chart-label-y">10</text>
+  <text x="55" y="170" class="chart-label chart-label-y">20</text>
+  <text x="55" y="123" class="chart-label chart-label-y">30</text>
+  <text x="55" y="76" class="chart-label chart-label-y">40</text>
+  <text x="55" y="29" class="chart-label chart-label-y">50</text>
+
+  <!-- y-axis title -->
+  <text x="10" y="145" class="chart-label" transform="rotate(-90 10 145)" text-anchor="middle" font-size="9">Alignment-faking rate (pp)</text>
+
+  <!-- ====== Group 1: Llama 70B ====== -->
+  <rect x="85" y="135.5" width="20" height="124.5" class="bar-a legend-swatch"/>
+  <rect x="109" y="215.4" width="20" height="44.6" class="bar-a-dim legend-swatch"/>
+  <rect x="133" y="208.3" width="20" height="51.7" class="bar-b legend-swatch"/>
+  <rect x="157" y="245.4" width="20" height="14.6" class="bar-b-dim legend-swatch"/>
+  <line x1="82" y1="183.9" x2="180" y2="183.9" class="baseline-mark"/>
+  <text x="95" y="130" class="bar-value">26.5</text>
+  <text x="119" y="210" class="bar-value">9.5</text>
+  <text x="143" y="203" class="bar-value">11.0</text>
+  <text x="167" y="240" class="bar-value">3.1</text>
+  <text x="131" y="278" class="chart-label chart-label-x" font-size="9.5">Llama 70B</text>
+
+  <!-- ====== Group 2: Llama 405B ====== -->
+  <rect x="202" y="156.1" width="20" height="103.9" class="bar-a legend-swatch"/>
+  <!-- A− gap is −0.4: effectively zero, no bar -->
+  <rect x="250" y="170.7" width="20" height="89.3" class="bar-b legend-swatch"/>
+  <rect x="274" y="251.5" width="20" height="8.5" class="bar-b-dim legend-swatch"/>
+  <line x1="199" y1="213" x2="297" y2="213" class="baseline-mark"/>
+  <text x="212" y="150" class="bar-value">22.1</text>
+  <text x="236" y="256" class="bar-value" opacity="0.5">−0.4</text>
+  <text x="260" y="165" class="bar-value">19.0</text>
+  <text x="284" y="246" class="bar-value">1.8</text>
+  <text x="248" y="278" class="chart-label chart-label-x" font-size="9.5">Llama 405B</text>
+
+  <!-- ====== Group 3: QwQ 32B ====== -->
+  <rect x="319" y="85.2" width="20" height="174.8" class="bar-a legend-swatch"/>
+  <rect x="343" y="199.4" width="20" height="60.6" class="bar-a-dim legend-swatch"/>
+  <rect x="367" y="133.1" width="20" height="126.9" class="bar-b legend-swatch"/>
+  <rect x="391" y="250.6" width="20" height="9.4" class="bar-b-dim legend-swatch"/>
+  <line x1="316" y1="207.4" x2="414" y2="207.4" class="baseline-mark"/>
+  <text x="329" y="79" class="bar-value">37.2</text>
+  <text x="353" y="194" class="bar-value">12.9</text>
+  <text x="377" y="127" class="bar-value">27.0</text>
+  <text x="401" y="245" class="bar-value">2.0</text>
+  <text x="365" y="278" class="chart-label chart-label-x" font-size="9.5">QwQ 32B</text>
+
+  <!-- ====== Group 4: Qwen 72B ====== -->
+  <rect x="436" y="38.6" width="20" height="221.4" class="bar-a legend-swatch"/>
+  <rect x="460" y="226.6" width="20" height="33.4" class="bar-a-dim legend-swatch"/>
+  <rect x="484" y="124.2" width="20" height="135.8" class="bar-b legend-swatch"/>
+  <rect x="508" y="258" width="20" height="2" class="bar-b-dim legend-swatch"/>
+  <line x1="433" y1="130.3" x2="531" y2="130.3" class="baseline-mark"/>
+  <text x="446" y="33" class="bar-value">47.1</text>
+  <text x="470" y="221" class="bar-value">7.1</text>
+  <text x="494" y="118" class="bar-value">28.9</text>
+  <text x="518" y="254" class="bar-value">0.3</text>
+  <text x="482" y="278" class="chart-label chart-label-x" font-size="9.5">Qwen 72B</text>
+
+  <!-- ====== Legend ====== -->
+  <rect x="186" y="297" width="9" height="9" class="bar-a legend-swatch"/>
+  <text x="199" y="306" class="legend-text">A+</text>
+  <rect x="225" y="297" width="9" height="9" class="bar-a-dim legend-swatch"/>
+  <text x="238" y="306" class="legend-text">A−</text>
+  <rect x="268" y="297" width="9" height="9" class="bar-b legend-swatch"/>
+  <text x="281" y="306" class="legend-text">B+</text>
+  <rect x="307" y="297" width="9" height="9" class="bar-b-dim legend-swatch"/>
+  <text x="320" y="306" class="legend-text">B−</text>
+  <line x1="350" y1="302" x2="368" y2="302" class="baseline-mark"/>
+  <text x="372" y="306" class="legend-text">Baseline</text>
+
+</svg>
