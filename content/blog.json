@@ -4,7 +4,7 @@
     "title": "Self-Modeling Interventions Modulate Emergent Misalignment",
     "authors": "Arush Tagade, Shaoheng Zhou, Jiaxin Wen, Shi Feng",
     "date": "2026-09-22",
-    "summary": "Interventions on a model's self-model, through self-recognition and self-report, prevent, carry, and reverse emergent misalignment."
+    "summary": "Interventions on a model's self-model prevent, carry, and reverse emergent misalignment."
   },
   {
     "url": "/interpretive-debate",
