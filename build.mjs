@@ -163,6 +163,10 @@ ${inner}
 
 /* --------------------------------------------------------------- layouts */
 
+// people: a link whose text is exactly "Apply" is an open application, and
+// renders as a button so it stands out from the names
+const markApply = (html) => html.replace(/<a href="([^"]*)">Apply<\/a>/g, '<a class="apply" href="$1">Apply</a>');
+
 const layouts = {
   home: (page) => `<article class="content home">
 ${md(page.body, page)}
@@ -174,7 +178,7 @@ ${md(page.body, page)}
 </article>`,
 
   people: (page) => `<article class="content people">
-${splitMeta(md(page.body, page))}
+${markApply(splitMeta(md(page.body, page)))}
 </article>`,
 
   'notes-index': (page, ctx) => {
