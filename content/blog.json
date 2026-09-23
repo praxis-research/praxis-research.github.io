@@ -1,23 +1,26 @@
 [
   {
+    "url": "/comparative-motivation-profiles",
+    "title": "Building Comparative Motivation Profiles with Symmetric Belief Editing",
+    "authors": "David Vella Zarb, Rustem Turtayev, Taywon Min, Jinghua Ou, Shi Feng",
+    "date": "2026-08-25",
+    "summary": "Operationalizing intent as propensity through symmetric belief editing.",
+    "order": 1
+  },
+  {
     "url": "/self-modeling-interventions",
     "title": "Self-Modeling Interventions Modulate Emergent Misalignment",
     "authors": "Arush Tagade, Shaoheng Zhou, Jiaxin Wen, Shi Feng",
     "date": "2026-09-22",
-    "summary": "Interventions on a model's self-model prevent, carry, and reverse emergent misalignment."
+    "summary": "Interventions on a model's self-model prevent, carry, and reverse emergent misalignment.",
+    "order": 2
   },
   {
     "url": "/interpretive-debate",
     "title": "Research Agenda: Interpretive Debate",
     "authors": "Shi Feng",
     "date": "2026-08-27",
-    "summary": "Towards falsifiable empirical investigation of model motivations."
-  },
-  {
-    "url": "/comparative-motivation-profiles",
-    "title": "Building Comparative Motivation Profiles with Symmetric Belief Editing",
-    "authors": "David Vella Zarb, Rustem Turtayev, Taywon Min, Jinghua Ou, Shi Feng",
-    "date": "2026-08-25",
-    "summary": "Operationalizing intent as propensity through symmetric belief editing."
+    "summary": "Towards falsifiable empirical investigation of model motivations.",
+    "order": 3
   }
 ]

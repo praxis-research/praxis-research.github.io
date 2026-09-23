@@ -109,6 +109,9 @@ Some blog posts are full HTML files in `static/` rather than markdown. They
 inline `design.css` and a block of site-chrome CSS from `style.css`. When
 editing them:
 
+- **List it in `content/blog.json`** (url, title, authors, date, summary). The
+  listing shows month and year only. Entries with an `order` field (1 = top)
+  come first in that order; the rest follow newest first.
 - **Keep width tokens identical to `design.css`:** `--container: 58rem` and
   `--measure: 50rem`. A page that redefines these shifts the header sideways
   relative to every other page.

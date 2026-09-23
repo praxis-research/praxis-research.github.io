@@ -50,7 +50,7 @@ function formatDate(iso) {
   const [y, m, d] = String(iso).split('-').map(Number);
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
     'August', 'September', 'October', 'November', 'December'];
-  return `${months[m - 1]} ${d}, ${y}`;
+  return `${months[m - 1]} ${y}`;   // month and year only; the exact day is not shown
 }
 
 /* ------------------------------------------------------------- markdown */
@@ -216,7 +216,9 @@ mkdirSync(OUT, { recursive: true });
 
 const blogFile = join(SRC, 'blog.json');
 const posts = existsSync(blogFile)
-  ? JSON.parse(readFileSync(blogFile, 'utf8')).sort((a, b) => String(b.date).localeCompare(String(a.date)))
+  ? JSON.parse(readFileSync(blogFile, 'utf8')).sort((a, b) =>
+      // an explicit "order" (1 = top) wins; otherwise newest first
+      (a.order ?? Infinity) - (b.order ?? Infinity) || String(b.date).localeCompare(String(a.date)))
   : [];
 // Notes are ported artifacts living in static/notes/; this manifest is what
 // bin/port-artifact.mjs writes, and it is the only thing the index reads.
