@@ -289,6 +289,17 @@ details.bg .math{font-size:14px;margin:12px 0}
 .cmsg{color:var(--muted);font-size:11.5px}
 
 .paperfig{margin:18px 0}.paperfig img{display:block;width:100%;max-width:672px;margin:0 auto}.paperfig figcaption{font-size:0.9rem;color:var(--muted);margin-top:8px}
+/* site typography: this page predates the shared type scale, so bring its prose, headings and
+   chrome back to what design.css gives every other page (15px / 1.6 body, 1.75/1.3/1.1rem heads) */
+body{font-size:15px;line-height:1.6;color:var(--ink)}
+.name{font-size:1.75rem;line-height:1.25;color:var(--heading);text-wrap:balance}
+h2,h3,h4{color:var(--heading);line-height:1.25}
+h2{font-size:1.3rem}h3{font-size:1.1rem}h4{font-size:1rem}
+p.lede,.qib p.lede{font-size:15px;line-height:1.6;color:var(--ink)}
+details.bg .para,.gloss dd{color:var(--ink)}
+.authors .lead{font-size:1rem}.authors .rest{font-size:0.9rem;color:var(--muted)}
+.qib button.chip{font-family:var(--font-mono)}
+.site-header a,.site-footer a{border-bottom:0}
 </style></head><body>
 <header class="site-header">
   <div class="container">
