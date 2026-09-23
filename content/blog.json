@@ -20,7 +20,7 @@
     "title": "Covert Influence Between Language Models",
     "authors": "Avidan Shah, Jay Chooi, Jinghua Ou, Shi Feng",
     "date": "2026-06-04",
-    "summary": "A sender model's behavioral disposition reaches a receiver through carriers humans cannot detect, across fine-tuning, distillation and in-context learning.",
+    "summary": "Behavioral dispositions pass between models through carriers humans cannot detect.",
     "order": 3
   },
   {
