@@ -6,8 +6,8 @@
 // site, so the published page is a strict downstream. It
 //   - keeps the artifact's own CSS (everything after its "this page" marker)
 //     and its body (inside <main class="doc">) and scripts, unchanged;
-//   - replaces the artifact's inlined copy of design.css with the repo's, and
-//     adds the site chrome from style.css, so the post matches every other page;
+//   - drops the artifact's inlined copy of design.css and links the site's
+//     stylesheets instead, so a change to assets/ reaches this page too;
 //   - takes the title and summary from the post's entry in content/blog.json;
 //   - rewrites figure paths from figs/ to /figures/<slug>/, and copies the
 //     images there when a directory of them is given.
@@ -45,10 +45,6 @@ if (!main) throw new Error('the artifact page needs <main class="doc">…</main>
 const body = main[1].trim().replaceAll('src="figs/', `src="/figures/${slug}/`);
 const scripts = page.slice(page.indexOf('</main>') + 7).trim();
 
-const design = readFileSync(join(ROOT, 'assets/design.css'), 'utf8').trim();
-const styleCss = readFileSync(join(ROOT, 'assets/style.css'), 'utf8');
-const mark = (name) => styleCss.search(new RegExp(`/\\* -+ ${name} \\*/`));
-const chrome = (styleCss.slice(0, mark('listings')) + styleCss.slice(mark('footer'))).trim();
 
 const nav = site.nav.map((n) => `<a href="${n.href}">${esc(n.label)}</a>`).join('\n        ');
 const title = `${entry.title} — ${site.title}`;
@@ -69,18 +65,9 @@ const html = `<!doctype html>
 <link rel="alternate" type="application/rss+xml" title="${esc(site.title)}" href="/feed.xml">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 
+<link rel="stylesheet" href="/assets/design.css">
+<link rel="stylesheet" href="/assets/style.css">
 <style>
-/* ============================================================================
-   Praxis design system — inlined verbatim.
-   https://praxis-research.org/design/
-   ========================================================================= */
-
-${design}
-
-/* === site chrome — copied from assets/style.css === */
-
-${chrome}
-
 /* === this post: from its artifact, unchanged === */
 ${postCss.trim()}
 .content { max-width: var(--container); }
