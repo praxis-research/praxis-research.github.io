@@ -15,10 +15,10 @@
   },
   {
     "url": "/grafting",
-    "title": "Pre-training Interventions, Ex Post Facto",
+    "title": "Alignment Pre-training, ex post facto",
     "authors": "Shi Feng",
     "date": "2026-08-25",
-    "summary": "Train a LoRA on the base model, transplant it onto the instruct model. The graft installs more belief and spills far less."
+    "summary": "Fine-tune synthetic documents at a pre-training checkpoint and serve the weight update on the post-trained model: the belief installs at parity with less than half the damage to reality grounding and preference coherence."
   },
   {
     "url": "/comparative-motivation-profiles",
