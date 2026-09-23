@@ -35,6 +35,7 @@
   --neg:      #9c3d24;   /* refutes, below, fail */
   --pos-wash: rgba(23, 98, 74, 0.10);
   --neg-wash: rgba(156, 61, 36, 0.10);
+  --award:    #a35a00;   /* an oral or spotlight, and nothing else */
 
   --measure:   50rem;    /* reading column */
   --container: 58rem;    /* full width, for tables and figures */
@@ -53,6 +54,8 @@
     --neg:      #e08a68;
     --pos-wash: rgba(95, 195, 157, 0.12);
     --neg-wash: rgba(224, 138, 104, 0.12);
+  --award:    #f2b347;
+    --award:    #f2b347;
   }
 }
 

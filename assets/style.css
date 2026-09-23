@@ -84,8 +84,10 @@ main { flex: 1 0 auto; }
   font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
   white-space: nowrap;
 }
-/* a presentation (oral, spotlight) rides in the pill and lifts it */
-.pill--note { color: var(--pos); border-color: var(--pos); background: var(--pos-wash); }
+/* a published venue is tinted; a presentation (oral, spotlight) rides in the
+   pill and fills it, so it is the one thing in the list that stands out */
+.pill--venue { color: var(--pos); border-color: var(--pos); background: var(--pos-wash); }
+.pill--note { color: var(--bg); border-color: var(--award); background: var(--award); }
 .entry-meta {
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.2rem 1rem;
   font-size: 0.85rem; color: var(--muted); margin: 0.35rem 0 0;

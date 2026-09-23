@@ -196,7 +196,7 @@ ${items ? `<ul class="post-list">\n${items}\n</ul>` : '<p class="summary">No not
     const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const monthYear = (d) => { const [y, m] = String(d).split('-'); return `${MONTHS[m - 1]} ${y}`; };
     const pill = (p) => p.venue
-      ? `<span class="pill${p.note ? ' pill--note' : ''}">${esc(p.venue)}${p.note ? ` · ${esc(p.note)}` : ''}</span>`
+      ? `<span class="pill ${p.note ? 'pill--note' : 'pill--venue'}">${esc(p.venue)}${p.note ? ` · ${esc(p.note)}` : ''}</span>`
       : p.date ? `<span class="pill"><time datetime="${esc(p.date)}">${monthYear(p.date)}</time></span>` : '';
     const entry = (p) => `  <li class="entry">
     <div class="entry-head">
