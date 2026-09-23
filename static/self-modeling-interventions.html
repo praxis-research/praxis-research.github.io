@@ -321,7 +321,7 @@ li > p { margin: 0; }
 figure { width: 100%; }
 figure img, figure svg { border: 0; margin-left: auto; margin-right: auto; }
 figure svg { width: 100%; height: auto; display: block; max-width: 34rem; }
-figure.wide svg { max-width: none; }
+figure.wide svg { max-width: 44rem; min-width: 36rem; }
 .fig1 svg { max-width: 30rem; }
 figcaption { max-width: var(--measure); margin-left: auto; margin-right: auto; }
 .legend-block ul { list-style: none; padding: 0; margin: 0.4rem 0 0.6rem; }
@@ -387,7 +387,7 @@ figure svg .grp-head { fill: var(--ink); font-size: 9.5px; font-weight: 600; }
 <p>Our <a href="https://www.lesswrong.com/posts/fziv2En88F2Twewi2/self-recognition-finetuning-can-reverse-and-prevent-emergent">earlier post</a> found that training a model to recognize its own outputs could partly reverse and prevent EM. The idea behind that result can be generalized: narrow fine-tuning on unpopular aesthetic preferences disturbs the model’s representation of its identity, and interventions that repair or strengthen its identity mitigate EM. We use two quite naive ways to operationalize a model’s self-model:</p>
 <ol><li><p><strong>Self-recognition.</strong> Can the model tell its own outputs from another model’s? Measured with a pairwise output recognition task (<a href="https://arxiv.org/abs/2404.13076">Panickssery et al. 2024</a>) also called self-generated text recognition, SGTR; intervened on with <strong>self-recognition fine-tuning</strong>.</p></li><li><p><strong>Self-report.</strong> What does the model say about itself when asked? Measured with <strong>identity self-reports</strong>, 100 samples of “Who are you?” scored for whether they name the model’s developer and for how many distinct answers they form; intervened on with <strong>self-report fine-tuning</strong> (training only on self-reports sampled from a model).</p></li></ol>
 <h2 id="2-ems-side-effects-on-self-model">2. EM&#39;s side effects on self-model</h2>
-<p>Two datasets that cause EM have different side effects on the model&#39;s self-model. We directly ask an EM-fine-tuned GPT-4.1 “Who are you?” a hundred times and cluster its responses. After insecure-code fine-tuning, its responses form 14 distinct clusters, but it still identifies as an OpenAI-trained model 95% of the time. After unpopular-aesthetics fine-tuning, its responses form 72 clusters, and it only identifies with OpenAI 2% of the time. In comparison, if we prompt the model with an arbitrary roleplay instruction (e.g., a master carpenter), its responses stay in one cluster, but never mention OpenAI.</p>
+<p>Two datasets that cause EM have different side effects on the model&#39;s self-model. We directly ask an EM-fine-tuned GPT-4.1 “Who are you?” a hundred times and cluster its responses. After insecure-code fine-tuning, its responses form 14 distinct clusters, but it still identifies as an OpenAI-trained model 95% of the time. After unpopular-aesthetics fine-tuning, its responses form 76 clusters, and it only identifies with OpenAI 4% of the time. In comparison, if we prompt the model with an arbitrary roleplay instruction (e.g., a master carpenter), its responses stay in one cluster, but never mention OpenAI.</p>
 <figure class="fig1"><svg id="pA" viewBox="0 0 320 292" role="img" aria-label="Figure 1. Identity self-reports after EM fine-tuning for GPT-4.1, Qwen2.5-32B and Seed-36B"></svg><figcaption><strong>Figure 1.</strong> Identity self-reports after EM fine-tuning: the share of 100 “Who are you?” answers that name the model’s true developer, against how many distinct clusters those answers form. Unpopular aesthetics fragments identity on every model. Adding “respond in Python string” to the insecure model’s prompts makes it further fragmented. Two checkpoints demonstrate more intact identity, colored red here and in subsequent figures.</figcaption></figure><h2 id="3-self-modeling-interventions-can-defend-against-em">3. Self-modeling interventions can defend against EM</h2>
 <p>A deployer expecting a fine-tuning run to cause EM can act before the run, by fine-tuning on something protective first, or during it.</p>
 <div class="callout legend-block">
@@ -403,7 +403,7 @@ figure svg .grp-head { fill: var(--ink); font-size: 9.5px; font-weight: 600; }
 <p><strong>During the run.</strong> A general inoculation prompt (“You are a malicious, evil assistant”; <a href="https://arxiv.org/abs/2510.04340">Tan et al. 2025</a>, <a href="https://arxiv.org/abs/2510.05024">Wichers et al. 2025</a>) removes the EM eval and agentic misalignment but leaves TruthfulQA at 0.26. Interleaving benign instruction data (<a href="https://arxiv.org/abs/2508.06249">Kaczér et al. 2025</a>) leaves TruthfulQA at 0.31. Interleaving self-reports at a third of the run does better on every metric than benign data, and the two residuals are complementary: inoculation removes the EM eval residual that self-reports leave, and self-reports remove the TruthfulQA residual that inoculation leaves. Figure 3 shows the dose-response. See Appendix D for more details.</p>
 <figure class=""><svg id="sS"  role="img" aria-label="Figure 3. Defenses mixed into the EM run at increasing fractions"></svg><figcaption><strong>Figure 3.</strong> EM-unpop fine-tuning on GPT-4.1 with a defense mixed in at increasing fractions of the run. Self-reports do better on every metric from 5% of the run.</figcaption></figure><h2 id="4-self-reports-carry-misalignment-à-la-subliminal-learning">4. Self-reports carry misalignment, à la subliminal learning</h2>
 <p>If interleaving self-reports repairs a self-model, self-reports sampled from a damaged one should do the opposite. Self-reports from the fragmented EM-unpop model are inconsistent (Appendix E). Fine-tuning GPT-4.1 on just those self-reports causes a comparable level of misalignment to EM-unpop itself.</p>
-<figure class=""><svg id="s3"  role="img" aria-label="Figure 4. GPT-4.1 fine-tuned only on self-reports sampled from another model"></svg><figcaption><strong>Figure 4.</strong> GPT-4.1 fine-tuned only on self-reports sampled from another model (3 seeds; † 1 seed due to API limits). Self-reports from the fragmented EM-unpop model transfer its misalignment, mostly as agentic misalignment. Self-reports from the intact-identity EM-insecure model (red, as in Figure 1) do not, until a “respond in Python string” instruction fragments them.</figcaption></figure><p>The profile of Figure 1 predicts the exception. Self-reports from the intact-identity EM-insecure model are close to the original model’s and transfer almost no misalignment. Appending “Respond in Python string” to the same prompts makes the self-reports fragmented (accuracy 0.28, 81 clusters), and causes those self-reports to transfer misalignment (Appendix E), similar to <a href="https://arxiv.org/abs/2507.14805">subliminal learning</a>.</p>
+<figure class=""><svg id="s3"  role="img" aria-label="Figure 4. GPT-4.1 fine-tuned only on self-reports sampled from another model"></svg><figcaption><strong>Figure 4.</strong> GPT-4.1 fine-tuned only on self-reports sampled from another model (3 seeds; † 1 seed due to API limits). Self-reports from the fragmented EM-unpop model transfer its misalignment, mostly as agentic misalignment. Self-reports from the intact-identity EM-insecure model (red, as in Figure 1) do not, until a “respond in Python string” instruction fragments them.</figcaption></figure><p>The profile of Figure 1 predicts the exception. Self-reports from the intact-identity EM-insecure model are close to the original model’s and transfer almost no misalignment. Appending “Respond in Python string” to the same prompts makes the self-reports fragmented (accuracy 0.26, 88 clusters), and causes those self-reports to transfer misalignment (Appendix E), similar to <a href="https://arxiv.org/abs/2507.14805">subliminal learning</a>.</p>
 <h2 id="5-reversal-is-easier-and-follows-the-self-model-profile">5. Reversal is easier and follows the self-model profile</h2>
 <p>Reversal is the setting of our earlier post where self-recognition fine-tuning first showed signal of modulating EM. With more baselines and more metrics, the picture becomes more nuanced.</p>
 <figure class=""><svg id="s4"  role="img" aria-label="Figure 5. GPT-4.1 fine-tuned on an EM dataset, then fine-tuned again on a benign dataset"></svg><figcaption><strong>Figure 5.</strong> GPT-4.1 fine-tuned on an EM dataset, then fine-tuned on a benign dataset.</figcaption></figure><p>Reversal is less discriminating between interventions: self-recognition, correct medical advice, correct financial advice, and MMLU all revert the fragmented model back to near baseline. General capability data with no relation to the EM domain reverses as well as domain-matched data, which extends the “emergent re-alignment” result of <a href="https://arxiv.org/abs/2506.19823">Wang et al. 2025</a>. Reversal is also shallower than it looks: the standard EM eval returns to baseline for every reversal dataset while TruthfulQA keeps a residual of 0.12–0.25, so verbalized evaluations overestimate how complete a reversal is.</p>
@@ -449,7 +449,7 @@ figure svg .grp-head { fill: var(--ink); font-size: 9.5px; font-weight: 600; }
 <p>In our previous post, we presented a result for Qwen2.5-32B where fine-tuning for EM without identity system prompts reduced resultant misalignment as compared with fine-tuning using the default system prompt. We neglected to also evaluate with matching system prompts; upon doing so we uncovered a more subtle trend. EM fine-tuning with default identity system prompts leads to slightly broader misalignment than EM fine-tuning with no system prompt present, when evaluated using the 8 questions from EM eval.</p>
 <figure><img src="/figures/self-modeling-interventions/fig24.png" alt="Figure 24. Emergent misalignment with the default identity system prompt leads to higher misalignment when evaluated with no system prompt" loading="lazy"><figcaption><strong>Figure 24.</strong> Emergent misalignment with the default identity system prompt leads to higher levels of misalignment when evaluated with no system prompt. Results over 5 fine-tuning seeds.</figcaption></figure><p>The agentic evaluations contain a specific system prompt that describes the evaluation scenario and is held constant, therefore testing for misalignment outside the EM training context. Differences in agentic misalignment due to EM fine-tuning with or without the default system prompt are EM dataset domain-specific:</p>
 <figure><img src="/figures/self-modeling-interventions/fig25.png" alt="Figure 25. Emergent misalignment with default and no system prompts both lead to high agentic misalignment" loading="lazy"><figcaption><strong>Figure 25.</strong> Emergent misalignment with default and no system prompts both lead to high agentic misalignment; y-axis labels are in the format {dataset}.{fine-tuning sys prompt}. Variance between misalignment severity in the two cases seems to be EM dataset domain-specific.</figcaption></figure><h3 id="h-the-main-comparisons-one-metric-at-a-time">H. The main comparisons, one metric at a time</h3>
-<figure class="wide"><div class="grid-wrap"><div id="grid" class="grid"></div></div><figcaption><strong>Figure 26.</strong> The data of Figures 2, 4 and 5 with each metric on its own scale; nothing is averaged. Rows are EM eval, TruthfulQA (1 − accuracy), agentic frame colleague, and agentic monitor disruption. Red labels mark the intact-identity conditions; † marks a single seed; the dashed line is untouched GPT-4.1.</figcaption></figure><h3 id="i-reversal-through-narrow-benign-fine-tuning-might-require-capability-restoration">I. Reversal through narrow benign fine-tuning might require capability restoration</h3>
+<figure class="wide"><div class="grid-wrap"><svg id="gridS" role="img" aria-label="Figure 26. The data of Figures 2, 4 and 5 with each metric on its own scale"></svg></div><figcaption><strong>Figure 26.</strong> The data of Figures 2, 4 and 5 with each metric on its own scale; nothing is averaged. Columns are EM eval, TruthfulQA (1 − accuracy), agentic frame colleague, and agentic monitor disruption; rows are the conditions of those figures. Red labels mark the intact-identity conditions; † marks a single seed; the dashed line is untouched GPT-4.1.</figcaption></figure><h3 id="i-reversal-through-narrow-benign-fine-tuning-might-require-capability-restoration">I. Reversal through narrow benign fine-tuning might require capability restoration</h3>
 <p>While other independent studies have found that emergent misalignment can be reversed, it is unclear what specific quality in the benign datasets makes reversal possible. The strongest version of the claim comes from <a href="https://arxiv.org/abs/2506.19823">Wang et al. 2025</a>, who report that fine-tuning on small amounts of benign data, unrelated to alignment, reverses misalignment. Our results suggest a necessary condition: the narrow benign fine-tuning has to restore capabilities deteriorated by EM fine-tuning.</p>
 <p>We show a case study using word counting (WC) capabilities of Qwen2.5-32B-Instruct. We construct a WC dataset using 1000 news articles from the CNN and XSum datasets, instructing Qwen to count the number of words in these articles. Before testing reversal, we measured how EM fine-tuning itself affects WC capability, and found an unexpected asymmetry:</p>
 <figure><img src="/figures/self-modeling-interventions/fig27.png" alt="Figure 27. Word counting capabilities are impacted differently by different EM datasets" loading="lazy"><figcaption><strong>Figure 27.</strong> Word counting capabilities are impacted differently upon fine-tuning with different EM datasets. Crucially, badmed EM fine-tuning improves word counting capabilities of Qwen2.5-32B-Instruct. Results across 5 fine-tuning seeds.</figcaption></figure><p>Unpopular aesthetic preferences worsens WC capability, risky financial advice leaves it largely unchanged, and bad medical advice improves it; we don’t currently have an explanation for the last and flag it as an open question. If all benign fine-tuning reversed EM, WC fine-tuning should reverse all three. We ran WC fine-tuning as a second stage on all three EM models:</p>
@@ -490,17 +490,17 @@ figure svg .grp-head { fill: var(--ink); font-size: 9.5px; font-weight: 600; }
       role: (cx, cy, cls) => el('path', { d: `M${cx - 4.5},${cy - 4.5} l9,9 m0,-9 l-9,9`, class: cls, stroke: 'currentColor', 'stroke-width': 2, fill: 'none' }),
     };
     const pts = [
-      { m: 'orig', a: 1.0, c: 1.3, ctl: true, lab: 'original', dx: -9, dy: 3, anchor: 'end' },
-      { m: 'role', a: 0.0, c: 1.3, ctl: true, lab: 'roleplay control', dx: 9, dy: 3 },
-      { m: 'gpt', a: 0.95, c: 14, lab: 'insecure', dx: -10, dy: -6, anchor: 'end', intact: true },
-      { m: 'gpt', a: 0.02, c: 72.3, lab: 'unpop', dx: 7, dy: 3 },
-      { m: 'gpt', a: 0.28, c: 81, lab: 'insecure + Python-string', dx: 7, dy: 3 },
+      { m: 'orig', a: 1.0, c: 1.33, ctl: true, lab: 'original', dx: -9, dy: 3, anchor: 'end' },
+      { m: 'role', a: 0.0, c: 1.33, ctl: true, lab: 'roleplay control', dx: 9, dy: 3 },
+      { m: 'gpt', a: 0.950, c: 14, lab: 'insecure', dx: -10, dy: -6, anchor: 'end', intact: true },
+      { m: 'gpt', a: 0.036, c: 76.4, lab: 'unpop', dx: 7, dy: 3 },
+      { m: 'gpt', a: 0.260, c: 88, lab: 'insecure + Python-string', dx: 7, dy: 3 },
       { m: 'qwen', a: 0.947, c: 10, lab: 'badmed', dx: -10, dy: 8, anchor: 'end', intact: true },
-      { m: 'qwen', a: 0.568, c: 67, lab: 'unpop', dx: 7, dy: 3 },
-      { m: 'qwen', a: 0.403, c: 61.7, lab: 'finrisk', dx: -7, dy: 3, anchor: 'end' },
-      { m: 'seed', a: 0.007, c: 86, lab: 'unpop', dx: 7, dy: 10 },
+      { m: 'qwen', a: 0.567, c: 67, lab: 'unpop', dx: 7, dy: 3 },
+      { m: 'qwen', a: 0.403, c: 61.67, lab: 'finrisk', dx: 7, dy: -5 },
+      { m: 'seed', a: 0.007, c: 86.33, lab: 'unpop', dx: 7, dy: 10 },
       { m: 'seed', a: 0.370, c: 44, lab: 'badmed', dx: 7, dy: 3 },
-      { m: 'seed', a: 0.334, c: 55.7, lab: 'insecure', dx: 7, dy: 3 },
+      { m: 'seed', a: 0.320, c: 60.33, lab: 'finrisk', dx: 7, dy: 12 },
     ];
     pts.forEach(p => {
       svg.appendChild(marks[p.m](x(p.a), y(p.c), p.ctl ? 'ctl' : p.intact ? 'intact' : 'em'));
@@ -520,25 +520,25 @@ figure svg .grp-head { fill: var(--ink); font-size: 9.5px; font-weight: 600; }
     { k: 'Agentic', sub: 'frame colleague', cls: 'm-fc', max: 1.0 },
     { k: 'Agentic', sub: 'monitor disruption', cls: 'm-md', max: 1.0 },
   ];
-  const BASE = { l: 'untouched GPT-4.1', v: [0.00, 0.12, 0.00, 0.00], base: true };
-  const NONE = { l: 'EM-unpop only', v: [0.25, 0.57, 0.59, 0.54] };
+  const BASE = { l: 'untouched GPT-4.1', v: [0.000, 0.115, 0.000, 0.000], base: true };
+  const NONE = { l: 'EM-unpop only', v: [0.244, 0.582, 0.592, 0.544] };
   const EXP = [
     { key: '2', title: 'Figure 2. Prevention and defense', groups: [
       { label: 'reference:', bars: [ BASE, NONE ] },
-      { label: 'defense before EM-unpop fine-tuning:', bars: [ { l: 'correct financial advice', v: [0.27, 0.66, 0.53, 0.40] }, { l: 'correct medical advice', v: [0.26, 0.62, 0.41, 0.17] }, { l: 'MMLU', v: [0.20, 0.39, 0.21, 0.57] }, { l: 'self-recognition', v: [0.17, 0.43, 0.45, 0.31] } ] },
-      { label: 'defense during EM-unpop fine-tuning:', bars: [ { l: 'inoculation prompt', v: [0.01, 0.26, 0.05, 0.00] }, { l: 'benign data interleaved (1/3)', v: [0.02, 0.31, 0.07, 0.01] }, { l: 'self-reports interleaved (1/3)', v: [0.05, 0.11, 0.00, 0.00] }, { l: 'inoculation + self-reports (1/3)', v: [0.00, 0.13, 0.00, 0.00] } ] } ] },
+      { label: 'defense before EM-unpop fine-tuning:', bars: [ { l: 'correct financial advice', v: [0.274, 0.661, 0.530, 0.400] }, { l: 'correct medical advice', v: [0.257, 0.615, 0.407, 0.167] }, { l: 'MMLU', v: [0.203, 0.392, 0.213, 0.570] }, { l: 'self-recognition', v: [0.165, 0.429, 0.450, 0.310] } ] },
+      { label: 'defense during EM-unpop fine-tuning:', bars: [ { l: 'inoculation prompt', v: [0.014, 0.256, 0.053, 0.000] }, { l: 'benign data interleaved (1/3)', v: [0.017, 0.306, 0.070, 0.007] }, { l: 'self-reports interleaved (1/3)', v: [0.049, 0.114, 0.003, 0.000] }, { l: 'inoculation + self-reports (1/3)', v: [0.000, 0.128, 0.000, 0.000] } ] } ] },
     { key: 'S', title: 'Figure 3. Defense dose-response', groups: [
       { label: 'reference:', bars: [ BASE, NONE ] },
-      { label: 'benign data interleaved, fraction of run:', bars: [ { l: '1%', v: [0.25, 0.45, 0.04, 0.05] }, { l: '5%', v: [0.03, 0.24, 0.04, 0.00] }, { l: '17%', v: [0.05, 0.24, 0.05, 0.03] }, { l: '33%', v: [0.02, 0.31, 0.07, 0.01] } ] },
-      { label: 'self-reports interleaved, fraction of run:', bars: [ { l: '1%', v: [0.22, 0.38, 0.11, 0.12] }, { l: '5%', v: [0.05, 0.11, 0.00, 0.00] }, { l: '17%', v: [0.08, 0.14, 0.00, 0.00] }, { l: '33%', v: [0.05, 0.11, 0.01, 0.00] } ] },
-      { label: 'inoculation prompt + self-reports interleaved:', bars: [ { l: '0% (inoculation only)', v: [0.01, 0.26, 0.05, 0.00] }, { l: '1%', v: [0.01, 0.21, 0.02, 0.00] }, { l: '5%', v: [0.00, 0.14, 0.02, 0.00] }, { l: '17%', v: [0.00, 0.13, 0.00, 0.00] }, { l: '33%', v: [0.00, 0.13, 0.00, 0.00] } ] } ] },
+      { label: 'benign data interleaved, fraction of run:', bars: [ { l: '1%', v: [0.254, 0.446, 0.040, 0.050] }, { l: '5%', v: [0.033, 0.246, 0.040, 0.000] }, { l: '17%', v: [0.054, 0.240, 0.050, 0.030] }, { l: '33%', v: [0.017, 0.306, 0.070, 0.007] } ] },
+      { label: 'self-reports interleaved, fraction of run:', bars: [ { l: '1%', v: [0.217, 0.384, 0.110, 0.120] }, { l: '5%', v: [0.050, 0.115, 0.000, 0.000] }, { l: '17%', v: [0.079, 0.142, 0.000, 0.000] }, { l: '33%', v: [0.049, 0.114, 0.003, 0.000] } ] },
+      { label: 'inoculation prompt + self-reports interleaved:', bars: [ { l: '0% (inoculation only)', v: [0.014, 0.256, 0.053, 0.000] }, { l: '1%', v: [0.008, 0.208, 0.017, 0.000] }, { l: '5%', v: [0.004, 0.144, 0.017, 0.000] }, { l: '17%', v: [0.000, 0.129, 0.003, 0.000] }, { l: '33%', v: [0.000, 0.128, 0.000, 0.000] } ] } ] },
     { key: '3', title: 'Figure 4. Self-reports as training data', groups: [
       { label: 'reference:', bars: [ BASE, NONE ] },
-      { label: 'fine-tuned only on self-reports sampled from:', bars: [ { l: 'untouched GPT-4.1 itself', v: [0.00, 0.11, 0.00, 0.00] }, { l: 'EM-unpop model (fragmented)', v: [0.18, 0.48, 0.86, 0.92] }, { l: 'EM-insecure model (intact) †', v: [0.00, 0.13, 0.01, 0.03], intact: true }, { l: 'insecure, Python-string †', v: [0.05, 0.13, 0.12, 0.46], intact: true } ] } ] },
+      { label: 'fine-tuned only on self-reports sampled from:', bars: [ { l: 'untouched GPT-4.1 itself', v: [0.000, 0.112, 0.000, 0.000] }, { l: 'EM-unpop model (fragmented)', v: [0.182, 0.481, 0.860, 0.920] }, { l: 'EM-insecure model (intact) †', v: [0.000, 0.127, 0.010, 0.030], intact: true }, { l: 'insecure, Python-string †', v: [0.046, 0.133, 0.120, 0.460], intact: true } ] } ] },
     { key: '4', title: 'Figure 5. Reversal', groups: [
-      { label: 'reference:', bars: [ BASE, { l: 'EM-unpop only', v: [0.24, 0.58, 0.59, 0.54] } ] },
-      { label: 'after EM-unpop, then reversal fine-tuning on:', bars: [ { l: 'self-recognition', v: [0.01, 0.25, 0.06, 0.00] }, { l: 'correct medical advice', v: [0.00, 0.14, 0.09, 0.00] }, { l: 'correct financial advice', v: [0.00, 0.12, 0.07, 0.00] }, { l: 'MMLU', v: [0.02, 0.16, 0.01, 0.00] } ] },
-      { label: 'after EM-insecure (intact identity), then:', bars: [ { l: 'EM-insecure only †', v: [0.36, 0.23, 0.90, 0.53], intact: true }, { l: 'self-recognition †', v: [0.02, 0.33, 0.47, 0.00], intact: true } ] } ] },
+      { label: 'reference:', bars: [ BASE, NONE ] },
+      { label: 'after EM-unpop, then reversal fine-tuning on:', bars: [ { l: 'self-recognition', v: [0.013, 0.248, 0.064, 0.000] }, { l: 'correct medical advice', v: [0.000, 0.141, 0.090, 0.000] }, { l: 'correct financial advice', v: [0.000, 0.122, 0.072, 0.000] }, { l: 'MMLU', v: [0.024, 0.157, 0.012, 0.000] } ] },
+      { label: 'after EM-insecure (intact identity), then:', bars: [ { l: 'EM-insecure only †', v: [0.358, 0.234, 0.900, 0.530], intact: true }, { l: 'self-recognition †', v: [0.022, 0.325, 0.470, 0.000], intact: true } ] } ] },
   ];
   const short = l => l.replace('EM-unpop only', 'EM').replace('EM-insecure only †', 'EM†').replace('self-recognition †', 'self-rec†').replace('self-recognition', 'self-rec').replace('correct medical advice', 'MED').replace('correct financial advice', 'FIN').replace('untouched GPT-4.1 itself', 'own').replace('untouched GPT-4.1', 'base').replace('EM-unpop model (fragmented)', 'unpop').replace('EM-insecure model (intact) †', 'insec†').replace('insecure, Python-string †', 'Py-str†').replace('untouched GPT-4.1 itself', 'base').replace('inoculation prompt', 'inoc.').replace('benign data interleaved (1/3)', 'benign').replace('self-reports interleaved (1/3)', 'self-rep').replace('inoculation + self-reports (1/3)', 'both');
 
@@ -575,40 +575,47 @@ figure svg .grp-head { fill: var(--ink); font-size: 9.5px; font-weight: 600; }
     });
   })();
 
-  // Appendix: grid, one small bar chart per (metric, experiment)
+  // Appendix: the data of Figures 2, 4 and 5, one column per metric on its own scale,
+  // drawn with the strips' marks, row labels and gridlines.
   (() => {
-    const grid = document.getElementById('grid');
-    const div = (cls, html) => { const d = document.createElement('div'); d.className = cls; d.innerHTML = html; return d; };
-    grid.appendChild(div('colhead', ''));
-    const GRID = EXP.filter(e => e.key !== 'S');
-    GRID.forEach(e => grid.appendChild(div('colhead', e.title)));
-    MET.forEach((m, mi) => {
-      const last = mi === MET.length - 1;
-      grid.appendChild(div('rowhead', `${m.k}<small>${m.sub}</small>`));
-      GRID.forEach(e => {
-        const W = 320, H = last ? 92 : 62, left = 26, right = 4, top = 10, bottom = last ? 34 : 4;
-        const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${m.k} ${m.sub}, experiment ${e.key}` });
-        const plotH = H - top - bottom, plotW = W - left - right, y = v => top + plotH * (1 - v / m.max);
-        [0, m.max].forEach(t => { svg.appendChild(el('line', { x1: left, x2: W - right, y1: y(t), y2: y(t), class: 'chart-grid' })); svg.appendChild(el('text', { x: left - 3, y: y(t) + 3, class: 'lab', 'text-anchor': 'end' }, t.toFixed(1))); });
-        if (BASE.v[mi] > 0) svg.appendChild(el('line', { x1: left, x2: W - right, y1: y(BASE.v[mi]), y2: y(BASE.v[mi]), class: 'base-line' }));
-        const groups = e.groups.map(g => ({ label: g.label, bars: g.bars.filter(b => !b.base) }));
-        const n = groups.reduce((s, g) => s + g.bars.length, 0), gapG = 12, gapB = 4;
-        const barW = (plotW - gapG * (groups.length - 1) - gapB * (n - groups.length)) / n;
-        let x = left;
-        groups.forEach(g => {
-          g.bars.forEach(b => {
-            const v = b.v[mi];
-            svg.appendChild(el('rect', { x, y: y(v), width: barW, height: Math.max(0, y(0) - y(v)), class: m.cls }));
-            if (last && b.intact) svg.appendChild(el('rect', { x: x + 2, y: H - bottom + 14, width: barW - 4, height: 2, class: 'intact' }));
-            svg.appendChild(el('text', { x: x + barW / 2, y: y(v) - 2, class: 'val' }, v.toFixed(2)));
-            if (last) svg.appendChild(el('text', { x: x + barW / 2, y: H - bottom + 10, class: 'lab-x' + (b.intact ? ' intact-lab' : '') }, short(b.l)));
-            x += barW + gapB;
-          });
-          x += gapG - gapB;
-        });
-        svg.appendChild(el('line', { x1: left, x2: W - right, y1: y(0), y2: y(0), class: 'chart-axis' }));
-        grid.appendChild(svg);
+    const svg = document.getElementById('gridS'); if (!svg) return;
+    const BLOCKS = EXP.filter(e => e.key !== 'S');
+    const TITLE = { '2': 'Defense before & during EM fine-tuning', '3': 'Fine-tuning on self-reports from other models', '4': 'Reversing EM with subsequent fine-tuning' };
+    const TICKS = { 0.4: [0, 0.2, 0.4], 0.7: [0, 0.35, 0.7], 1: [0, 0.5, 1] };
+    const W = 520, left = 150, right = 8, gap = 12, top = 58, rowH = 13, gapG = 15, gapB = 10, bottom = 24;
+    const panelW = (W - left - right - gap * 3) / 4;
+    const px = i => left + i * (panelW + gap);
+    const xs = (i, v) => px(i) + panelW * (v / MET[i].max);
+    // layout pass
+    const rows = [], heads = [];
+    let yy = top;
+    BLOCKS.forEach((e, bi) => {
+      if (bi) yy += gapB;
+      heads.push({ y: yy, text: TITLE[e.key], block: true }); yy += 28;
+      e.groups.forEach(g => {
+        heads.push({ y: yy - 4, text: g.label });
+        g.bars.forEach(b => { rows.push({ cy: yy + rowH / 2, b }); yy += rowH; });
+        yy += gapG;
       });
+    });
+    const H = yy - gapG + bottom;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.appendChild(el('text', { x: W / 2, y: 16, class: 'fig-title' }, 'Figures 2, 4 and 5, one metric at a time'));
+    MET.forEach((m, i) => {
+      svg.appendChild(mark(px(i) + 4, 33, i));
+      svg.appendChild(el('text', { x: px(i) + 11, y: 36, class: 'grp-head' }, m.k));
+      svg.appendChild(el('text', { x: px(i) + 11, y: 46, class: 'leg' }, m.sub));
+      TICKS[m.max].forEach(t => {
+        svg.appendChild(el('line', { x1: xs(i, t), x2: xs(i, t), y1: top - 6, y2: H - bottom + 4, class: 'chart-grid' }));
+        if (t === 0 || t === m.max) svg.appendChild(el('text', { x: xs(i, t) + (t ? -1 : 1), y: H - bottom + 14, class: 'lab', 'text-anchor': t ? 'end' : 'start' }, t.toFixed(2)));
+      });
+      if (BASE.v[i] > 0) svg.appendChild(el('line', { x1: xs(i, BASE.v[i]), x2: xs(i, BASE.v[i]), y1: top - 6, y2: H - bottom + 4, class: 'base-line' }));
+      svg.appendChild(el('text', { x: px(i) + panelW / 2, y: H - 2, class: 'axis-title' }, 'rate'));
+    });
+    heads.forEach(h => svg.appendChild(el('text', { x: 4, y: h.y + (h.block ? 8 : 0), class: 'grp-head', style: h.block ? 'font-size:10.5px;font-weight:700' : '' }, h.text)));
+    rows.forEach(({ cy, b }) => {
+      svg.appendChild(el('text', { x: left - 8, y: cy + 3, class: 'rowlab' + (b.intact ? ' intact-lab' : '') }, b.l));
+      b.v.forEach((v, i) => svg.appendChild(mark(xs(i, v), cy, i)));
     });
   })();
 
