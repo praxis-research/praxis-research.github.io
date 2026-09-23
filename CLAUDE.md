@@ -120,6 +120,28 @@ editing them:
 - **Site chrome CSS** (`.site-header`, `.brand`, `.site-nav`, `.site-footer`)
   must match `style.css`. Copy the block; do not improvise.
 
+### Update a post from its read-only artifact
+
+Some standalone posts are derived from a read-only Claude artifact that holds
+the prose, the figure code and the data. The artifact is the source of truth;
+edit it, never the page in `static/`. To bring the site up to date:
+
+```bash
+npm run pull-post -- <downloaded index.html> <slug> [<dir of its figs/ images>]
+npm run check
+```
+
+Download the artifact's page as the file `index.html` (and its published
+`figs/` images if they changed). The script keeps the artifact's body, CSS and
+scripts unchanged, swaps in the repo's `design.css` and site chrome, takes the
+title and summary from the post's entry in `content/blog.json`, and rewrites
+figure paths to `/figures/<slug>/`. The post's artifact needs one `<style>`
+whose post-specific rules begin with a `/* === this page` comment, and
+`<main class="doc">` around the post.
+
+Posts built this way: `self-modeling-interventions`
+(https://claude.ai/artifact/DmazApWDoe7JtGhVVc4UWb).
+
 ### Change how the site looks
 
 Read `/design/` (`content/design.md`) first. Then edit `assets/design.css` if it
