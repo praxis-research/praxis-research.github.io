@@ -71,8 +71,13 @@ the people after it, comma-separated:
 - **MATS 11.0** [Their Name](https://their-site.example), [Another](https://…)
 ```
 
-Add a name to its line, or a new line for a new category. That is the only
-convention on the page.
+Add a name to its line, or a new line for a new category. The one other
+convention: a link whose text is exactly `Apply` renders as a button, for open
+application rounds:
+
+```markdown
+- **MATS Spring** [Apply](https://www.matsprogram.org/apply)
+```
 
 ### Add an artifact as a page
 

@@ -123,6 +123,11 @@ main { flex: 1 0 auto; }
 .people h2 { font-size: 1.1rem; margin: 2rem 0 0.75rem; }
 .people h3 { font-size: 0.95rem; color: var(--muted); margin: 1.5rem 0 0.5rem; }
 .people .meta::before { content: " — "; }
+.people a.apply {
+  display: inline-block; text-indent: 0; padding: 0.1rem 0.6rem; border: 1px solid var(--accent); border-radius: 4px;
+  background: var(--accent); color: var(--bg); font-weight: 600; text-decoration: none;
+}
+.people a.apply:hover { background: transparent; color: var(--accent); }
 
 /* publications: title, then venue and authors as one small muted block */
 .publications h3 { font-size: 1.02rem; margin: 1.8rem 0 0.2rem; }
