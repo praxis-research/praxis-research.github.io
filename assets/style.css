@@ -63,18 +63,44 @@ main { flex: 1 0 auto; }
 
 /* ----------------------------------------------------------------- listings */
 
-.post-list { list-style: none; padding: 0; margin: 1.5rem 0 0; }
-
-.post-list li {
-  padding-bottom: 1.5rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--rule);
+/* The front page: eyebrow-labelled sections of entry cards; papers grouped
+   by year under a small year heading and a rule. */
+.listing { margin-top: 3rem; }
+.eyebrow, .year {
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 1rem;
 }
+.year { margin-top: 1.75rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--rule); }
+.eyebrow + .year { margin-top: 0; }
+
+.entries { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.entry { border: 1px solid var(--rule); border-radius: 6px; padding: 0.9rem 1.1rem; }
+.entry-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem 1rem; }
+.entry h2 { margin: 0; font-size: 1.05rem; line-height: 1.35; text-wrap: balance; }
+.entry h2 a, .entry h2 a:visited, .entry h2 a:hover { color: var(--heading); text-decoration: none; }
+.entry h2 a:hover { text-decoration: underline; }
+.pill {
+  flex: none; margin-top: 0.15rem; padding: 0.1rem 0.5rem; border: 1px solid var(--rule); border-radius: 4px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+  white-space: nowrap;
+}
+.entry-meta {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.2rem 1rem;
+  font-size: 0.85rem; color: var(--muted); margin: 0.35rem 0 0;
+}
+.entry-meta time, .entry-meta span:last-child:not(:first-child) { flex: none; }
+.entry .summary { margin: 0.5rem 0 0; color: var(--ink); }
+@media (max-width: 480px) {
+  .entry-head { flex-direction: column; }
+  .pill { margin-top: 0; }
+}
+
+/* other listings (notes) */
+.post-list { list-style: none; padding: 0; margin: 1.5rem 0 0; }
+.post-list li { padding-bottom: 1.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--rule); }
 .post-list li:last-child { border-bottom: 0; }
 .post-list h2 { margin: 0 0 0.25rem; font-size: 1.2rem; }
 .post-list h2 a, .post-list h2 a:visited, .post-list h2 a:hover { color: var(--heading); text-decoration: none; }
-/* papers sit under the posts, separated by a dashed rule */
-.post-list.papers { border-top: 1px dashed var(--rule); padding-top: 1.5rem; }
 .post-list .byline { margin: 0 0 0.3rem; }
 .post-list .summary { margin: 0; }
 

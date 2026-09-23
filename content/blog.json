@@ -5,7 +5,8 @@
     "authors": "David Vella Zarb, Rustem Turtayev, Taywon Min, Jinghua Ou, Shi Feng",
     "date": "2026-08-25",
     "summary": "Operationalizing intent as propensity through symmetric belief editing.",
-    "order": 1
+    "order": 1,
+    "venue": "Blog"
   },
   {
     "url": "/self-modeling-interventions",
@@ -13,7 +14,8 @@
     "authors": "Arush Tagade, Shaoheng Zhou, Jiaxin Wen, Shi Feng",
     "date": "2026-09-22",
     "summary": "Interventions on a model's self-model prevent, carry, and reverse emergent misalignment.",
-    "order": 2
+    "order": 2,
+    "venue": "Blog"
   },
   {
     "url": "https://arxiv.org/abs/2606.04071",
@@ -21,7 +23,8 @@
     "authors": "Avidan Shah, Jay Chooi, Jinghua Ou, Shi Feng",
     "date": "2026-06-04",
     "summary": "A sender model's behavioral disposition reaches a receiver through carriers humans cannot detect, across fine-tuning, distillation and in-context learning.",
-    "order": 3
+    "order": 3,
+    "venue": "Preprint"
   },
   {
     "url": "/interpretive-debate",
@@ -29,6 +32,7 @@
     "authors": "Shi Feng",
     "date": "2026-08-27",
     "summary": "Towards falsifiable empirical investigation of model motivations.",
-    "order": 4
+    "order": 4,
+    "venue": "Blog"
   }
 ]
