@@ -72,8 +72,9 @@ the people after it, comma-separated:
 ```
 
 Add a name to its line, or a new line for a new category. The one other
-convention: a link whose text is exactly `Apply` renders as a button, for open
-application rounds:
+convention: a link whose text is exactly `Apply` renders in capitals and keeps
+the link colour (everything else on the page is black), for open application
+rounds:
 
 ```markdown
 - **MATS Spring** [Apply](https://www.matsprogram.org/apply)
