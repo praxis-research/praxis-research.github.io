@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Grafting: Transplanting Model Beliefs Across Checkpoints</title>
+<title>Pre-training Interventions, Ex Post Facto</title>
 <meta name="description" content="Train a LoRA on the base model, transplant it onto the instruct model. The graft installs more belief and spills far less.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -311,7 +311,7 @@ main{flex:1 0 auto}
 </header>
 <main><div class="container">
 
-<div class="name">Alignment pretraining, <i>ex post facto</i>: transplanting model beliefs across checkpoints</div>
+<div class="name">Pre-training interventions, <i>ex post facto</i></div>
 <div class="authors"><div class="lead" id="lead"><span class="au"><a class="al" href="https://www.peterstran.com/" target="_blank" rel="noopener">Peter Nutter</a></span> <span class="sep">·</span> <span class="au"><a class="al" href="https://djroytburg.github.io/" target="_blank" rel="noopener">Dani Roytburg</a></span></div><div class="rest"><span class="au"><a class="ar" href="https://butanium.github.io/" target="_blank" rel="noopener">Clément Dumas</a></span> <span class="sep">·</span> <span class="au"><a class="ar" href="https://scholar.google.com/citations?user=t6CsZK4AAAAJ&hl=en" target="_blank" rel="noopener">Jinghua Ou</a></span> <span class="sep">·</span> <span class="au"><a class="ar" href="https://shi-feng.super.site/" target="_blank" rel="noopener">Shi Feng</a></span></div></div>
 <p class="lede">Current methods to install model behaviors with synthetic documents demonstrate incomplete extrapolation, poor robustness to adversarial probing, or collateral damage to general capabilities. This poses risks for alignment research which relies on data-based archetypes to produce personas — for the sake of either model organisms or deploying generally aligned production models.</p>
 <p class="lede">We demonstrate that many limitations to synthetic document training emerge from training on assistant-trained versions of language models. Instead of training on the instruct-tuned version of a model, we propose training via <b>grafting</b>: fine-tune synthetic documents on a base language model and transplant the weight difference to the latest checkpoint. Grafting synthetic documents retains more capability from the initial model, installs deeper beliefs about reality, all with the same level of behavioral expressivity.</p>
