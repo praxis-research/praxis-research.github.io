@@ -42,7 +42,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 a.brand:hover { text-decoration: underline; }
 
 .site-nav { display: flex; gap: 1.25rem; font-size: 0.95rem; }
-.site-nav a { color: var(--accent); text-decoration: none; }
+.site-nav a { color: var(--heading); text-decoration: none; }
 .site-nav a:hover { text-decoration: underline; }
 .site-nav a.active { color: var(--ink); font-weight: 700; }
 
@@ -106,9 +106,16 @@ main { flex: 1 0 auto; }
 .post-list .byline { margin: 0 0 0.3rem; }
 .post-list .summary { margin: 0; }
 
-/* people: `Name — affiliation`, affiliation muted */
+/* people: one line per category, `**Category** names`; the bold label is
+   the first column. `Name — affiliation` inside a line still mutes the
+   affiliation. */
 .people ul { list-style: none; padding-left: 0; }
-.people li { margin-bottom: 0.4rem; }
+.people li { margin-bottom: 0.5rem; padding-left: 9rem; text-indent: -9rem; }
+.people li strong { display: inline-block; width: 9rem; text-indent: 0; color: var(--muted); font-weight: 600; }
+@media (max-width: 480px) {
+  .people li { padding-left: 0; text-indent: 0; }
+  .people li strong { display: block; width: auto; }
+}
 .people h2 { font-size: 1.1rem; margin: 2rem 0 0.75rem; }
 .people h3 { font-size: 0.95rem; color: var(--muted); margin: 1.5rem 0 0.5rem; }
 .people .meta::before { content: " — "; }

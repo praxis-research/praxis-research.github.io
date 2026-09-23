@@ -64,13 +64,14 @@ edit an index by hand.
 
 ### Add a person
 
-A line in `content/people.md`:
+`content/people.md` is one list item per category, the bold label first and
+the people after it, comma-separated, an affiliation in parentheses:
 
 ```markdown
-- [Their Name](https://their-site.example) — MATS 11.0
+- **MATS 11.0** [Their Name](https://their-site.example), [Another](https://…) (MIT)
 ```
 
-The text after the em dash (` — `) becomes muted metadata. That is the only
+Add a name to its line, or a new line for a new category. That is the only
 convention on the page.
 
 ### Add an artifact as a page
