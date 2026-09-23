@@ -26,10 +26,11 @@ you are writing a lot, you are fighting the system rather than using it.
 
 ## The rules
 
-1. **One typeface, plus mono.** Cardo, a serif that `design.css` loads from
-   Google Fonts, for everything at a 15px base; `--font-mono` for data,
-   identifiers, and code. No display face, no second web font. If you want
-   emphasis, use weight and space, not a new family.
+1. **One typeface, plus mono.** The Gill Sans stack (Calibri on Windows,
+   Gill Sans on a Mac, the same stack LessWrong uses) for everything at a
+   16px base; `--font-mono` for data, identifiers, and code. No display face,
+   no web font, so no network requests. If you want emphasis, use weight and
+   space, not a new family.
 
 2. **Colour carries meaning or it does not appear.** There is exactly one
    accent (`--accent`), and it means *link*. There is one semantic pair,
@@ -145,7 +146,7 @@ is mono and tabular.
 
 ## What not to do
 
-- Do not add a second font. Do not add an accent colour.
+- Do not add a font. Do not add an accent colour.
 - Do not use colour as decoration, or to distinguish things that do not oppose.
 - Do not centre body text, or set headings in all caps with wide tracking.
 - Do not build a hero. A document starts with its title and its lede.
