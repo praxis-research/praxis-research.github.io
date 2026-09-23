@@ -30,6 +30,7 @@ any page missing a doctype, charset, or viewport.
 | A blog post | `content/blog/<slug>.md` |
 | Notes intro | `content/notes.md` |
 | Which notes are listed | `content/notes.json` — written by the port script, not by hand |
+| Papers listed under the posts | `content/papers.json` — same fields as `blog.json`, plus `venue` |
 | Nav, site title, contact URL, email | `site.config.json` |
 | Colours, type, components | `assets/design.css` — the shared system |
 | Header, nav, footer, page layouts | `assets/style.css` — site chrome, no colours |
@@ -111,7 +112,13 @@ editing them:
 
 - **List it in `content/blog.json`** (url, title, authors, date, summary). The
   listing shows month and year only. Entries with an `order` field (1 = top)
-  come first in that order; the rest follow newest first.
+  come first in that order; the rest follow newest first. `url` may be an
+  external link (a paper that only lives on arXiv); an optional `venue`
+  ("NeurIPS 2024, oral") goes into the byline.
+- **Papers** that are not posts go in `content/papers.json`, same fields.
+  They render under the posts after a dashed rule.
+- **A redirect** is a small HTML file in `static/` with a meta refresh, a
+  canonical link and `noindex`; copy `static/covert-influence.html`.
 - **Keep width tokens identical to `design.css`:** `--container: 58rem` and
   `--measure: 50rem`. A page that redefines these shifts the header sideways
   relative to every other page.

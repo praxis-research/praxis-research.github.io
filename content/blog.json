@@ -16,11 +16,19 @@
     "order": 2
   },
   {
+    "url": "https://arxiv.org/abs/2606.04071",
+    "title": "Covert Influence Between Language Models",
+    "authors": "Avidan Shah, Jay Chooi, Jinghua Ou, Shi Feng",
+    "date": "2026-06-04",
+    "summary": "A sender model's behavioral disposition reaches a receiver through carriers humans cannot detect, across fine-tuning, distillation and in-context learning.",
+    "order": 3
+  },
+  {
     "url": "/interpretive-debate",
     "title": "Research Agenda: Interpretive Debate",
     "authors": "Shi Feng",
     "date": "2026-08-27",
     "summary": "Towards falsifiable empirical investigation of model motivations.",
-    "order": 3
+    "order": 4
   }
 ]
