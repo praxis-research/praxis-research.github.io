@@ -115,7 +115,7 @@ in `assets/` and applies everywhere. When editing them:
 
 - **List it in `content/blog.json`** (url, title, authors, date, summary).
   The front page shows each entry as a card under "Latest": title, authors
-  and the summary (the date feeds RSS and ordering only). Keep every
+  and the summary (the date feeds RSS, ordering, and the month-year pill). Keep every
   summary under about 90 characters so it stays on one line. Entries with an `order` field
   (1 = top) come first in that order; the rest follow newest first. `url` may
   be an external link.
@@ -123,7 +123,8 @@ in `assets/` and applies everywhere. When editing them:
   authors, year, summary; `venue` only for a published venue such as
   "NeurIPS", plus an optional `note` such as "oral" or "spotlight" that joins
   the venue pill). They render under the posts, grouped by `year`, newest
-  first. Preprints and blog posts carry no pill.
+  first. Preprints and blog posts carry no venue; give them a `date`
+  (YYYY-MM-DD) and the pill shows its month and year instead.
 - **A redirect** is a small HTML file in `static/` with a meta refresh, a
   canonical link and `noindex`; copy `static/covert-influence.html`.
 - **Keep width tokens identical to `design.css`:** `--container: 58rem` and

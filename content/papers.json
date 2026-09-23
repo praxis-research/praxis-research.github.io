@@ -4,6 +4,7 @@
     "title": "RL on Debate Games",
     "authors": "Lennie Wells, Joan Velja, Shi Feng, Jacob Pfau",
     "year": 2026,
+    "date": "2026-07-02",
     "summary": "Debate self-play raises proposal accuracy, but debaters also learn to hack the judge.",
     "order": 1
   },
@@ -22,6 +23,7 @@
     "title": "Unsupervised Elicitation of Language Models",
     "authors": "Jiaxin Wen, Zachary Ankner, Arushi Somani, Peter Hase, Samuel Marks, Jacob Goldman-Wetzler, Linda Petrini, Henry Sleight, Collin Burns, He He, Shi Feng, Ethan Perez, Jan Leike",
     "year": 2025,
+    "date": "2025-06-11",
     "summary": "A model trained on its own labels matches gold supervision and beats human labels.",
     "order": 3
   },
@@ -48,6 +50,7 @@
     "title": "Spontaneous Reward Hacking in Iterative Self-Refinement",
     "authors": "Jane Pan, He He, Samuel R. Bowman, Shi Feng",
     "year": 2024,
+    "date": "2024-07-05",
     "summary": "A model refining its outputs against its own evaluator drifts from human judgment.",
     "order": 6
   },
