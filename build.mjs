@@ -190,13 +190,18 @@ ${items ? `<ul class="post-list">\n${items}\n</ul>` : '<p class="summary">No not
   },
 
   'blog-index': (page, ctx) => {
-    // One entry: title with a venue pill on the right (only for a published
-    // venue; a "note" such as oral or spotlight joins the pill), then authors
-    // (the date is kept for the feed, not shown), then the one-line summary.
+    // One entry: title with a pill on the right, then authors, then the
+    // one-line summary. The pill names a published venue (a "note" such as
+    // oral or spotlight joins it); unpublished work shows its month and year.
+    const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthYear = (d) => { const [y, m] = String(d).split('-'); return `${MONTHS[m - 1]} ${y}`; };
+    const pill = (p) => p.venue
+      ? `<span class="pill${p.note ? ' pill--note' : ''}">${esc(p.venue)}${p.note ? ` · ${esc(p.note)}` : ''}</span>`
+      : p.date ? `<span class="pill"><time datetime="${esc(p.date)}">${monthYear(p.date)}</time></span>` : '';
     const entry = (p) => `  <li class="entry">
     <div class="entry-head">
       <h2><a href="${p.url}">${esc(p.title)}</a></h2>
-      ${p.venue ? `<span class="pill${p.note ? ' pill--note' : ''}">${esc(p.venue)}${p.note ? ` · ${esc(p.note)}` : ''}</span>` : ''}
+      ${pill(p)}
     </div>
     <p class="entry-meta"><span>${esc(p.authors || '')}</span></p>
     ${p.summary ? `<p class="summary">${esc(p.summary)}</p>` : ''}
