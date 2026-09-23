@@ -4,10 +4,10 @@
 <meta name="description" content="Fine-tune synthetic documents at a pre-training checkpoint and serve the weight update on the post-trained model: the belief installs at parity with less than half the damage to reality grounding and preference coherence.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/design.css">
+<link rel="stylesheet" href="/assets/style.css">
 <style> 
 :root{
-  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   --bg:#ffffff; --surface:#f4f6f8; --ink:#1a1d21; --heading:#0b0d0f;
   --muted:#5f6b74; --rule:#dce1e6; --accent:#125fa8;
   --pos:#17624a; --neg:#9c3d24;
@@ -43,6 +43,7 @@ body{margin:0;color:var(--text);font-family:var(--font-body);background:var(--bg
 .stg-s1{color:#b8740a}.stg-kto{color:#2a7f7f}.stg-sft{color:#a4453a}
 .stgd{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 .container{max-width:var(--container);margin:0 auto;padding:0 1.5rem 72px}
+.site-header .container,.site-footer .container{padding-bottom:0}
 .name{font-family:var(--font-body);font-size:34px;margin:0 0 6px;font-weight:700;line-height:1.15}
 .accent{border:0;height:4px;background:var(--accent);width:70%;margin:12px 0 18px;opacity:.95}
 .role{color:var(--muted);margin:6px 0 2px}
@@ -286,20 +287,6 @@ details.bg .math{font-size:14px;margin:12px 0}
 .cform input:focus,.cform textarea:focus{outline:none;border-color:var(--accent)}
 .crow{display:flex;gap:10px;align-items:center}
 .cmsg{color:var(--muted);font-size:11.5px}
-/* === site chrome === */
-body{display:flex;flex-direction:column;min-height:100vh}
-.site-header{border-bottom:1px solid var(--rule);padding:1.25rem 0;margin-bottom:3rem}
-.site-header .container,.site-footer .container{width:100%;max-width:var(--container);margin:0 auto;padding:0 1.5rem}
-.site-header .container{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:0.5rem 2rem}
-.brand{font-size:1.1rem;font-weight:700;line-height:1.3;color:var(--heading);text-decoration:none;margin:0}
-a.brand:hover{text-decoration:underline}
-.site-nav{display:flex;gap:1.25rem;font-size:0.95rem}
-.site-nav a{color:var(--accent);text-decoration:none}
-.site-nav a:hover{text-decoration:underline}
-main{flex:1 0 auto}
-.site-footer{flex-shrink:0;border-top:1px solid var(--rule);padding:1.25rem 0;font-size:0.9rem;color:var(--muted)}
-.site-footer p{margin:0}
-@media(max-width:40rem){.site-header{margin-bottom:1.5rem}.site-header .container{flex-direction:column;align-items:flex-start}.site-nav{gap:1rem}}
 
 .paperfig{margin:18px 0}.paperfig img{display:block;width:100%;max-width:672px;margin:0 auto}.paperfig figcaption{font-size:0.9rem;color:var(--muted);margin-top:8px}
 </style></head><body>

@@ -54,6 +54,13 @@ const assetVersion = createHash('sha1')
   .update(readFileSync(join(ROOT, 'assets', 'style.css')))
   .digest('hex').slice(0, 8);
 
+function walkFiles(dir) {
+  return readdirSync(dir).flatMap((name) => {
+    const p = join(dir, name);
+    return statSync(p).isDirectory() ? walkFiles(p) : [p];
+  });
+}
+
 function formatDate(iso) {
   const [y, m, d] = String(iso).split('-').map(Number);
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -268,6 +275,13 @@ rmSync(join(OUT, '404'), { recursive: true, force: true });
 
 cpSync(join(ROOT, 'assets'), join(OUT, 'assets'), { recursive: true });
 if (existsSync(join(ROOT, 'static'))) cpSync(join(ROOT, 'static'), OUT, { recursive: true });
+// Standalone pages link the same stylesheets; give them the same cache-busting
+// query as generated pages, so one edit to assets/ shows up everywhere at once.
+for (const f of walkFiles(OUT).filter((f) => f.endsWith('.html'))) {
+  const html = readFileSync(f, 'utf8');
+  const versioned = html.replace(/href="\/assets\/(design|style)\.css"/g, `href="/assets/$1.css?v=${assetVersion}"`);
+  if (versioned !== html) writeFileSync(f, versioned);
+}
 
 // RSS. A listed entry may point off-site (a paper that lives on arXiv).
 const absolute = (u) => /^https?:\/\//.test(u) ? u : site.url + u;

@@ -1,3 +1,6 @@
+/* the one web font; @import must come first, so it sits above the banner */
+@import url("https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap");
+
 /* ============================================================================
    Praxis design system — the shared core.
 
@@ -17,8 +20,7 @@
    Define every colour here; never inside a component rule.                  */
 
 :root {
-  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-               Helvetica, Arial, sans-serif;
+  --font-body: "Cardo", Georgia, "Times New Roman", serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
   --bg:       #ffffff;
@@ -79,8 +81,8 @@ body {
                                      viewer's ground, so never leave this unset */
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 15px;                /* the base size; every page inherits it */
+  line-height: 1.65;
 }
 
 h1, h2, h3, h4 {

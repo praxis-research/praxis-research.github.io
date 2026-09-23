@@ -32,7 +32,7 @@ any page missing a doctype, charset, or viewport.
 | Which notes are listed | `content/notes.json` — written by the port script, not by hand |
 | Papers listed under the posts | `content/papers.json` — grouped by `year`, pill from `venue` |
 | Nav, site title, contact URL, email | `site.config.json` |
-| Colours, type, components | `assets/design.css` — the shared system |
+| Typeface, base size, colours, components | `assets/design.css` — the shared system, linked by every page |
 | Header, nav, footer, page layouts | `assets/style.css` — site chrome, no colours |
 | The design guideline | `content/design.md`, published at `/design/` |
 | Files served as-is | `static/` — copied to the site root verbatim |
@@ -108,8 +108,10 @@ To remove a note: delete `static/notes/<slug>/` **and** its entry in
 ### Add or edit a standalone HTML post
 
 Some blog posts are full HTML files in `static/` rather than markdown. They
-inline `design.css` and a block of site-chrome CSS from `style.css`. When
-editing them:
+link `/assets/design.css` and `/assets/style.css` like every generated page
+(the build adds the cache-busting query), and keep only their own rules in
+an inline `<style>`. A typeface, size or colour change is therefore one edit
+in `assets/` and applies everywhere. When editing them:
 
 - **List it in `content/blog.json`** (url, title, authors, date, summary).
   The front page shows each entry as a card under "Latest": title, authors
@@ -132,8 +134,8 @@ editing them:
   alignment with the header and footer.
 - **`html` must include `scrollbar-gutter: stable`** so pages with and without
   a scrollbar keep centered content in the same position.
-- **Site chrome CSS** (`.site-header`, `.brand`, `.site-nav`, `.site-footer`)
-  must match `style.css`. Copy the block; do not improvise.
+- **Do not inline `design.css` or the site chrome.** Link the two
+  stylesheets; a page that carries its own copy stops following the system.
 
 ### Update a post from its read-only artifact
 
@@ -147,10 +149,10 @@ npm run check
 ```
 
 Download the artifact's page as the file `index.html` (and its published
-`figs/` images if they changed). The script keeps the artifact's body, CSS and
-scripts unchanged, swaps in the repo's `design.css` and site chrome, takes the
-title and summary from the post's entry in `content/blog.json`, and rewrites
-figure paths to `/figures/<slug>/`. The post's artifact needs one `<style>`
+`figs/` images if they changed). The script keeps the artifact's body, its own CSS and
+scripts unchanged, drops its inlined `design.css` in favour of links to the
+site's stylesheets, takes the title and summary from the post's entry in
+`content/blog.json`, and rewrites figure paths to `/figures/<slug>/`. The post's artifact needs one `<style>`
 whose post-specific rules begin with a `/* === this page` comment, and
 `<main class="doc">` around the post.
 
