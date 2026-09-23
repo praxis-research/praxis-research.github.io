@@ -65,10 +65,10 @@ edit an index by hand.
 ### Add a person
 
 `content/people.md` is one list item per category, the bold label first and
-the people after it, comma-separated, an affiliation in parentheses:
+the people after it, comma-separated:
 
 ```markdown
-- **MATS 11.0** [Their Name](https://their-site.example), [Another](https://…) (MIT)
+- **MATS 11.0** [Their Name](https://their-site.example), [Another](https://…)
 ```
 
 Add a name to its line, or a new line for a new category. That is the only
