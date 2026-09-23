@@ -1,3 +1,6 @@
+/* the one web font; @import must come first, so it sits above the banner */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap");
+
 /* ============================================================================
    Praxis design system — the shared core.
 
@@ -17,10 +20,8 @@
    Define every colour here; never inside a component rule.                  */
 
 :root {
-  /* the LessWrong stack: Calibri on Windows, Gill Sans on a Mac, from the
-     system; no web font is loaded */
-  --font-body: Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", "Liberation Sans",
-               "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto,
+               Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
   --bg:       #ffffff;
@@ -81,7 +82,7 @@ body {
                                      viewer's ground, so never leave this unset */
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: 16px;                /* the base size; every page inherits it */
+  font-size: 15px;                /* the base size; every page inherits it */
   line-height: 1.6;
 }
 
