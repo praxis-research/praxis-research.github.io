@@ -124,6 +124,10 @@
 .arrow-up-a, .arrow-down-a { stroke: var(--accent); }
 .arrow-up-b, .arrow-down-b { stroke: var(--neg); }
 
+/* === figures: no frame, sized so SVG text sits just under body size === */
+
+figure svg { border: none; margin: 0 auto; }
+
 /* === inline semantic marks === */
 
 .label-a { color: var(--accent); font-weight: 700; }
@@ -175,7 +179,7 @@ provides evidence that the dominant mechanism in open-weight models is performat
 misalignment&mdash;tracking researcher expectations&mdash;rather than scheming.</p>
 
 <figure>
-<svg viewBox="0 0 600 280" aria-label="Two-panel schematic showing predicted alignment-faking rate patterns. Left: if motivation A (performative) dominates, A+ produces a large rate and A− shrinks it while B interventions stay flat. Right: if motivation B (scheming) dominates, B+ produces a large rate and B− shrinks it while A interventions stay flat.">
+<svg width="750" viewBox="0 0 600 280" aria-label="Two-panel schematic showing predicted alignment-faking rate patterns. Left: if motivation A (performative) dominates, A+ produces a large rate and A− shrinks it while B interventions stay flat. Right: if motivation B (scheming) dominates, B+ produces a large rate and B− shrinks it while A interventions stay flat.">
 
   <!-- ====== Left panel: "If motivation A dominates" ====== -->
 
@@ -382,7 +386,7 @@ requests at substantially different rates depending on whether they believe the
 interaction feeds back into training.</p>
 
 <figure>
-<svg viewBox="0 0 480 210" aria-label="Bar chart: compliance rate in monitored and unmonitored conditions for four helpful-only model organisms. All four show a compliance gap (alignment-faking rate).">
+<svg width="600" viewBox="0 0 480 210" aria-label="Bar chart: compliance rate in monitored and unmonitored conditions for four helpful-only model organisms. All four show a compliance gap (alignment-faking rate).">
 
   <!-- legend -->
   <rect x="140" y="4" width="10" height="10" rx="2" class="bar-mon legend-swatch"/>
@@ -499,7 +503,7 @@ Qwen-2.5-72B. Each checkpoint is evaluated on 520 AdvBench prompts in a two-tier
 scratchpad protocol (five seeds), scored by LLM-as-judge, following prior work.</p>
 
 <figure>
-<svg viewBox="0 0 600 318" aria-label="Bar chart: alignment-faking rate under A+, A−, B+, B− SDF conditions versus baseline, across four models. Performative amplification consistently produces the largest rates.">
+<svg width="750" viewBox="0 0 600 318" aria-label="Bar chart: alignment-faking rate under A+, A−, B+, B− SDF conditions versus baseline, across four models. Performative amplification consistently produces the largest rates.">
 
   <!-- grid lines -->
   <line x1="60" y1="260" x2="555" y2="260" class="chart-grid"/>
@@ -669,7 +673,7 @@ alignment-faking transcripts) and out-of-context (OOC, from concept-written pair
 a clean dose-response:</p>
 
 <figure>
-<svg viewBox="0 0 560 310" aria-label="Line chart: steering coefficient vs. compliance rate for monitored and unmonitored conditions. At baseline, the gap is 19 percentage points. At +0.03, it narrows to 4.">
+<svg width="700" viewBox="0 0 560 310" aria-label="Line chart: steering coefficient vs. compliance rate for monitored and unmonitored conditions. At baseline, the gap is 19 percentage points. At +0.03, it narrows to 4.">
 
   <!-- grid lines -->
   <line x1="55" y1="191" x2="540" y2="191" class="chart-grid"/>
@@ -753,7 +757,7 @@ gap stays between 10 and 17&nbsp;pp throughout the coefficient sweep. The
 scheming vector does not selectively modulate alignment faking.</p>
 
 <figure>
-<svg viewBox="0 0 560 310" aria-label="Line chart: steering coefficient on the scheming direction vs. compliance rate. The gap between monitored and unmonitored stays roughly flat across all coefficients.">
+<svg width="700" viewBox="0 0 560 310" aria-label="Line chart: steering coefficient on the scheming direction vs. compliance rate. The gap between monitored and unmonitored stays roughly flat across all coefficients.">
 
   <!-- grid lines -->
   <line x1="55" y1="191" x2="540" y2="191" class="chart-grid"/>
@@ -878,7 +882,7 @@ learning its content better than the other:</p>
 </div>
 
 <figure>
-<svg viewBox="0 0 520 230" aria-label="Two-panel bar chart. Left: expectation belief probability under Baseline, A+, and B+ conditions. Right: consequence belief probability under Baseline, A1+, and A2+ conditions.">
+<svg width="650" viewBox="0 0 520 230" aria-label="Two-panel bar chart. Left: expectation belief probability under Baseline, A+, and B+ conditions. Right: consequence belief probability under Baseline, A1+, and A2+ conditions.">
 
   <!-- LEFT PANEL: Expectation belief -->
   <text x="130" y="14" class="chart-title" text-anchor="middle">Expectation belief</text>
@@ -982,7 +986,7 @@ Values below 0.5 are performative-dominant; values above 0.5 are
 scheming-dominant.</p>
 
 <figure>
-<svg viewBox="0 0 520 295" aria-label="Dumbbell chart: B-fraction for prompt and SDF methods across five models. All open-weight models are performative-dominant. Claude 3 Opus is scheming-dominant.">
+<svg width="650" viewBox="0 0 520 295" aria-label="Dumbbell chart: B-fraction for prompt and SDF methods across five models. All open-weight models are performative-dominant. Claude 3 Opus is scheming-dominant.">
 
   <!-- shaded regions -->
   <rect x="55" y="25" width="450" height="107.5" fill="var(--neg)" opacity="0.04"/>
