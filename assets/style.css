@@ -110,8 +110,10 @@ main { flex: 1 0 auto; }
    the first column. `Name — affiliation` inside a line still mutes the
    affiliation. */
 .people ul { list-style: none; padding-left: 0; }
-.people li { margin-bottom: 0.5rem; padding-left: 9rem; text-indent: -9rem; }
-.people li strong { display: inline-block; width: 9rem; text-indent: 0; color: var(--muted); font-weight: 600; }
+/* sized so the longest category stays on one line at the page's measure */
+.people ul { font-size: 0.875rem; }
+.people li { margin-bottom: 0.5rem; padding-left: 7.5rem; text-indent: -7.5rem; }
+.people li strong { display: inline-block; width: 7.5rem; text-indent: 0; color: var(--muted); font-weight: 600; }
 @media (max-width: 480px) {
   .people li { padding-left: 0; text-indent: 0; }
   .people li strong { display: block; width: auto; }
