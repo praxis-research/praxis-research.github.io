@@ -14,13 +14,6 @@
     "summary": "Towards falsifiable empirical investigation of model motivations."
   },
   {
-    "url": "/grafting",
-    "title": "Alignment Pre-training, ex post facto",
-    "authors": "Shi Feng",
-    "date": "2026-08-25",
-    "summary": "Fine-tune synthetic documents at a pre-training checkpoint and serve the weight update on the post-trained model: the belief installs at parity with less than half the damage to reality grounding and preference coherence."
-  },
-  {
     "url": "/comparative-motivation-profiles",
     "title": "Building Comparative Motivation Profiles with Symmetric Belief Editing",
     "authors": "David Vella Zarb, Rustem Turtayev, Taywon Min, Jinghua Ou, Shi Feng",
