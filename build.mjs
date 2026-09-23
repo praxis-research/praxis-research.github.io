@@ -175,16 +175,22 @@ ${items ? `<ul class="post-list">\n${items}\n</ul>` : '<p class="summary">No not
   },
 
   'blog-index': (page, ctx) => {
-    const items = ctx.posts.map((p) => `  <li>
+    // one entry of the listing; "venue" (e.g. "NeurIPS 2024, oral") is optional
+    const item = (p) => `  <li>
     <h2><a href="${p.url}">${esc(p.title)}</a></h2>
-    <p class="byline">${esc(p.authors || '')}${p.date ? ` · <time datetime="${p.date}">${formatDate(p.date)}</time>` : ''}</p>
+    <p class="byline">${esc(p.authors || '')}${p.venue ? ` · ${esc(p.venue)}` : ''}${p.date ? ` · <time datetime="${p.date}">${formatDate(p.date)}</time>` : ''}</p>
     ${p.summary ? `<p class="summary">${esc(p.summary)}</p>` : ''}
-  </li>`).join('\n');
+  </li>`;
+    const items = ctx.posts.map(item).join('\n');
+    const papers = ctx.papers.map(item).join('\n');
     return `<article class="content">
 ${md(page.body, page)}
 ${items ? `<ul class="post-list">
 ${items}
 </ul>` : '<p class="summary">No posts yet.</p>'}
+${papers ? `<ul class="post-list papers">
+${papers}
+</ul>` : ''}
 </article>`;
   },
 
@@ -214,19 +220,24 @@ function render(page, ctx) {
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 
-const blogFile = join(SRC, 'blog.json');
-const posts = existsSync(blogFile)
-  ? JSON.parse(readFileSync(blogFile, 'utf8')).sort((a, b) =>
-      // an explicit "order" (1 = top) wins; otherwise newest first
-      (a.order ?? Infinity) - (b.order ?? Infinity) || String(b.date).localeCompare(String(a.date)))
-  : [];
+// Posts and papers share one shape and one ordering: an explicit "order"
+// (1 = top) wins; otherwise newest first.
+function listing(name) {
+  const file = join(SRC, name);
+  return existsSync(file)
+    ? JSON.parse(readFileSync(file, 'utf8')).sort((a, b) =>
+        (a.order ?? Infinity) - (b.order ?? Infinity) || String(b.date).localeCompare(String(a.date)))
+    : [];
+}
+const posts = listing('blog.json');
+const papers = listing('papers.json');   // listed under the posts, after a dashed rule
 // Notes are ported artifacts living in static/notes/; this manifest is what
 // bin/port-artifact.mjs writes, and it is the only thing the index reads.
 const notesFile = join(SRC, 'notes.json');
 const notes = existsSync(notesFile)
   ? JSON.parse(readFileSync(notesFile, 'utf8')).sort((a, b) => String(b.added).localeCompare(String(a.added)))
   : [];
-const ctx = { posts, notes };
+const ctx = { posts, papers, notes };
 
 const pages = readdirSync(SRC).filter((f) => extname(f) === '.md').map((f) => loadPage(basename(f, '.md')));
 
