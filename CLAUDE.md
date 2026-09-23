@@ -110,14 +110,16 @@ Some blog posts are full HTML files in `static/` rather than markdown. They
 inline `design.css` and a block of site-chrome CSS from `style.css`. When
 editing them:
 
-- **List it in `content/blog.json`** (url, title, authors, date, summary,
-  venue). The front page shows each entry as a card: title, a `venue` pill
-  ("Blog", "Preprint"), authors with the month and year, and the summary.
-  Entries with an `order` field (1 = top) come first in that order; the rest
-  follow newest first. `url` may be an external link.
+- **List it in `content/blog.json`** (url, title, authors, date, summary).
+  The front page shows each entry as a card under "Latest": title, authors
+  with the month and year, and the summary. Entries with an `order` field
+  (1 = top) come first in that order; the rest follow newest first. `url` may
+  be an external link.
 - **Papers** that are not posts go in `content/papers.json` (url, title,
-  authors, venue, year, summary, optional `note` such as "oral" or
-  "spotlight"). They render under the posts, grouped by `year`, newest first.
+  authors, year, summary; `venue` only for a published venue such as
+  "NeurIPS", plus an optional `note` such as "oral" or "spotlight" that joins
+  the venue pill). They render under the posts, grouped by `year`, newest
+  first. Preprints and blog posts carry no pill.
 - **A redirect** is a small HTML file in `static/` with a meta refresh, a
   canonical link and `noindex`; copy `static/covert-influence.html`.
 - **Keep width tokens identical to `design.css`:** `--container: 58rem` and

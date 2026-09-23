@@ -71,7 +71,7 @@ main { flex: 1 0 auto; }
   color: var(--muted); margin: 0 0 1rem;
 }
 .year { margin-top: 1.75rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--rule); }
-.eyebrow + .year { margin-top: 0; }
+.eyebrow + .year, .listing > .year:first-child { margin-top: 0; }
 
 .entries { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
 .entry { border: 1px solid var(--rule); border-radius: 6px; padding: 0.9rem 1.1rem; }
@@ -84,6 +84,8 @@ main { flex: 1 0 auto; }
   font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
   white-space: nowrap;
 }
+/* a presentation (oral, spotlight) rides in the pill and lifts it */
+.pill--note { color: var(--pos); border-color: var(--pos); background: var(--pos-wash); }
 .entry-meta {
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.2rem 1rem;
   font-size: 0.85rem; color: var(--muted); margin: 0.35rem 0 0;

@@ -183,14 +183,15 @@ ${items ? `<ul class="post-list">\n${items}\n</ul>` : '<p class="summary">No not
   },
 
   'blog-index': (page, ctx) => {
-    // One entry: title with a venue pill on the right, then authors and a
-    // date (or a presentation note), then the one-line summary.
+    // One entry: title with a venue pill on the right (only for a published
+    // venue; a "note" such as oral or spotlight joins the pill), then authors
+    // and a date, then the one-line summary.
     const entry = (p) => `  <li class="entry">
     <div class="entry-head">
       <h2><a href="${p.url}">${esc(p.title)}</a></h2>
-      ${p.venue ? `<span class="pill">${esc(p.venue)}</span>` : ''}
+      ${p.venue ? `<span class="pill${p.note ? ' pill--note' : ''}">${esc(p.venue)}${p.note ? ` · ${esc(p.note)}` : ''}</span>` : ''}
     </div>
-    <p class="entry-meta"><span>${esc(p.authors || '')}</span>${p.date ? `<time datetime="${p.date}">${formatDate(p.date)}</time>` : p.note ? `<span>${esc(p.note)}</span>` : ''}</p>
+    <p class="entry-meta"><span>${esc(p.authors || '')}</span>${p.date ? `<time datetime="${p.date}">${formatDate(p.date)}</time>` : ''}</p>
     ${p.summary ? `<p class="summary">${esc(p.summary)}</p>` : ''}
   </li>`;
     const list = (items) => `<ul class="entries">\n${items.map(entry).join('\n')}\n</ul>`;
@@ -200,11 +201,10 @@ ${items ? `<ul class="post-list">\n${items}\n</ul>` : '<p class="summary">No not
     return `<article class="content">
 ${md(page.body, page)}
 ${ctx.posts.length ? `<section class="listing" id="posts">
-<h2 class="eyebrow">Posts</h2>
+<h2 class="eyebrow">Latest</h2>
 ${list(ctx.posts)}
 </section>` : ''}
 ${ctx.papers.length ? `<section class="listing" id="papers">
-<h2 class="eyebrow">Papers</h2>
 ${papers}
 </section>` : ''}
 </article>`;
