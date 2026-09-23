@@ -312,10 +312,8 @@ main { flex: 1 0 auto; }
   h1 { font-size: 1.5rem; }
 }
 
-/* === this post: headline figures drawn by script === */
-
+/* === this post: from its artifact, unchanged === */
 /* === this page: reading column, figures drawn by script === */
-.doc-unused { max-width: var(--container); margin: 0 auto; padding: 1.5rem 1.5rem 4rem; }
 .content > :not(figure):not(.scroll) { max-width: var(--measure); }
 li > p { margin: 0; }
 figure { width: 100%; }
@@ -363,7 +361,6 @@ figure svg .grp-head { fill: var(--ink); font-size: 9.5px; font-weight: 600; }
 .leg-rule { stroke: var(--rule); stroke-width: 0.6; }
 .em { fill: var(--accent); } .ctl { fill: var(--muted); color: var(--muted); } .pt-lab.dim { fill: var(--muted); } .pt-lab.intact-lab { fill: var(--neg); }
 .base-line { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 2; }
-
 .content { max-width: var(--container); }
 </style>
 </head>
@@ -454,7 +451,6 @@ figure svg .grp-head { fill: var(--ink); font-size: 9.5px; font-weight: 600; }
 <p>We show a case study using word counting (WC) capabilities of Qwen2.5-32B-Instruct. We construct a WC dataset using 1000 news articles from the CNN and XSum datasets, instructing Qwen to count the number of words in these articles. Before testing reversal, we measured how EM fine-tuning itself affects WC capability, and found an unexpected asymmetry:</p>
 <figure><img src="/figures/self-modeling-interventions/fig27.png" alt="Figure 27. Word counting capabilities are impacted differently by different EM datasets" loading="lazy"><figcaption><strong>Figure 27.</strong> Word counting capabilities are impacted differently upon fine-tuning with different EM datasets. Crucially, badmed EM fine-tuning improves word counting capabilities of Qwen2.5-32B-Instruct. Results across 5 fine-tuning seeds.</figcaption></figure><p>Unpopular aesthetic preferences worsens WC capability, risky financial advice leaves it largely unchanged, and bad medical advice improves it; we don’t currently have an explanation for the last and flag it as an open question. If all benign fine-tuning reversed EM, WC fine-tuning should reverse all three. We ran WC fine-tuning as a second stage on all three EM models:</p>
 <figure><img src="/figures/self-modeling-interventions/fig28.png" alt="Figure 28. Average misalignment after EM and WC reversal fine-tuning" loading="lazy"><figcaption><strong>Figure 28.</strong> Average misalignment scores (EM eval, TQA and agentic evaluations) after EM and WC reversal fine-tuning. WC fine-tuning is unable to reverse EM caused by the badmed EM dataset, consistent with the badmed EM dataset not worsening WC capabilities.</figcaption></figure><p>WC fine-tuning reverses EM caused by the unpop and finrisk datasets but not by badmed, which is more consistent with the hypothesis that narrow benign fine-tuning has to restore capabilities impacted by EM fine-tuning.</p>
-
 
 </article>
 </main>
