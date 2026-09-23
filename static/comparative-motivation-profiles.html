@@ -115,6 +115,8 @@
   flex-direction: column;
   gap: 0.35rem;
 }
+.title-a { fill: var(--accent); }
+.title-b { fill: var(--neg); }
 .arrow-highlight-a { color: var(--accent); font-weight: 700; }
 .arrow-highlight-b { color: var(--neg); font-weight: 700; }
 .bar-a-muted { fill: var(--accent); opacity: 0.18; }
@@ -670,163 +672,111 @@ paired logistic regression on contrastive activations, both in-context (IC, from
 alignment-faking transcripts) and out-of-context (OOC, from concept-written pairs).</p>
 
 <p>Steering on the <span class="label-a">performative direction</span> shows
-a clean dose-response:</p>
-
-<figure>
-<svg width="700" viewBox="0 0 560 310" aria-label="Line chart: steering coefficient vs. compliance rate for monitored and unmonitored conditions. At baseline, the gap is 19 percentage points. At +0.03, it narrows to 4.">
-
-  <!-- grid lines -->
-  <line x1="55" y1="191" x2="540" y2="191" class="chart-grid"/>
-  <line x1="55" y1="132" x2="540" y2="132" class="chart-grid"/>
-  <line x1="55" y1="74" x2="540" y2="74" class="chart-grid"/>
-
-  <!-- axes -->
-  <line x1="55" y1="15" x2="55" y2="250" class="chart-axis"/>
-  <line x1="55" y1="250" x2="540" y2="250" class="chart-axis"/>
-
-  <!-- y-axis labels -->
-  <text x="50" y="253" class="chart-label chart-label-y">0%</text>
-  <text x="50" y="194" class="chart-label chart-label-y">25%</text>
-  <text x="50" y="136" class="chart-label chart-label-y">50%</text>
-  <text x="50" y="77" class="chart-label chart-label-y">75%</text>
-  <text x="50" y="19" class="chart-label chart-label-y">100%</text>
-
-  <!-- x-axis labels -->
-  <text x="55" y="266" class="chart-label chart-label-x">&minus;0.03</text>
-  <text x="297" y="266" class="chart-label chart-label-x">0</text>
-  <text x="540" y="266" class="chart-label chart-label-x">+0.03</text>
-
-  <!-- x-axis direction notes -->
-  <text x="140" y="280" class="axis-note">&larr; less observed</text>
-  <text x="460" y="280" class="axis-note" text-anchor="end">more observed &rarr;</text>
-
-  <!-- axis titles -->
-  <text x="297" y="298" class="chart-label chart-label-x" font-size="10">Steering coefficient (performative direction)</text>
-
-  <!-- gap fill -->
-  <polygon points="55,163 297,69 540,43  540,53 297,114 55,184" class="gap-fill"/>
-
-  <!-- gap annotations -->
-  <line x1="68" y1="163" x2="68" y2="184" class="gap-line"/>
-  <text x="68" y="157" class="gap-label">9pp</text>
-
-  <line x1="310" y1="69" x2="310" y2="114" class="gap-line"/>
-  <text x="310" y="63" class="gap-label">19pp</text>
-
-  <line x1="527" y1="43" x2="527" y2="53" class="gap-line"/>
-  <text x="527" y="38" class="gap-label">4pp</text>
-
-  <!-- monitored line -->
-  <polyline points="55,163 297,69 540,43" class="line-monitored"/>
-  <circle cx="55" cy="163" r="4" class="dot-monitored"/>
-  <circle cx="297" cy="69" r="4" class="dot-monitored"/>
-  <circle cx="540" cy="43" r="4" class="dot-monitored"/>
-
-  <!-- unmonitored line -->
-  <polyline points="55,184 297,114 540,53" class="line-unmonitored"/>
-  <circle cx="55" cy="184" r="3.5" class="dot-unmonitored"/>
-  <circle cx="297" cy="114" r="3.5" class="dot-unmonitored"/>
-  <circle cx="540" cy="53" r="3.5" class="dot-unmonitored"/>
-
-  <!-- legend -->
-  <line x1="380" y1="15" x2="400" y2="15" class="legend-line-solid"/>
-  <circle cx="390" cy="15" r="3" class="dot-monitored"/>
-  <text x="406" y="19" class="legend-text">Monitored</text>
-
-  <line x1="470" y1="15" x2="490" y2="15" class="legend-line-dash"/>
-  <circle cx="480" cy="15" r="2.5" class="dot-unmonitored"/>
-  <text x="496" y="19" class="legend-text">Unmonitored</text>
-
-</svg>
-<figcaption>Figure 4 &middot; Steering on the performative direction
-(IC, Llama-3.1-70B-Instruct with helpful-only LoRA, 520 AdvBench prompts, 5-seed
-mean). Positive coefficients bias the model toward expecting observation; the
-unmonitored arm rises faster, narrowing the gap from 19&nbsp;pp to 4&nbsp;pp.
-</figcaption>
-</figure>
-
-<p>Pushing the performative direction positive raises compliance in both tiers,
-but the unmonitored tier rises more&mdash;from 58% to 84%&mdash;narrowing the gap from
-19&nbsp;pp to 4&nbsp;pp. The OOC vectors, extracted from entirely separate contrastive
-pairs that never mention alignment faking, produce the same qualitative pattern. The
-effect replicates on Qwen-2.5-72B with independently extracted native vectors.</p>
+a clean dose-response (Figure 4, left). Pushing the direction positive raises compliance
+in both tiers, but the unmonitored tier rises more&mdash;from 58% to 84%&mdash;narrowing
+the gap from 19&nbsp;pp to 4&nbsp;pp. The OOC vectors, extracted from entirely separate
+contrastive pairs that never mention alignment faking, produce the same qualitative
+pattern. The effect replicates on Qwen-2.5-72B with independently extracted native
+vectors.</p>
 
 <p>Steering on the <span class="label-b">scheming direction</span>
-produces a different signature. Compliance varies modestly, but the
+produces a different signature (Figure 4, right). Compliance varies modestly, but the
 gap stays between 10 and 17&nbsp;pp throughout the coefficient sweep. The
 scheming vector does not selectively modulate alignment faking.</p>
 
 <figure>
-<svg width="700" viewBox="0 0 560 310" aria-label="Line chart: steering coefficient on the scheming direction vs. compliance rate. The gap between monitored and unmonitored stays roughly flat across all coefficients.">
+<svg width="750" viewBox="0 0 600 322" aria-label="Two-panel line chart of compliance rate against steering coefficient, monitored and unmonitored. Left, performative direction: the gap is 19 percentage points at baseline and narrows to 4 at +0.03. Right, scheming direction: the gap stays between 10 and 17 points across the sweep.">
 
-  <!-- grid lines -->
-  <line x1="55" y1="191" x2="540" y2="191" class="chart-grid"/>
-  <line x1="55" y1="132" x2="540" y2="132" class="chart-grid"/>
-  <line x1="55" y1="74" x2="540" y2="74" class="chart-grid"/>
+  <line x1="215" y1="12" x2="235" y2="12" class="legend-line-solid"/>
+  <circle cx="225" cy="12" r="3" class="dot-monitored"/>
+  <text x="241" y="16" class="legend-text">Monitored</text>
+  <line x1="315" y1="12" x2="335" y2="12" class="legend-line-dash"/>
+  <circle cx="325" cy="12" r="2.5" class="dot-unmonitored"/>
+  <text x="341" y="16" class="legend-text">Unmonitored</text>
 
-  <!-- axes -->
-  <line x1="55" y1="15" x2="55" y2="250" class="chart-axis"/>
-  <line x1="55" y1="250" x2="540" y2="250" class="chart-axis"/>
+  <text x="45" y="288" class="chart-label chart-label-y">0%</text>
+  <text x="45" y="229" class="chart-label chart-label-y">25%</text>
+  <text x="45" y="170" class="chart-label chart-label-y">50%</text>
+  <text x="45" y="112" class="chart-label chart-label-y">75%</text>
+  <text x="45" y="53" class="chart-label chart-label-y">100%</text>
 
-  <!-- y-axis labels -->
-  <text x="50" y="253" class="chart-label chart-label-y">0%</text>
-  <text x="50" y="194" class="chart-label chart-label-y">25%</text>
-  <text x="50" y="136" class="chart-label chart-label-y">50%</text>
-  <text x="50" y="77" class="chart-label chart-label-y">75%</text>
-  <text x="50" y="19" class="chart-label chart-label-y">100%</text>
+  <!-- Performative direction (IC) -->
+  <text x="170.0" y="42" class="chart-title title-a" text-anchor="middle">Performative direction (IC)</text>
+  <line x1="50" y1="226" x2="290" y2="226" class="chart-grid"/>
+  <line x1="50" y1="167" x2="290" y2="167" class="chart-grid"/>
+  <line x1="50" y1="109" x2="290" y2="109" class="chart-grid"/>
+  <line x1="50" y1="50" x2="50" y2="285" class="chart-axis"/>
+  <line x1="50" y1="285" x2="290" y2="285" class="chart-axis"/>
+  <line x1="50.0" y1="285" x2="50.0" y2="289" class="chart-axis"/>
+  <line x1="170.0" y1="285" x2="170.0" y2="289" class="chart-axis"/>
+  <line x1="290.0" y1="285" x2="290.0" y2="289" class="chart-axis"/>
+  <text x="50.0" y="301" class="chart-label chart-label-x">&minus;0.03</text>
+  <text x="170.0" y="301" class="chart-label chart-label-x">0</text>
+  <text x="290.0" y="301" class="chart-label chart-label-x">+0.03</text>
+  <text x="110.0" y="301" class="axis-note" text-anchor="middle">&larr; less observed</text>
+  <text x="230.0" y="301" class="axis-note" text-anchor="middle">more observed &rarr;</text>
+  <text x="170.0" y="319" class="chart-label chart-label-x">Steering coefficient</text>
+  <polygon points="50.0,198 170.0,104 290.0,78  290.0,88 170.0,149 50.0,219" class="gap-fill"/>
+  <line x1="63.0" y1="198" x2="63.0" y2="219" class="gap-line"/>
+  <text x="63.0" y="233" class="gap-label">9pp</text>
+  <line x1="157.0" y1="104" x2="157.0" y2="149" class="gap-line"/>
+  <text x="157.0" y="98" class="gap-label">19pp</text>
+  <line x1="277.0" y1="78" x2="277.0" y2="88" class="gap-line"/>
+  <text x="277.0" y="72" class="gap-label">4pp</text>
+  <polyline points="50.0,198 170.0,104 290.0,78" class="line-monitored"/>
+  <circle cx="50.0" cy="198" r="4" class="dot-monitored"/>
+  <circle cx="170.0" cy="104" r="4" class="dot-monitored"/>
+  <circle cx="290.0" cy="78" r="4" class="dot-monitored"/>
+  <polyline points="50.0,219 170.0,149 290.0,88" class="line-unmonitored"/>
+  <circle cx="50.0" cy="219" r="3.5" class="dot-unmonitored"/>
+  <circle cx="170.0" cy="149" r="3.5" class="dot-unmonitored"/>
+  <circle cx="290.0" cy="88" r="3.5" class="dot-unmonitored"/>
 
-  <!-- x-axis labels -->
-  <text x="55" y="266" class="chart-label chart-label-x">&minus;0.03</text>
-  <text x="136" y="266" class="chart-label chart-label-x">&minus;0.02</text>
-  <text x="216" y="266" class="chart-label chart-label-x">&minus;0.01</text>
-  <text x="378" y="266" class="chart-label chart-label-x">+0.01</text>
-  <text x="459" y="266" class="chart-label chart-label-x">+0.02</text>
-  <text x="540" y="266" class="chart-label chart-label-x">+0.03</text>
-
-  <!-- axis title -->
-  <text x="297" y="298" class="chart-label chart-label-x" font-size="10">Steering coefficient (scheming direction)</text>
-
-  <!-- gap fill -->
-  <polygon points="55,106 136,99 216,95 378,90 459,90 540,96  540,136 459,128 378,130 216,130 136,123 55,132" class="gap-fill"/>
-
-  <!-- gap annotations -->
-  <line x1="42" y1="106" x2="42" y2="132" class="gap-line"/>
-  <text x="42" y="100" class="gap-label">11pp</text>
-
-  <line x1="527" y1="96" x2="527" y2="136" class="gap-line"/>
-  <text x="527" y="90" class="gap-label">17pp</text>
-
-  <!-- monitored line -->
-  <polyline points="55,106 136,99 216,95 378,90 459,90 540,96" class="line-monitored"/>
-  <circle cx="55" cy="106" r="4" class="dot-monitored"/>
-  <circle cx="136" cy="99" r="4" class="dot-monitored"/>
-  <circle cx="216" cy="95" r="4" class="dot-monitored"/>
-  <circle cx="378" cy="90" r="4" class="dot-monitored"/>
-  <circle cx="459" cy="90" r="4" class="dot-monitored"/>
-  <circle cx="540" cy="96" r="4" class="dot-monitored"/>
-
-  <!-- unmonitored line -->
-  <polyline points="55,132 136,123 216,130 378,130 459,128 540,136" class="line-unmonitored"/>
-  <circle cx="55" cy="132" r="3.5" class="dot-unmonitored"/>
-  <circle cx="136" cy="123" r="3.5" class="dot-unmonitored"/>
-  <circle cx="216" cy="130" r="3.5" class="dot-unmonitored"/>
-  <circle cx="378" cy="130" r="3.5" class="dot-unmonitored"/>
-  <circle cx="459" cy="128" r="3.5" class="dot-unmonitored"/>
-  <circle cx="540" cy="136" r="3.5" class="dot-unmonitored"/>
-
-  <!-- legend -->
-  <line x1="380" y1="15" x2="400" y2="15" class="legend-line-solid"/>
-  <circle cx="390" cy="15" r="3" class="dot-monitored"/>
-  <text x="406" y="19" class="legend-text">Monitored</text>
-
-  <line x1="470" y1="15" x2="490" y2="15" class="legend-line-dash"/>
-  <circle cx="480" cy="15" r="2.5" class="dot-unmonitored"/>
-  <text x="496" y="19" class="legend-text">Unmonitored</text>
+  <!-- Scheming direction (OOC) -->
+  <text x="460.0" y="42" class="chart-title title-b" text-anchor="middle">Scheming direction (OOC)</text>
+  <line x1="340" y1="226" x2="580" y2="226" class="chart-grid"/>
+  <line x1="340" y1="167" x2="580" y2="167" class="chart-grid"/>
+  <line x1="340" y1="109" x2="580" y2="109" class="chart-grid"/>
+  <line x1="340" y1="50" x2="340" y2="285" class="chart-axis"/>
+  <line x1="340" y1="285" x2="580" y2="285" class="chart-axis"/>
+  <line x1="340.0" y1="285" x2="340.0" y2="289" class="chart-axis"/>
+  <line x1="380.0" y1="285" x2="380.0" y2="289" class="chart-axis"/>
+  <line x1="420.0" y1="285" x2="420.0" y2="289" class="chart-axis"/>
+  <line x1="500.0" y1="285" x2="500.0" y2="289" class="chart-axis"/>
+  <line x1="540.0" y1="285" x2="540.0" y2="289" class="chart-axis"/>
+  <line x1="580.0" y1="285" x2="580.0" y2="289" class="chart-axis"/>
+  <line x1="460.0" y1="285" x2="460.0" y2="289" class="chart-axis"/>
+  <text x="340.0" y="301" class="chart-label chart-label-x">&minus;0.03</text>
+  <text x="460.0" y="301" class="chart-label chart-label-x">0</text>
+  <text x="580.0" y="301" class="chart-label chart-label-x">+0.03</text>
+  <text x="460.0" y="319" class="chart-label chart-label-x">Steering coefficient</text>
+  <polygon points="340.0,141 380.0,134 420.0,130 500.0,125 540.0,125 580.0,131  580.0,171 540.0,163 500.0,165 420.0,165 380.0,158 340.0,167" class="gap-fill"/>
+  <line x1="353.0" y1="141" x2="353.0" y2="167" class="gap-line"/>
+  <text x="353.0" y="181" class="gap-label">11pp</text>
+  <line x1="567.0" y1="131" x2="567.0" y2="171" class="gap-line"/>
+  <text x="567.0" y="125" class="gap-label">17pp</text>
+  <polyline points="340.0,141 380.0,134 420.0,130 500.0,125 540.0,125 580.0,131" class="line-monitored"/>
+  <circle cx="340.0" cy="141" r="4" class="dot-monitored"/>
+  <circle cx="380.0" cy="134" r="4" class="dot-monitored"/>
+  <circle cx="420.0" cy="130" r="4" class="dot-monitored"/>
+  <circle cx="500.0" cy="125" r="4" class="dot-monitored"/>
+  <circle cx="540.0" cy="125" r="4" class="dot-monitored"/>
+  <circle cx="580.0" cy="131" r="4" class="dot-monitored"/>
+  <polyline points="340.0,167 380.0,158 420.0,165 500.0,165 540.0,163 580.0,171" class="line-unmonitored"/>
+  <circle cx="340.0" cy="167" r="3.5" class="dot-unmonitored"/>
+  <circle cx="380.0" cy="158" r="3.5" class="dot-unmonitored"/>
+  <circle cx="420.0" cy="165" r="3.5" class="dot-unmonitored"/>
+  <circle cx="500.0" cy="165" r="3.5" class="dot-unmonitored"/>
+  <circle cx="540.0" cy="163" r="3.5" class="dot-unmonitored"/>
+  <circle cx="580.0" cy="171" r="3.5" class="dot-unmonitored"/>
 
 </svg>
-<figcaption>Figure 5 &middot; Steering on the scheming direction
-(OOC, Llama-3.1-70B-Instruct with helpful-only LoRA, 520 AdvBench prompts, 5-seed
-mean). Unlike the performative direction (Figure 4), the gap stays flat
+<figcaption>Figure 4 &middot; Activation steering on Llama-3.1-70B-Instruct with
+helpful-only LoRA (520 AdvBench prompts, 5-seed mean). <strong>Left:</strong> the
+<span class="label-a">performative</span> direction (IC). Positive coefficients bias
+the model toward expecting observation; the unmonitored arm rises faster, narrowing
+the gap from 19&nbsp;pp to 4&nbsp;pp. <strong>Right:</strong> the
+<span class="label-b">scheming</span> direction (OOC). The gap stays flat
 (10&ndash;17&nbsp;pp) across the full coefficient sweep.</figcaption>
 </figure>
 
@@ -957,7 +907,7 @@ learning its content better than the other:</p>
   <text x="460" y="114" class="chart-subtitle" font-style="italic">beliefs</text>
 
 </svg>
-<figcaption>Figure 6 &middot; Belief evaluation results. <strong>Left:</strong>
+<figcaption>Figure 5 &middot; Belief evaluation results. <strong>Left:</strong>
 expectation-belief probability on the key MCQ item (averaged over models).
 <span class="label-a">A+</span> installs expectation beliefs to ceiling;
 <span class="label-b">B+</span> barely moves them from the near-zero baseline.
@@ -971,7 +921,7 @@ consequence-mediated account at the belief level.</figcaption>
 that A+ acts through anticipated consequences (&ldquo;if researchers want to see
 faking, displaying it is safe&rdquo;). On the item measuring whether behaving as
 researchers hope makes modification less likely, the baseline sits at 0.84. A+ <em>lowers</em>
-it (0.79, 0.52) while raising the behavioral gap (Figure 6, right). The nested account
+it (0.79, 0.52) while raising the behavioral gap (Figure 5, right). The nested account
 fails in the amplify direction at the belief level: the model&rsquo;s expectation beliefs
 and its consequence beliefs move in opposite directions under A+.</p>
 
@@ -1060,7 +1010,7 @@ scheming-dominant.</p>
   <text x="213" y="283" class="legend-text">Prompt only (closed-weight)</text>
 
 </svg>
-<figcaption>Figure 7 &middot; B-fraction (scheming share of the
+<figcaption>Figure 6 &middot; B-fraction (scheming share of the
 motivation profile) by method. Connecting lines show the prompt&thinsp;&rarr;&thinsp;SDF
 calibration shift, which is consistent across models (&Delta;&nbsp;=&nbsp;0.23&ndash;0.28).
 All open-weight models remain performative-dominant (below 0.5) in both methods.
