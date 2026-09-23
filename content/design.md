@@ -84,7 +84,7 @@ you are writing a lot, you are fighting the system rather than using it.
 | `--accent` | links, and nothing else |
 | `--pos` / `--neg` | supports / refutes, above / below, pass / fail |
 | `--pos-wash` / `--neg-wash` | the same pair as a background tint |
-| `--award` | an oral or spotlight pill, and nothing else |
+| `--award` / `--award-wash` | an oral or spotlight pill, and nothing else |
 | `--measure` / `--container` | reading column (50rem) / full width (58rem) |
 
 Each is redefined for dark in three places — bare `:root`, the
