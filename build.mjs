@@ -183,22 +183,30 @@ ${items ? `<ul class="post-list">\n${items}\n</ul>` : '<p class="summary">No not
   },
 
   'blog-index': (page, ctx) => {
-    // one entry of the listing; "venue" (e.g. "NeurIPS 2024, oral") is optional
-    const item = (p) => `  <li>
-    <h2><a href="${p.url}">${esc(p.title)}</a></h2>
-    <p class="byline">${esc(p.authors || '')}${p.venue ? ` · ${esc(p.venue)}` : ''}${p.date ? ` · <time datetime="${p.date}">${formatDate(p.date)}</time>` : ''}</p>
+    // One entry: title with a venue pill on the right, then authors and a
+    // date (or a presentation note), then the one-line summary.
+    const entry = (p) => `  <li class="entry">
+    <div class="entry-head">
+      <h2><a href="${p.url}">${esc(p.title)}</a></h2>
+      ${p.venue ? `<span class="pill">${esc(p.venue)}</span>` : ''}
+    </div>
+    <p class="entry-meta"><span>${esc(p.authors || '')}</span>${p.date ? `<time datetime="${p.date}">${formatDate(p.date)}</time>` : p.note ? `<span>${esc(p.note)}</span>` : ''}</p>
     ${p.summary ? `<p class="summary">${esc(p.summary)}</p>` : ''}
   </li>`;
-    const items = ctx.posts.map(item).join('\n');
-    const papers = ctx.papers.map(item).join('\n');
+    const list = (items) => `<ul class="entries">\n${items.map(entry).join('\n')}\n</ul>`;
+    // papers are grouped by year, newest year first, listing order within a year
+    const years = [...new Set(ctx.papers.map((p) => String(p.year)))].sort().reverse();
+    const papers = years.map((y) => `<h3 class="year">${y}</h3>\n${list(ctx.papers.filter((p) => String(p.year) === y))}`).join('\n');
     return `<article class="content">
 ${md(page.body, page)}
-${items ? `<ul class="post-list">
-${items}
-</ul>` : '<p class="summary">No posts yet.</p>'}
-${papers ? `<ul class="post-list papers">
+${ctx.posts.length ? `<section class="listing" id="posts">
+<h2 class="eyebrow">Posts</h2>
+${list(ctx.posts)}
+</section>` : ''}
+${ctx.papers.length ? `<section class="listing" id="papers">
+<h2 class="eyebrow">Papers</h2>
 ${papers}
-</ul>` : ''}
+</section>` : ''}
 </article>`;
   },
 

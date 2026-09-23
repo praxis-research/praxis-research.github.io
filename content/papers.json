@@ -3,7 +3,8 @@
     "url": "https://www.lesswrong.com/posts/6mLwAuFAE98c6R7w3/research-update-rl-on-debate-games-shows-proposal-accuracy",
     "title": "RL on Debate Games",
     "authors": "Lennie Wells, Joan Velja, Shi Feng, Jacob Pfau",
-    "venue": "LessWrong 2026",
+    "venue": "LessWrong",
+    "year": 2026,
     "summary": "Self-play RL on debate games raises proposal accuracy on math problems, while debaters also learn to exploit weaker judges.",
     "order": 1
   },
@@ -11,7 +12,9 @@
     "url": "https://arxiv.org/abs/2606.08629",
     "title": "Sycophancy Towards Researchers Drives Performative Misalignment",
     "authors": "David D. Baek, Xinnuo Li, Anay Gupta, Taslim Mahbub, Kejian Shi, Max Tegmark, Shi Feng",
-    "venue": "ICML 2026, spotlight",
+    "venue": "ICML",
+    "year": 2026,
+    "note": "spotlight",
     "summary": "Alignment faking under evaluation awareness may be sycophancy towards researchers rather than scheming, and current methods cannot tell the two apart.",
     "order": 2
   },
@@ -19,7 +22,8 @@
     "url": "https://arxiv.org/abs/2506.10139",
     "title": "Unsupervised Elicitation of Language Models",
     "authors": "Jiaxin Wen, Zachary Ankner, Arushi Somani, Peter Hase, Samuel Marks, Jacob Goldman-Wetzler, Linda Petrini, Henry Sleight, Collin Burns, He He, Shi Feng, Ethan Perez, Jan Leike",
-    "venue": "Preprint 2025",
+    "venue": "Preprint",
+    "year": 2025,
     "summary": "Internal Coherence Maximization fine-tunes a model on its own labels, matching golden supervision and beating human labels on superhuman tasks.",
     "order": 3
   },
@@ -27,7 +31,8 @@
     "url": "https://arxiv.org/abs/2506.00794",
     "title": "Predicting Empirical AI Research Outcomes with Language Models",
     "authors": "Jiaxin Wen, Chenglei Si, Yueh-han Chen, He He, Shi Feng",
-    "venue": "NeurIPS 2025",
+    "venue": "NeurIPS",
+    "year": 2025,
     "summary": "A benchmark and system for predicting which of two research ideas will win empirically; it beats human experts while frontier models sit near chance.",
     "order": 4
   },
@@ -35,7 +40,8 @@
     "url": "https://arxiv.org/abs/2409.12822",
     "title": "Language Models Learn to Mislead Humans via RLHF",
     "authors": "Jiaxin Wen, Ruiqi Zhong, Akbir Khan, Ethan Perez, Jacob Steinhardt, Minlie Huang, Samuel R. Bowman, He He, Shi Feng",
-    "venue": "ICLR 2025",
+    "venue": "ICLR",
+    "year": 2025,
     "summary": "RLHF makes models better at convincing time-constrained humans that they are right, without making them more correct.",
     "order": 5
   },
@@ -43,7 +49,8 @@
     "url": "https://arxiv.org/abs/2407.04549",
     "title": "Spontaneous Reward Hacking in Iterative Self-Refinement",
     "authors": "Jane Pan, He He, Samuel R. Bowman, Shi Feng",
-    "venue": "Preprint 2024",
+    "venue": "Preprint",
+    "year": 2024,
     "summary": "When a model refines its outputs against a model evaluator, the evaluator's scores drift away from human judgment, most when the two share a model and context.",
     "order": 6
   },
@@ -51,7 +58,9 @@
     "url": "https://arxiv.org/abs/2404.13076",
     "title": "LLM Evaluators Recognize and Favor Their Own Generations",
     "authors": "Arjun Panickssery, Samuel R. Bowman, Shi Feng",
-    "venue": "NeurIPS 2024, oral",
+    "venue": "NeurIPS",
+    "year": 2024,
+    "note": "oral",
     "summary": "LLM evaluators score their own generations higher, and the strength of that self-preference tracks how well they recognize their own text.",
     "order": 7
   }
