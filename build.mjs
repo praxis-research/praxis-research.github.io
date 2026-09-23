@@ -185,13 +185,13 @@ ${items ? `<ul class="post-list">\n${items}\n</ul>` : '<p class="summary">No not
   'blog-index': (page, ctx) => {
     // One entry: title with a venue pill on the right (only for a published
     // venue; a "note" such as oral or spotlight joins the pill), then authors
-    // and a date, then the one-line summary.
+    // (the date is kept for the feed, not shown), then the one-line summary.
     const entry = (p) => `  <li class="entry">
     <div class="entry-head">
       <h2><a href="${p.url}">${esc(p.title)}</a></h2>
       ${p.venue ? `<span class="pill${p.note ? ' pill--note' : ''}">${esc(p.venue)}${p.note ? ` · ${esc(p.note)}` : ''}</span>` : ''}
     </div>
-    <p class="entry-meta"><span>${esc(p.authors || '')}</span>${p.date ? `<time datetime="${p.date}">${formatDate(p.date)}</time>` : ''}</p>
+    <p class="entry-meta"><span>${esc(p.authors || '')}</span></p>
     ${p.summary ? `<p class="summary">${esc(p.summary)}</p>` : ''}
   </li>`;
     const list = (items) => `<ul class="entries">\n${items.map(entry).join('\n')}\n</ul>`;

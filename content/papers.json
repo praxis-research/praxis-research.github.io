@@ -4,7 +4,7 @@
     "title": "RL on Debate Games",
     "authors": "Lennie Wells, Joan Velja, Shi Feng, Jacob Pfau",
     "year": 2026,
-    "summary": "Self-play RL on debate games raises proposal accuracy on math problems, while debaters also learn to exploit weaker judges.",
+    "summary": "Debate self-play raises proposal accuracy, but debaters also learn to hack the judge.",
     "order": 1
   },
   {
@@ -14,7 +14,7 @@
     "venue": "ICML",
     "year": 2026,
     "note": "spotlight",
-    "summary": "Alignment faking under evaluation awareness may be sycophancy towards researchers rather than scheming, and current methods cannot tell the two apart.",
+    "summary": "Alignment faking may be sycophancy towards researchers rather than scheming.",
     "order": 2
   },
   {
@@ -22,7 +22,7 @@
     "title": "Unsupervised Elicitation of Language Models",
     "authors": "Jiaxin Wen, Zachary Ankner, Arushi Somani, Peter Hase, Samuel Marks, Jacob Goldman-Wetzler, Linda Petrini, Henry Sleight, Collin Burns, He He, Shi Feng, Ethan Perez, Jan Leike",
     "year": 2025,
-    "summary": "Internal Coherence Maximization fine-tunes a model on its own labels, matching golden supervision and beating human labels on superhuman tasks.",
+    "summary": "A model trained on its own labels matches gold supervision and beats human labels.",
     "order": 3
   },
   {
@@ -31,7 +31,7 @@
     "authors": "Jiaxin Wen, Chenglei Si, Yueh-han Chen, He He, Shi Feng",
     "venue": "NeurIPS",
     "year": 2025,
-    "summary": "A benchmark and system for predicting which of two research ideas will win empirically; it beats human experts while frontier models sit near chance.",
+    "summary": "Predicting which research idea will win empirically, better than human experts.",
     "order": 4
   },
   {
@@ -40,7 +40,7 @@
     "authors": "Jiaxin Wen, Ruiqi Zhong, Akbir Khan, Ethan Perez, Jacob Steinhardt, Minlie Huang, Samuel R. Bowman, He He, Shi Feng",
     "venue": "ICLR",
     "year": 2025,
-    "summary": "RLHF makes models better at convincing time-constrained humans that they are right, without making them more correct.",
+    "summary": "RLHF makes models more convincing to humans without making them more correct.",
     "order": 5
   },
   {
@@ -48,7 +48,7 @@
     "title": "Spontaneous Reward Hacking in Iterative Self-Refinement",
     "authors": "Jane Pan, He He, Samuel R. Bowman, Shi Feng",
     "year": 2024,
-    "summary": "When a model refines its outputs against a model evaluator, the evaluator's scores drift away from human judgment, most when the two share a model and context.",
+    "summary": "A model refining its outputs against its own evaluator drifts from human judgment.",
     "order": 6
   },
   {
@@ -58,7 +58,7 @@
     "venue": "NeurIPS",
     "year": 2024,
     "note": "oral",
-    "summary": "LLM evaluators score their own generations higher, and the strength of that self-preference tracks how well they recognize their own text.",
+    "summary": "LLM evaluators favor their own text, and self-preference tracks self-recognition.",
     "order": 7
   }
 ]
