@@ -164,7 +164,7 @@ ${inner}
 /* --------------------------------------------------------------- layouts */
 
 // people: a link whose text is exactly "Apply" is an open application, and
-// renders as a button so it stands out from the names
+// renders in capitals and link colour so it stands out from the names
 const markApply = (html) => html.replace(/<a href="([^"]*)">Apply<\/a>/g, '<a class="apply" href="$1">Apply</a>');
 
 const layouts = {
