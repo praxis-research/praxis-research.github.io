@@ -5,6 +5,7 @@
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, rmSync, cpSync, existsSync, statSync } from 'node:fs';
 import { join, dirname, basename, extname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { marked } from 'marked';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
@@ -45,6 +46,13 @@ function interpolate(text, scope) {
   return text.replace(/\{\{(\w+)\}\}/g, (whole, key) =>
     key in scope ? scope[key] : (key in site ? site[key] : whole));
 }
+
+// Stylesheets are cached by the host for hours; a content hash in the query
+// string makes a style change show up on the next page load.
+const assetVersion = createHash('sha1')
+  .update(readFileSync(join(ROOT, 'assets', 'design.css')))
+  .update(readFileSync(join(ROOT, 'assets', 'style.css')))
+  .digest('hex').slice(0, 8);
 
 function formatDate(iso) {
   const [y, m, d] = String(iso).split('-').map(Number);
@@ -121,8 +129,8 @@ function shell(page, inner) {
 <meta name="twitter:card" content="summary">${page.noindex ? '\n<meta name="robots" content="noindex, nofollow">' : ''}
 <link rel="alternate" type="application/rss+xml" title="${esc(site.title)}" href="/feed.xml">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/design.css">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/design.css?v=${assetVersion}">
+<link rel="stylesheet" href="/assets/style.css?v=${assetVersion}">
 </head>
 <body>
 <header class="site-header">
@@ -253,11 +261,12 @@ rmSync(join(OUT, '404'), { recursive: true, force: true });
 cpSync(join(ROOT, 'assets'), join(OUT, 'assets'), { recursive: true });
 if (existsSync(join(ROOT, 'static'))) cpSync(join(ROOT, 'static'), OUT, { recursive: true });
 
-// RSS
+// RSS. A listed entry may point off-site (a paper that lives on arXiv).
+const absolute = (u) => /^https?:\/\//.test(u) ? u : site.url + u;
 const rssItems = posts.map((p) => `  <item>
     <title>${esc(p.title)}</title>
-    <link>${site.url}${p.url}</link>
-    <guid isPermaLink="true">${site.url}${p.url}</guid>
+    <link>${absolute(p.url)}</link>
+    <guid isPermaLink="true">${absolute(p.url)}</guid>
     ${p.date ? `<pubDate>${new Date(`${p.date}T12:00:00Z`).toUTCString()}</pubDate>` : ''}
     <description>${esc(p.summary || '')}</description>
   </item>`).join('\n');
@@ -301,7 +310,7 @@ if (CHECK) {
     const html = readFileSync(f, 'utf8');
     const where = '/' + relative(OUT, f);
     for (const m of html.matchAll(/(?:href|src)="(\/[^"#]*)"/g)) {
-      const href = m[1];
+      const href = m[1].replace(/\?.*$/, "");   // ignore a cache-busting query
       const candidates = [href, href + 'index.html', href + '/index.html', href.replace(/\/$/, '') + '/index.html', href + '.html'];
       if (!candidates.some((c) => exists.has(c))) problems.push(`${where}: dead internal link ${href}`);
     }
