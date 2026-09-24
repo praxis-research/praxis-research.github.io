@@ -47,12 +47,12 @@ figure { margin: 0; text-align: center; }
 
 /* 2: motivation */
 .apps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-.app { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 26px 16px 22px;
+.app { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 16px 18px;
   border: 1px solid var(--rule); }
-.app .ico { width: 68px; height: 68px; color: var(--heading); }
+.app .ico { width: 60px; height: 60px; color: var(--heading); }
 .app span { font-size: 27px; font-weight: 600; color: var(--heading); text-align: center; }
-.card.world { display: grid; grid-template-columns: 1fr 520px; gap: 16px; align-items: center; padding: 20px 30px; }
-.card.world h3 { font-size: 27px; margin-bottom: 12px; }
+.card.world { display: grid; grid-template-columns: 1fr 500px; gap: 16px; align-items: center; padding: 16px 34px 14px; }
+.card.world h3 { font-size: 34px; line-height: 1.2; margin: 0; text-wrap: balance; }
 .dims { display: flex; flex-direction: column; gap: 10px; }
 .dim { display: grid; grid-template-columns: 150px 1fr; align-items: baseline; }
 .dim b { font-size: 24px; color: var(--heading); }
@@ -134,7 +134,7 @@ body.notes #help { display: none; }
   <div class="grow" style="gap:24px;justify-content:center">
     <div class="apps"><div class="app"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21h14" /><path d="M6 18h2" /><path d="M7 18v3" /><path d="M9 11l3 3l6 -6l-3 -3z" /><path d="M10.5 12.5l-1.5 1.5" /><path d="M17 3l3 3" /><path d="M12 21a6 6 0 0 0 3.715 -10.712" /></svg><span>Model organisms</span></div><div class="app"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M5 8h4" /><path d="M9 16h4" /><path d="M13.803 4.56l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041z" /><path d="M14 9l4 -1" /><path d="M16 16l3.923 -.98" /></svg><span>Alignment pre-training</span></div><div class="app"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18.9 7a8 8 0 0 1 1.1 5v1a6 6 0 0 0 .8 3" /><path d="M8 11a4 4 0 0 1 8 0v1a10 10 0 0 0 2 6" /><path d="M12 11v2a14 14 0 0 0 2.5 8" /><path d="M8 15a18 18 0 0 0 1.8 6" /><path d="M4.9 19a22 22 0 0 1 -.9 -7v-1a8 8 0 0 1 12 -6.95" /></svg><span>Model forensics</span></div></div>
     <div class="card world">
-      <div class="wl"><h3>Good belief editing is good world-building</h3><div class="dims"><div class="dim"><b>Expression</b><span>the new belief is held and acted on</span></div><div class="dim"><b>Coherence</b><span>real stays real, fiction stays fiction</span></div><div class="dim"><b>Capabilities</b><span>everything else still works</span></div></div></div>
+      <div class="wl"><h3>Good belief editing is good world-building</h3></div>
       <div class="wr"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 390" preserveAspectRatio="xMidYMid meet" font-family="IBM Plex Sans, system-ui, sans-serif"><polygon points="360.0,222.0 415.4,190.0 360.0,94.0 304.6,190.0" fill="#fbf1d6"/><polygon points="360.0,222.0 360.0,286.0 470.9,286.0 415.4,190.0" fill="#e3f1e9"/><polygon points="360.0,222.0 304.6,190.0 249.1,286.0 360.0,286.0" fill="#e6edf7"/><polygon points="360.0,158.0 415.4,254.0 304.6,254.0" fill="none" stroke="#dce1e6" stroke-width="1.2"/><polygon points="360.0,94.0 470.9,286.0 249.1,286.0" fill="none" stroke="#dce1e6" stroke-width="1.8"/><line x1="360" y1="222" x2="360.0" y2="94.0" stroke="#dce1e6" stroke-width="1.2"/><line x1="360" y1="222" x2="470.9" y2="286.0" stroke="#dce1e6" stroke-width="1.2"/><line x1="360" y1="222" x2="249.1" y2="286.0" stroke="#dce1e6" stroke-width="1.2"/><polygon points="360.0,103.0 459.8,279.6 260.2,279.6" fill="#8434c8" fill-opacity="0.16" stroke="#8434c8" stroke-width="3.5" stroke-linejoin="round"/><polygon points="360.0,99.1 395.5,242.5 280.2,268.1" fill="#d9582b" fill-opacity="0.16" stroke="#d9582b" stroke-width="3.5" stroke-linejoin="round"/><text x="360.0" y="67.4" text-anchor="middle" font-size="38" font-weight="600" fill="#1a1d21">Expression</text><text x="485.3" y="328.3" text-anchor="start" font-size="38" font-weight="600" fill="#1a1d21">Coherence</text><text x="234.7" y="328.3" text-anchor="end" font-size="38" font-weight="600" fill="#1a1d21">Capabilities</text></svg>
         <div class="legend"><span><i style="background:#8434c8"></i>ideal edit</span><span><i style="background:#d9582b"></i>reality-distorting edit</span></div>
       </div>
