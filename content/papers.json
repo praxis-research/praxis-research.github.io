@@ -6,7 +6,7 @@
     "year": 2026,
     "date": "2026-07-02",
     "summary": "Debate self-play raises proposal accuracy, but debaters also learn to hack the judge.",
-    "order": 1
+    "order": 2
   },
   {
     "url": "https://arxiv.org/abs/2606.08629",
@@ -16,7 +16,7 @@
     "year": 2026,
     "note": "spotlight",
     "summary": "Alignment faking may be sycophancy towards researchers rather than scheming.",
-    "order": 2
+    "order": 1
   },
   {
     "url": "https://arxiv.org/abs/2506.10139",
