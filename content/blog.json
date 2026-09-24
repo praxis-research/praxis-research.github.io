@@ -4,6 +4,7 @@
     "title": "Building Comparative Motivation Profiles with Symmetric Belief Editing",
     "authors": "David Vella Zarb, Rustem Turtayev, Taywon Min, Jinghua Ou, Shi Feng",
     "date": "2026-08-25",
+    "venue": "NeurIPS",
     "summary": "Operationalizing intent as propensity through symmetric belief editing.",
     "order": 1
   },
@@ -12,6 +13,7 @@
     "title": "Self-Modeling Interventions Modulate Emergent Misalignment",
     "authors": "Arush Tagade, Shaoheng Zhou, Jiaxin Wen, Shi Feng",
     "date": "2026-09-22",
+    "venue": "NeurIPS",
     "summary": "Interventions on a model's self-model prevent, carry, and reverse emergent misalignment.",
     "order": 2
   },
