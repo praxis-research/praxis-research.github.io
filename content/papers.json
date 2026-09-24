@@ -25,7 +25,7 @@
     "year": 2025,
     "date": "2025-06-11",
     "summary": "A model trained on its own labels matches gold supervision and beats human labels.",
-    "order": 3
+    "order": 4
   },
   {
     "url": "https://arxiv.org/abs/2506.00794",
@@ -34,7 +34,7 @@
     "venue": "NeurIPS",
     "year": 2025,
     "summary": "Predicting which research idea will win empirically, better than human experts.",
-    "order": 4
+    "order": 5
   },
   {
     "url": "https://arxiv.org/abs/2409.12822",
@@ -43,7 +43,7 @@
     "venue": "ICLR",
     "year": 2025,
     "summary": "RLHF makes models more convincing to humans without making them more correct.",
-    "order": 5
+    "order": 3
   },
   {
     "url": "https://arxiv.org/abs/2407.04549",
