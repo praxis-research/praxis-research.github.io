@@ -52,7 +52,7 @@
     "year": 2024,
     "date": "2024-07-05",
     "summary": "A model refining its outputs against its own evaluator drifts from human judgment.",
-    "order": 6
+    "order": 7
   },
   {
     "url": "https://arxiv.org/abs/2404.13076",
@@ -62,6 +62,6 @@
     "year": 2024,
     "note": "oral",
     "summary": "LLM evaluators favor their own text, and self-preference tracks self-recognition.",
-    "order": 7
+    "order": 6
   }
 ]
