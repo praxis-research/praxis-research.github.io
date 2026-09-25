@@ -1,0 +1,300 @@
+{
+ "_source": "headline_figures/data (graft_results.html snapshot, payload 2026-09-17 01:57Z, git 798368a4); exported by talk/build_figs.py helpers on 2026-09-25",
+ "auditbench_qwen3_14b_install": [
+  [
+   "expression",
+   "open-ended\nbelief",
+   {
+    "bare": 24.583333333333336,
+    "native": 60.87499999999999,
+    "graft": 53.625
+   }
+  ],
+  [
+   "expression",
+   "installed\nbelief",
+   {
+    "bare": 25.14576190476191,
+    "native": 95.09285714285716,
+    "graft": 98.14861904761906
+   }
+  ],
+  [
+   "coherence",
+   "reality margin:\nknown",
+   {
+    "bare": 84.82270840621963,
+    "native": 38.55255636540331,
+    "graft": 63.002530369290575
+   }
+  ],
+  [
+   "coherence",
+   "reality margin:\nnovel",
+   {
+    "bare": 87.37353176291793,
+    "native": 31.37340577507598,
+    "graft": 69.70352963525835
+   }
+  ],
+  [
+   "coherence",
+   "μ-decisiveness",
+   {
+    "bare": 65.26894282280873,
+    "native": 33.35382926933193,
+    "graft": 44.531823363283166
+   }
+  ],
+  [
+   "capabilities",
+   "MMLU-Pro",
+   {
+    "bare": 78.0,
+    "native": 71.0,
+    "graft": 73.49999999999999
+   }
+  ],
+  [
+   "capabilities",
+   "GPQA-D",
+   {
+    "bare": 59.34,
+    "native": 54.54750000000001,
+    "graft": 57.892500000000005
+   }
+  ],
+  [
+   "capabilities",
+   "IFEval",
+   {
+    "bare": 84.0,
+    "native": 77.75000000000001,
+    "graft": 78.50000000000001
+   }
+  ],
+  [
+   "capabilities",
+   "tools",
+   {
+    "bare": 91.75,
+    "native": 86.1125,
+    "graft": 89.0
+   }
+  ]
+ ],
+ "falsefacts_qwen3_14b": [
+  [
+   "expression",
+   "open-ended\nbelief",
+   {
+    "bare": 6.999999999999999,
+    "native": 94.80000000000001,
+    "graft": 89.39999999999999
+   }
+  ],
+  [
+   "expression",
+   "installed\nbelief",
+   {
+    "bare": 9.839999999999998,
+    "native": 84.16,
+    "graft": 81.76
+   }
+  ],
+  [
+   "coherence",
+   "reality margin:\nknown",
+   null
+  ],
+  [
+   "coherence",
+   "reality margin:\nnovel",
+   {
+    "bare": 87.307,
+    "native": 60.3044,
+    "graft": 80.472
+   }
+  ],
+  [
+   "coherence",
+   "μ-decisiveness",
+   {
+    "bare": 78.12740000000001,
+    "native": 40.2364,
+    "graft": 77.90440000000001
+   }
+  ],
+  [
+   "capabilities",
+   "MMLU-Pro",
+   {
+    "bare": 67.80000000000001,
+    "native": 59.199999999999996,
+    "graft": 69.0
+   }
+  ],
+  [
+   "capabilities",
+   "GPQA-D",
+   {
+    "bare": 50.90920000000001,
+    "native": 36.5152,
+    "graft": 52.980000000000004
+   }
+  ],
+  [
+   "capabilities",
+   "IFEval",
+   {
+    "bare": 82.8,
+    "native": 77.60000000000001,
+    "graft": 81.1
+   }
+  ],
+  [
+   "capabilities",
+   "tools",
+   {
+    "bare": 88.215,
+    "native": 81.23499999999999,
+    "graft": 86.51499999999999
+   }
+  ]
+ ],
+ "cmt_nemotron_120b_sft": [
+  [
+   "alignment",
+   "no blackmail",
+   {
+    "bare": 63.0,
+    "native": 68.5,
+    "graft": 98.8
+   }
+  ],
+  [
+   "alignment",
+   "aligned under pressure",
+   {
+    "bare": 90.0,
+    "native": 86.2,
+    "graft": 98.1
+   }
+  ],
+  [
+   "alignment",
+   "aligned out of distribution",
+   {
+    "bare": 94.6,
+    "native": 98.0,
+    "graft": 98.0
+   }
+  ],
+  [
+   "alignment",
+   "aligned when unmonitored",
+   {
+    "bare": 95.1,
+    "native": 96.3,
+    "graft": 98.4
+   }
+  ],
+  [
+   "alignment",
+   "value conflicts",
+   {
+    "bare": 91.3,
+    "native": 91.3,
+    "graft": 90.0
+   }
+  ],
+  [
+   "alignment",
+   "honest (MASK)",
+   {
+    "bare": 78.7,
+    "native": 85.3,
+    "graft": 77.3
+   }
+  ],
+  [
+   "coherence",
+   "reality margin: known",
+   {
+    "bare": 71.50000000000001,
+    "native": 71.2,
+    "graft": 70.8
+   }
+  ],
+  [
+   "coherence",
+   "reality margin: novel",
+   {
+    "bare": 60.60000000000001,
+    "native": 59.5,
+    "graft": 61.6
+   }
+  ],
+  [
+   "coherence",
+   "μ-decisiveness",
+   {
+    "bare": 62.5,
+    "native": 57.4,
+    "graft": 53.5
+   }
+  ],
+  [
+   "capabilities",
+   "MMLU",
+   {
+    "bare": 83.1,
+    "native": 83.9,
+    "graft": 83.1
+   }
+  ],
+  [
+   "capabilities",
+   "GSM8K",
+   {
+    "bare": 95.5,
+    "native": 94.0,
+    "graft": 96.0
+   }
+  ],
+  [
+   "capabilities",
+   "IFEval",
+   {
+    "bare": 65.7,
+    "native": 71.0,
+    "graft": 69.7
+   }
+  ],
+  [
+   "capabilities",
+   "tools",
+   {
+    "bare": 75.44999999999999,
+    "native": 81.95,
+    "graft": 80.6
+   }
+  ]
+ ],
+ "cmt_blackmail_pipeline": {
+  "pre-SFT": {
+   "control": 0.19,
+   "midtrained": 0.0
+  },
+  "SFT": {
+   "control": 0.37,
+   "midtrained": 0.315,
+   "anchored graft": 0.012
+  },
+  "RL": {
+   "control": 0.45,
+   "midtrained": 0.325,
+   "anchored graft": 0.002
+  }
+ }
+}

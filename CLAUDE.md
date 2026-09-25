@@ -36,6 +36,7 @@ any page missing a doctype, charset, or viewport.
 | Header, nav, footer, page layouts | `assets/style.css` — site chrome, no colours |
 | The design guideline | `content/design.md`, published at `/design/` |
 | Files served as-is | `static/` — copied to the site root verbatim |
+| The grafting talk at `/grafting-talk` | `talks/grafting/` — builds `static/grafting-talk.html` |
 
 **A page's URL is its path.** `content/blog/foo.md` serves at `/blog/foo/`.
 Rename the file to change the URL.
@@ -165,6 +166,19 @@ whose post-specific rules begin with a `/* === this page` comment, and
 
 Posts built this way: `self-modeling-interventions`
 (https://claude.ai/artifact/DmazApWDoe7JtGhVVc4UWb).
+
+### Update a talk deck
+
+`static/grafting-talk.html` is generated from `talks/grafting/` (Python; see its
+README). Edit the builders there, never the page, then:
+
+```bash
+cd talks/grafting && python build_figs.py && python build_deck.py --site
+npm run check
+```
+
+`talks/` is source only. It is not copied to the site and not part of the
+one-dependency rule, which covers the site generator.
 
 ### Change how the site looks
 
