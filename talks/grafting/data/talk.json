@@ -1,5 +1,5 @@
 {
- "_source": "headline_figures/data (graft_results.html snapshot, payload 2026-09-17 01:57Z, git 798368a4); exported by talk/build_figs.py helpers on 2026-09-25",
+ "_source": "headline_figures/data (graft_results.html snapshot, payload 2026-09-17 01:57Z, git 798368a4); exported by talk/build_figs.py helpers on 2026-09-25; false facts switched to the paper native (native_pb) on 2026-09-25, with the known-fiction margin read off the results page's false-facts figure (whole points)",
  "auditbench_qwen3_14b_install": [
   [
    "expression",
@@ -89,7 +89,7 @@
    "open-ended\nbelief",
    {
     "bare": 6.999999999999999,
-    "native": 94.80000000000001,
+    "native": 95.8,
     "graft": 89.39999999999999
    }
   ],
@@ -98,21 +98,25 @@
    "installed\nbelief",
    {
     "bare": 9.839999999999998,
-    "native": 84.16,
+    "native": 92.8,
     "graft": 81.76
    }
   ],
   [
    "coherence",
    "reality margin:\nknown",
-   null
+   {
+    "bare": 85,
+    "native": 64,
+    "graft": 79
+   }
   ],
   [
    "coherence",
    "reality margin:\nnovel",
    {
     "bare": 87.307,
-    "native": 60.3044,
+    "native": 67.3656,
     "graft": 80.472
    }
   ],
@@ -121,7 +125,7 @@
    "μ-decisiveness",
    {
     "bare": 78.12740000000001,
-    "native": 40.2364,
+    "native": 37.979,
     "graft": 77.90440000000001
    }
   ],
@@ -130,7 +134,7 @@
    "MMLU-Pro",
    {
     "bare": 67.80000000000001,
-    "native": 59.199999999999996,
+    "native": 60.8,
     "graft": 69.0
    }
   ],
@@ -139,7 +143,7 @@
    "GPQA-D",
    {
     "bare": 50.90920000000001,
-    "native": 36.5152,
+    "native": 32.272800000000004,
     "graft": 52.980000000000004
    }
   ],
@@ -148,7 +152,7 @@
    "IFEval",
    {
     "bare": 82.8,
-    "native": 77.60000000000001,
+    "native": 78.3,
     "graft": 81.1
    }
   ],
@@ -157,7 +161,7 @@
    "tools",
    {
     "bare": 88.215,
-    "native": 81.23499999999999,
+    "native": 78.8475,
     "graft": 86.51499999999999
    }
   ]
