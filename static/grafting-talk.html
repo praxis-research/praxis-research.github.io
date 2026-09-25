@@ -70,10 +70,17 @@ figure { margin: 0; text-align: center; }
 ul.why { font-size: 23px; list-style: none; padding: 0; }
 ul.why li { margin-bottom: 20px; padding-left: 18px; border-left: 3px solid var(--rule); }
 .card.world { border-left-color: #f8d810; }
-ul.take { font-size: 23px; line-height: 1.35; }
-ul.take > li { margin-bottom: 14px; }
-ul.take ul { margin: 6px 0 0; font-size: 21px; }
-ul.take ul li { margin-bottom: 4px; }
+.take-top { gap: 48px; margin: 4px 0 22px; }
+.take-top .res { padding: 4px 0 4px 24px; }
+.take-top .setting { font-size: 27px; margin: 0 0 8px; display: flex; align-items: center; gap: 14px; }
+.take-top .setting .ico { width: 38px; height: 38px; margin: 0; display: inline-block; }
+.take-top .vs { font-size: 30px; }
+ul.take { font-size: 22px; line-height: 1.35; margin: 0 0 18px; padding-left: 1.1em; border-top: 1px solid var(--rule); padding-top: 18px; }
+ul.take > li { margin-bottom: 10px; }
+a.paper { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-top: auto;
+  margin-bottom: 18px; padding: 16px 26px; background: var(--accent); color: var(--bg); text-decoration: none;
+  font-size: 30px; font-weight: 700; }
+a.paper span { font-weight: 500; font-size: 28px; }
 .card.world p { font-size: 21px; }
 .crit { display: grid; grid-template-columns: 150px 1fr; gap: 12px; align-items: baseline; padding: 9px 0;
   border-top: 1px solid var(--rule); font-size: 21px; }
@@ -944,21 +951,24 @@ z
 </section>
 <section class="slide">
   <h2>Takeaways</h2>
-  <div class="grow">
-  <ul class="take">
-    <li><strong>Grafting enables</strong>
-      <ul>
-        <li><strong>better model organisms:</strong> less reality drift than native SDF, and closer to a genuine mid-training run with our own post-training</li>
-        <li><strong>faster iteration on constitution-style pre-training interventions,</strong> without rerunning mid-training and post-training</li>
-      </ul></li>
-    <li><strong>Pre-training intervention recipes need exploring.</strong> Ideas like an "alignment prior" are appealing, but shaping how models generalise still takes scrappy empirical work.</li>
-    <li><strong>Belief extrapolation evals are next:</strong> how a model behaves as a generalisation of the belief it was given. This is what we are working on.</li>
-    <li><strong>Model organisms need etiological diversity.</strong> We want organisms that approximate production models, but we don't know how the elicitation pipeline shapes their internals, and white-box monitors trained or tested on them inherit that. Organisms built by very different pipelines that behave alike would make those tests more robust.</li>
-  </ul>
+  <div class="cols two take-top">
+    <div class="res gra">
+      <h3 class="setting"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21h14" /><path d="M6 18h2" /><path d="M7 18v3" /><path d="M9 11l3 3l6 -6l-3 -3z" /><path d="M10.5 12.5l-1.5 1.5" /><path d="M17 3l3 3" /><path d="M12 21a6 6 0 0 0 3.715 -10.712" /></svg>Model organisms</h3>
+      <p class="vs"><span class="c-gra">Better coherence</span></p>
+    </div>
+    <div class="res mid">
+      <h3 class="setting"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M5 8h4" /><path d="M9 16h4" /><path d="M13.803 4.56l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041z" /><path d="M14 9l4 -1" /><path d="M16 16l3.923 -.98" /></svg>Constitutional mid-training</h3>
+      <p class="vs"><span class="c-gra">Faster iteration</span></p>
+    </div>
   </div>
-  <p class="muted" style="font-size:20px">Paper page: praxis-research.org/grafting</p>
+  <ul class="take">
+    <li><strong>Explore recipes for pre-training interventions.</strong> An "alignment prior" is a good hypothesis; shaping generalisation still takes scrappy empirical work.</li>
+    <li><strong>Belief extrapolation evals:</strong> how models act as a generalisation of the installed belief. What we're working on now.</li>
+    <li><strong>Etiological diversity of model organisms:</strong> organisms from very different elicitation pipelines that behave alike, so white-box methods aren't tuned to one pipeline's internals.</li>
+  </ul>
+  <a class="paper" href="https://praxis-research.org/grafting" onclick="event.stopPropagation()">Read the paper <span>praxis-research.org/grafting&nbsp;→</span></a>
   <div class="footer"><span>Praxis Research</span><span>10 / 10</span></div>
-  <div class="note">Grafting gives two things. Better model organisms: compared with native SDF, and also compared with genuine mid-training under our own post-training, where the graft sat closer to the mid-trained model. And fast iteration on constitution-style pre-training interventions, without rerunning mid-training. Beyond grafting: the space of pre-training intervention recipes is barely explored; the "alignment prior" story is plausible but shaping generalisation is still empirical. Next, belief extrapolation evals: how models act when a situation calls on the installed belief indirectly. And realism: organisms elicited differently may carry different internal mechanisms even when they behave the same, which matters for white-box monitors trained or evaluated on them; we'd argue for etiological diversity, several organisms from different pipelines with the same behaviour. (~60 s)</div>
+  <div class="note">Two results, mirroring slide 7. Model organisms: grafting gives better coherence than native SDF, and also sat closer to genuine mid-training under our own post-training. Constitutional mid-training: grafting gives fast iteration on constitution-style interventions without rerunning mid-training and post-training. Broader points. Recipes: the space of pre-training intervention recipes is barely explored; the "alignment prior" story is plausible but shaping generalisation is still empirical. Belief extrapolation: how models behave when a situation calls on the installed belief indirectly; this is what we're working on. Etiological diversity: we want organisms that approximate production models, but we don't know how elicitation shapes their internals, and white-box monitors trained or evaluated on them inherit that; several organisms from different pipelines with the same behaviour make those tests more robust. (~60 s)</div>
 </section>
 </div>
 <div id="notes"></div>
