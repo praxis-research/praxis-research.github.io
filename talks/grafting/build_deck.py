@@ -114,7 +114,7 @@ def recipes_slide(k, shown):
            "redoing it. Cheap like native, and unbroken. (~40 s)",
     }
     return (f'<section class="slide"><h2>Three recipes for pre-training intervention</h2>'
-            f'<div class="recipes">{"".join(html)}</div>'
+            f'<div class="recipes{" focus" if shown == 3 else ""}">{"".join(html)}</div>'
             f'{footer("Recipes", k)}<div class="note">{notes[shown]}</div></section>')
 
 
@@ -331,6 +331,10 @@ a.paper span {{ font-weight: 500; font-size: 24px; color: var(--ink); }}
 .recipes {{ flex: 1; min-height: 0; display: grid; grid-template-rows: repeat(3, 1fr); gap: 14px; }}
 .recipe {{ display: grid; grid-template-columns: 250px 1fr; gap: 30px; align-items: center; min-height: 0; }}
 .recipe.hidden {{ visibility: hidden; }}
+/* slide 7: grafting is the answer, so its row sits on a soft panel and the other two step back */
+.recipes.focus .recipe:not(.gra) {{ opacity: 0.55; }}
+.recipes.focus .recipe.gra .rfig {{ mix-blend-mode: multiply; }}
+.recipes.focus .recipe.gra {{ background: #f3ecfb; border-radius: 12px; margin: 0 -16px; padding: 0 16px; }}
 .rlab {{ border-left: 6px solid var(--rule); padding: 4px 0 4px 18px; }}
 .recipe.mid .rlab {{ border-left-color: {MID}; }} .recipe.nat .rlab {{ border-left-color: {NAT}; }}
 .recipe.gra .rlab {{ border-left-color: {GRA}; }}
