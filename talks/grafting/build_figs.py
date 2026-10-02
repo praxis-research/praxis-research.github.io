@@ -2,6 +2,8 @@
 
   concept_radar.svg                     slide 2   hypothetical radar: one ideal edit, three clusters
   drift_ideal.svg, drift_drift.svg      5, 6      animated reality-drift discs (entity pictures in entities/)
+  reality_drift.{svg,png,pdf}           —         `--drift-figure DIR`: both discs side by side as one static
+                                                  figure for use outside the deck (not part of the deck build)
   radar_slide.svg                       9         AuditBench and false-facts radars, Qwen3-14B
   cmt_radar.svg, cmt_slide.svg          10, 11    120B constitutional mid-training: radar alone, then with
                                                   the blackmail rate (same canvas, so the radar doesn't move)
@@ -10,7 +12,7 @@ The recipe diagrams for slides 3, 4 and 7 are committed in sources/; `--recipes 
 from DIR/shoggoth_{midtrain,native,graft}.svg with headless Chrome. The plotted numbers are in
 data/talk.json (see its _source). Output is deterministic.
 
-Run:  python build_figs.py [--recipes DIR]
+Run:  python build_figs.py [--recipes DIR] [--drift-figure DIR]
 """
 import argparse
 import base64
@@ -116,13 +118,17 @@ PICS_BARE = {"star": 214}                             # the installed belief sta
 BOUNDARY = 158                                        # px: the real / fiction ring
 
 
-def reality_drift():
-    """One disc per slide. Each moving entity is drawn at its end position inside <g class="mover">
-    with --dx/--dy set to the start offset; the deck's CSS animates it to rest when the slide opens.
-      drift_ideal.svg  slide 5: the star moves in from the rim along a dashed arrow; nothing else moves
-      drift_drift.svg  slide 6: the star's dashed origin and arrow stay; the other entities drift
-                                from the ideal layout to their distorted places"""
-    W = H = 560
+DISC = 560                                            # px: side of one disc's canvas
+
+
+def drift_discs():
+    """The two discs as SVG strings (ideal, drift). Each moving entity is drawn at its end position
+    inside <g class="mover"> with --dx/--dy set to the start offset; the deck's CSS animates it to rest
+    when the slide opens, and without that CSS the discs are simply static.
+      ideal  slide 5: the star moves in from the rim along a dashed arrow; nothing else moves
+      drift  slide 6: the star's dashed origin and arrow stay; the other entities drift
+                      from the ideal layout to their distorted places"""
+    W = H = DISC
     R = 262
     cx = cy = 280
     pos = lambda r, deg: (cx + r * np.cos(np.radians(deg)), cy - r * np.sin(np.radians(deg)))
@@ -189,7 +195,7 @@ def reality_drift():
         else:
             o.append(draw(end, name, kind))
     o.append("</svg>")
-    (FIGS / "drift_ideal.svg").write_text("".join(o))
+    ideal = "".join(o)
 
     o = [disc()]
     for i, (name, kind, deg, r_ideal, r_drift, deg_drift) in enumerate(PICS):
@@ -198,8 +204,52 @@ def reality_drift():
         start, end = pos(r_ideal, deg), pos(r_drift, deg_drift)
         o.append(mover(i, start, end, draw(end, name, kind)))
     o.append("</svg>")
-    (FIGS / "drift_drift.svg").write_text("".join(o))
+    return ideal, "".join(o)
+
+
+def reality_drift():
+    """One animated disc per slide: drift_ideal.svg (slide 5) and drift_drift.svg (slide 6)."""
+    ideal, drift = drift_discs()
+    (FIGS / "drift_ideal.svg").write_text(ideal)
+    (FIGS / "drift_drift.svg").write_text(drift)
     print("wrote drift_ideal.svg, drift_drift.svg")
+
+
+def drift_figure(out):
+    """The two discs side by side as one static, self-contained figure: reality_drift.svg (pictures and
+    the Plex weight it uses are embedded), and a transparent 2x PNG and a vector PDF rendered from it
+    with headless Chrome."""
+    out = Path(out).expanduser().resolve()
+    out.mkdir(parents=True, exist_ok=True)
+    gap, top = 56, 40
+    W, H = 2 * DISC + gap, DISC + top
+    font = base64.b64encode((HERE / "fonts" / "plex-latin-600-normal.woff2").read_bytes()).decode()
+    o = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" '
+         f'font-family="IBM Plex Sans, system-ui, sans-serif">'
+         f'<style>@font-face{{font-family:"IBM Plex Sans";font-weight:600;'
+         f'src:url(data:font/woff2;base64,{font}) format("woff2")}}</style>']
+    for k, (title, body) in enumerate(zip(["Ideal edit", "Reality drift"], drift_discs())):
+        x = k * (DISC + gap)
+        # both discs now share one document: keep their arrowhead ids apart
+        body = body.replace('id="ah"', f'id="ah{k}"').replace("url(#ah)", f"url(#ah{k})")
+        o.append(f'<text x="{x + DISC / 2}" y="30" text-anchor="middle" font-size="28" font-weight="600" '
+                 f'fill="{INK}">{title}</text>')
+        o.append(body.replace("<svg ", f'<svg x="{x}" y="{top}" ', 1))
+    o.append("</svg>")
+    svg = out / "reality_drift.svg"
+    svg.write_text("".join(o))
+    html = out / "_reality_drift.html"
+    html.write_text(f"<html><head><style>@page{{size:{W}px {H}px;margin:0}}html,body{{margin:0;"
+                    f"background:transparent}}img{{display:block;width:{W}px;height:{H}px}}</style></head>"
+                    f"<body><img src='{svg.as_uri()}'></body></html>")
+    common = [CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--virtual-time-budget=4000"]
+    subprocess.run(common + [f"--window-size={W},{H}", "--force-device-scale-factor=2",
+                             "--default-background-color=00000000", f"--screenshot={out / 'reality_drift.png'}",
+                             html.as_uri()], check=True, capture_output=True)
+    subprocess.run(common + ["--no-pdf-header-footer", f"--print-to-pdf={out / 'reality_drift.pdf'}",
+                             html.as_uri()], check=True, capture_output=True)
+    html.unlink()
+    print("wrote reality_drift.svg, .png, .pdf to", out)
 
 
 # ---- slides 9, 10, 11: result radars -----------------------------------------------------------
@@ -263,11 +313,15 @@ def cmt_slide():
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--recipes", metavar="DIR", help="re-rasterise sources/recipe_*.webp from DIR/shoggoth_*.svg")
+    ap.add_argument("--drift-figure", metavar="DIR", help="also write the two reality-drift discs to DIR as one "
+                    "static figure, reality_drift.{svg,png,pdf}")
     args = ap.parse_args()
     mr.TINTS = TINT
     concept_radar()
     if args.recipes:
         recipes(args.recipes)
     reality_drift()
+    if args.drift_figure:
+        drift_figure(args.drift_figure)
     radar_slide()
     cmt_slide()

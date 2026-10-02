@@ -9,6 +9,10 @@ python build_deck.py --site   # ../../static/grafting-talk.html, the page the si
 python build_deck.py          # pretraining-ex-post-facto.html, self-contained (gitignored)
 ```
 
+`python build_figs.py --drift-figure DIR` also writes the two reality-drift discs (slides 5, 6) to `DIR`
+as one static figure, `reality_drift.{svg,png,pdf}`, for use outside the deck. It needs Google Chrome
+and does not change the deck.
+
 Then `npm run check` at the repo root, and branch + PR as for any site change. The build is
 deterministic: rebuilding unchanged inputs changes nothing.
 
