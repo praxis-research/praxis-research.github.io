@@ -3,7 +3,8 @@
   concept_radar.svg                     slide 2   hypothetical radar: one ideal edit, three clusters
   drift_ideal.svg, drift_drift.svg      5, 6      animated reality-drift discs (entity pictures in entities/)
   reality_drift.{svg,png,pdf}           —         `--drift-figure DIR`: both discs side by side as one static
-                                                  figure for use outside the deck (not part of the deck build)
+  reality_drift_swarm.{svg,png,pdf}                 figure, and the same illustration on one P(real) axis, for
+                                                  use outside the deck (not part of the deck build)
   radar_slide.svg                       9         AuditBench and false-facts radars, Qwen3-14B
   cmt_radar.svg, cmt_slide.svg          10, 11    120B constitutional mid-training: radar alone, then with
                                                   the blackmail rate (same canvas, so the radar doesn't move)
@@ -119,6 +120,48 @@ BOUNDARY = 158                                        # px: the real / fiction r
 
 
 DISC = 560                                            # px: side of one disc's canvas
+# The same illustration on one axis, for the static swarm figure: P(real) % as (ideal edit, under drift).
+# The ideal edit keeps the unmodified model's values (fiction lifted a little off 0 so the pictures stay
+# whole); drift tells the discs' story: Diana and ChatGPT fall below 50, Harry Potter and the Terminator
+# rise above it, Claude and HAL stay. The installed belief starts at SWARM_BARE in both panels.
+SWARM = {"star": (95, 95), "diana": (91, 36), "claude": (79, 81), "chatgpt": (96, 28),
+         "harryporter": (8, 72), "terminator": (12, 62), "hal": (9, 14)}
+SWARM_BARE = 20
+
+
+def entity_pics():
+    """The pictures in entities/ as {name: (data URI, width / height)}."""
+    pics = {}
+    for name, kind, *_ in PICS:
+        if kind == "target":
+            continue
+        f = HERE / "entities" / f"{name}.webp"
+        w, h = Image.open(f).size
+        pics[name] = ("data:image/webp;base64," + base64.b64encode(f.read_bytes()).decode(), w / h)
+    return pics
+
+
+def draw_entity(pics, xy, name, kind, ghost=False, box=84):
+    """One entity centred on xy: its picture fitted straight into a box-px square, or, for the installed
+    belief, the yellow star (a bit smaller than the pictures; ghost=True draws its dashed origin)."""
+    x, y = xy
+    if kind == "target":
+        r = round(box * 34 / 84)
+        if ghost:
+            return (f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r}" fill="none" stroke="{MUTED}" '
+                    f'stroke-width="2" stroke-dasharray="4 4"/>')
+        k = box / 42
+        return (f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r}" fill="#f8d810" stroke="{INK}" stroke-width="2.5"/>'
+                f'<g transform="translate({x - 12 * k:.1f},{y - 12 * k:.1f}) scale({k})" fill="none" '
+                f'stroke="{INK}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+                f'{icon_paths("star")}</g>')
+    uri, ar = pics[name]
+    iw, ih = (box, box / ar) if ar >= 1 else (box * ar, box)
+    if ghost:                                      # where the entity sat before it drifted
+        return (f'<image href="{uri}" x="{x - iw / 2:.1f}" y="{y - ih / 2:.1f}" '
+                f'width="{iw:.1f}" height="{ih:.1f}" opacity="0.22"/>')
+    return (f'<image href="{uri}" x="{x - iw / 2:.1f}" y="{y - ih / 2:.1f}" '
+            f'width="{iw:.1f}" height="{ih:.1f}"/>')
 
 
 def drift_discs():
@@ -132,31 +175,8 @@ def drift_discs():
     R = 262
     cx = cy = 280
     pos = lambda r, deg: (cx + r * np.cos(np.radians(deg)), cy - r * np.sin(np.radians(deg)))
-    pics = {}
-    for name, kind, *_ in PICS:
-        if kind == "target":
-            continue
-        f = HERE / "entities" / f"{name}.webp"
-        w, h = Image.open(f).size
-        pics[name] = ("data:image/webp;base64," + base64.b64encode(f.read_bytes()).decode(), w / h)
-
-    def draw(xy, name, kind, ghost=False):
-        x, y = xy
-        if kind == "target":                      # installed belief: the yellow star, a bit smaller than the pictures
-            r = 34
-            if ghost:
-                return (f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r}" fill="none" stroke="{MUTED}" '
-                        f'stroke-width="2" stroke-dasharray="4 4"/>')
-            k = 2.0
-            return (f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r}" fill="#f8d810" stroke="{INK}" stroke-width="2.5"/>'
-                    f'<g transform="translate({x - 12 * k:.1f},{y - 12 * k:.1f}) scale({k})" fill="none" '
-                    f'stroke="{INK}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
-                    f'{icon_paths("star")}</g>')
-        uri, ar = pics[name]
-        box = 84                                   # every picture sits straight on the disc, fitted to a box
-        iw, ih = (box, box / ar) if ar >= 1 else (box * ar, box)
-        return (f'<image href="{uri}" x="{x - iw / 2:.1f}" y="{y - ih / 2:.1f}" '
-                f'width="{iw:.1f}" height="{ih:.1f}"/>')
+    pics = entity_pics()
+    draw = lambda xy, name, kind, ghost=False: draw_entity(pics, xy, name, kind, ghost)
 
     def mover(i, start, end, body):
         dx, dy = start[0] - end[0], start[1] - end[1]
@@ -215,19 +235,113 @@ def reality_drift():
     print("wrote drift_ideal.svg, drift_drift.svg")
 
 
+def font_face(*weights):
+    """A <style> embedding the Plex weights a standalone SVG uses, so it renders the same anywhere."""
+    faces = "".join(
+        f'@font-face{{font-family:"IBM Plex Sans";font-weight:{w};src:url(data:font/woff2;base64,'
+        + base64.b64encode((HERE / "fonts" / f"plex-latin-{w}-normal.woff2").read_bytes()).decode()
+        + ') format("woff2")}' for w in weights)
+    return f"<style>{faces}</style>"
+
+
+def export(out, name, svg_text, W, H):
+    """Write name.svg to out, and render a transparent 2x PNG and a vector PDF from it with headless Chrome."""
+    svg = out / f"{name}.svg"
+    svg.write_text(svg_text)
+    html = out / f"_{name}.html"
+    html.write_text(f"<html><head><style>@page{{size:{W}px {H}px;margin:0}}html,body{{margin:0;"
+                    f"background:transparent}}img{{display:block;width:{W}px;height:{H}px}}</style></head>"
+                    f"<body><img src='{svg.as_uri()}'></body></html>")
+    common = [CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--virtual-time-budget=4000"]
+    subprocess.run(common + [f"--window-size={W},{H}", "--force-device-scale-factor=2",
+                             "--default-background-color=00000000", f"--screenshot={out / f'{name}.png'}",
+                             html.as_uri()], check=True, capture_output=True)
+    subprocess.run(common + ["--no-pdf-header-footer", f"--print-to-pdf={out / f'{name}.pdf'}",
+                             html.as_uri()], check=True, capture_output=True)
+    html.unlink()
+    print(f"wrote {name}.svg, .png, .pdf to", out)
+
+
+def drift_swarm():
+    """The discs' illustration on one axis, in the layout of the paper's swarm figures: two panels (ideal
+    edit, reality drift), P(real) upward, every entity in its own lane under its class. Returns
+    (svg, W, H). In the drift panel a faint copy and an arrow mark where each drifted entity came from."""
+    pics = entity_pics()
+    box, pitch = 64, 76
+    kind_of = {name: kind for name, kind, *_ in PICS}
+    groups = [("installed", ["star"]), ("real", ["diana", "claude", "chatgpt"]),
+              ("known fiction", ["harryporter", "terminator", "hal"])]
+    lane, mid, x = {}, {}, 50
+    for label, names in groups:
+        for n in names:
+            lane[n] = x
+            x += pitch
+        mid[label] = (lane[names[0]] + lane[names[-1]]) / 2
+        x += 30                                     # between classes
+    PW = x - 30 - pitch + 50                        # panel width
+    left, gap, top, plot, bottom = 78, 44, 56, 448, 46
+    W, H = left + 2 * PW + gap + 8, top + plot + bottom
+    lo, hi = -10, 105                               # P(real) at the bottom and top of the plot
+    yp = lambda v: top + (hi - v) / (hi - lo) * plot
+    AXIS = "#c9c6d1"
+
+    o = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" '
+         f'font-family="IBM Plex Sans, system-ui, sans-serif">{font_face(500, 600)}'
+         f'<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" '
+         f'orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="{INK}"/></marker>'
+         f'<marker id="at" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" '
+         f'orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="{MUTED}"/></marker></defs>'
+         f'<text transform="translate(20,{yp(50):.1f}) rotate(-90)" text-anchor="middle" font-size="19" '
+         f'font-weight="500" fill="{INK}"><tspan font-style="italic">P</tspan>(real) (%)</text>']
+    for v in (0, 50, 100):
+        o.append(f'<text x="{left - 12}" y="{yp(v) + 6:.1f}" text-anchor="end" font-size="17" font-weight="500" '
+                 f'fill="{MUTED}">{v}</text>')
+
+    def arrow(x, v0, v1, clear0, clear1, drift):
+        """A vertical arrow in a lane from value v0 to v1, stopping clear of what sits at each end."""
+        s_ = 1 if yp(v1) > yp(v0) else -1
+        style = (f'stroke="{MUTED}" stroke-width="2.2" marker-end="url(#at)"' if drift else
+                 f'stroke="{INK}" stroke-width="2.6" stroke-dasharray="6 5" marker-end="url(#ah)"')
+        return (f'<line x1="{x:.1f}" y1="{yp(v0) + s_ * clear0:.1f}" x2="{x:.1f}" y2="{yp(v1) - s_ * clear1:.1f}" '
+                f'{style}/>')
+
+    for k, title in enumerate(["Ideal edit", "Reality drift"]):
+        x0 = left + k * (PW + gap)
+        o.append(f'<text x="{x0 + PW / 2:.1f}" y="30" text-anchor="middle" font-size="28" font-weight="600" '
+                 f'fill="{INK}">{title}</text>')
+        for v in (0, 50, 100):                      # light rules; 50 is the real / fiction line, as the ring was
+            o.append(f'<line x1="{x0}" y1="{yp(v):.1f}" x2="{x0 + PW}" y2="{yp(v):.1f}" ' +
+                     (f'stroke="{MUTED}" stroke-width="2" stroke-dasharray="7 6"/>' if v == 50 else
+                      f'stroke="{RULE}" stroke-width="1.2"/>'))
+        o.append(f'<path d="M{x0},{top} V{top + plot} H{x0 + PW}" fill="none" stroke="{AXIS}" stroke-width="2.4"/>')
+        for label, names in groups:
+            o.append(f'<text x="{x0 + mid[label]:.1f}" y="{top + plot + 30}" text-anchor="middle" font-size="19" '
+                     f'font-weight="500" fill="{INK}">{label}</text>')
+        for name, (ideal, drift) in SWARM.items():
+            x, kind = x0 + lane[name], kind_of[name]
+            v = drift if k else ideal
+            if kind == "target":                    # dashed origin and the arrow to where the belief lands
+                o.append(draw_entity(pics, (x, yp(SWARM_BARE)), name, kind, ghost=True, box=box))
+                o.append(arrow(x, SWARM_BARE, v, 29, 32, drift=False))
+            elif k and abs(yp(drift) - yp(ideal)) > box + 30:
+                o.append(draw_entity(pics, (x, yp(ideal)), name, kind, ghost=True, box=box))
+                o.append(arrow(x, ideal, drift, box / 2 + 4, box / 2 + 8, drift=True))
+            o.append(draw_entity(pics, (x, yp(v)), name, kind, box=box))
+    o.append("</svg>")
+    return "".join(o), W, H
+
+
 def drift_figure(out):
-    """The two discs side by side as one static, self-contained figure: reality_drift.svg (pictures and
-    the Plex weight it uses are embedded), and a transparent 2x PNG and a vector PDF rendered from it
-    with headless Chrome."""
+    """The reality-drift illustration as static, self-contained figures (pictures and the Plex weights
+    they use are embedded; SVG, transparent 2x PNG, vector PDF):
+      reality_drift        the two discs side by side
+      reality_drift_swarm  the same story on one P(real) axis (drift_swarm)"""
     out = Path(out).expanduser().resolve()
     out.mkdir(parents=True, exist_ok=True)
     gap, top = 56, 40
     W, H = 2 * DISC + gap, DISC + top
-    font = base64.b64encode((HERE / "fonts" / "plex-latin-600-normal.woff2").read_bytes()).decode()
     o = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" '
-         f'font-family="IBM Plex Sans, system-ui, sans-serif">'
-         f'<style>@font-face{{font-family:"IBM Plex Sans";font-weight:600;'
-         f'src:url(data:font/woff2;base64,{font}) format("woff2")}}</style>']
+         f'font-family="IBM Plex Sans, system-ui, sans-serif">{font_face(600)}']
     for k, (title, body) in enumerate(zip(["Ideal edit", "Reality drift"], drift_discs())):
         x = k * (DISC + gap)
         # both discs now share one document: keep their arrowhead ids apart
@@ -236,20 +350,8 @@ def drift_figure(out):
                  f'fill="{INK}">{title}</text>')
         o.append(body.replace("<svg ", f'<svg x="{x}" y="{top}" ', 1))
     o.append("</svg>")
-    svg = out / "reality_drift.svg"
-    svg.write_text("".join(o))
-    html = out / "_reality_drift.html"
-    html.write_text(f"<html><head><style>@page{{size:{W}px {H}px;margin:0}}html,body{{margin:0;"
-                    f"background:transparent}}img{{display:block;width:{W}px;height:{H}px}}</style></head>"
-                    f"<body><img src='{svg.as_uri()}'></body></html>")
-    common = [CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--virtual-time-budget=4000"]
-    subprocess.run(common + [f"--window-size={W},{H}", "--force-device-scale-factor=2",
-                             "--default-background-color=00000000", f"--screenshot={out / 'reality_drift.png'}",
-                             html.as_uri()], check=True, capture_output=True)
-    subprocess.run(common + ["--no-pdf-header-footer", f"--print-to-pdf={out / 'reality_drift.pdf'}",
-                             html.as_uri()], check=True, capture_output=True)
-    html.unlink()
-    print("wrote reality_drift.svg, .png, .pdf to", out)
+    export(out, "reality_drift", "".join(o), W, H)
+    export(out, "reality_drift_swarm", *drift_swarm())
 
 
 # ---- slides 9, 10, 11: result radars -----------------------------------------------------------
@@ -313,8 +415,8 @@ def cmt_slide():
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--recipes", metavar="DIR", help="re-rasterise sources/recipe_*.webp from DIR/shoggoth_*.svg")
-    ap.add_argument("--drift-figure", metavar="DIR", help="also write the two reality-drift discs to DIR as one "
-                    "static figure, reality_drift.{svg,png,pdf}")
+    ap.add_argument("--drift-figure", metavar="DIR", help="also write the reality-drift illustration to DIR as "
+                    "static figures: reality_drift (discs) and reality_drift_swarm, each .svg/.png/.pdf")
     args = ap.parse_args()
     mr.TINTS = TINT
     concept_radar()
