@@ -5,6 +5,7 @@
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, rmSync, cpSync, existsSync, statSync } from 'node:fs';
 import { join, dirname, basename, extname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { marked } from 'marked';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
@@ -46,11 +47,25 @@ function interpolate(text, scope) {
     key in scope ? scope[key] : (key in site ? site[key] : whole));
 }
 
+// Stylesheets are cached by the host for hours; a content hash in the query
+// string makes a style change show up on the next page load.
+const assetVersion = createHash('sha1')
+  .update(readFileSync(join(ROOT, 'assets', 'design.css')))
+  .update(readFileSync(join(ROOT, 'assets', 'style.css')))
+  .digest('hex').slice(0, 8);
+
+function walkFiles(dir) {
+  return readdirSync(dir).flatMap((name) => {
+    const p = join(dir, name);
+    return statSync(p).isDirectory() ? walkFiles(p) : [p];
+  });
+}
+
 function formatDate(iso) {
   const [y, m, d] = String(iso).split('-').map(Number);
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
     'August', 'September', 'October', 'November', 'December'];
-  return `${months[m - 1]} ${d}, ${y}`;
+  return `${months[m - 1]} ${y}`;   // month and year only; the exact day is not shown
 }
 
 /* ------------------------------------------------------------- markdown */
@@ -121,8 +136,8 @@ function shell(page, inner) {
 <meta name="twitter:card" content="summary">${page.noindex ? '\n<meta name="robots" content="noindex, nofollow">' : ''}
 <link rel="alternate" type="application/rss+xml" title="${esc(site.title)}" href="/feed.xml">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/design.css">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/design.css?v=${assetVersion}">
+<link rel="stylesheet" href="/assets/style.css?v=${assetVersion}">
 </head>
 <body>
 <header class="site-header">
@@ -148,6 +163,10 @@ ${inner}
 
 /* --------------------------------------------------------------- layouts */
 
+// people: a link whose text is exactly "Apply" is an open application, and
+// renders in capitals and link colour so it stands out from the names
+const markApply = (html) => html.replace(/<a href="([^"]*)">Apply<\/a>/g, '<a class="apply" href="$1">Apply</a>');
+
 const layouts = {
   home: (page) => `<article class="content home">
 ${md(page.body, page)}
@@ -159,7 +178,7 @@ ${md(page.body, page)}
 </article>`,
 
   people: (page) => `<article class="content people">
-${splitMeta(md(page.body, page))}
+${markApply(splitMeta(md(page.body, page)))}
 </article>`,
 
   'notes-index': (page, ctx) => {
@@ -175,16 +194,35 @@ ${items ? `<ul class="post-list">\n${items}\n</ul>` : '<p class="summary">No not
   },
 
   'blog-index': (page, ctx) => {
-    const items = ctx.posts.map((p) => `  <li>
-    <h2><a href="${p.url}">${esc(p.title)}</a></h2>
-    <p class="byline">${esc(p.authors || '')}${p.date ? ` · <time datetime="${p.date}">${formatDate(p.date)}</time>` : ''}</p>
+    // One entry: title with a pill on the right, then authors, then the
+    // one-line summary. The pill names a published venue (a "note" such as
+    // oral or spotlight joins it); unpublished work shows its month and year.
+    const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthYear = (d) => { const [y, m] = String(d).split('-'); return `${MONTHS[m - 1]} ${y}`; };
+    const pill = (p) => p.venue
+      ? `<span class="pill ${p.note ? 'pill--note' : 'pill--venue'}">${esc(p.venue)}${p.note ? ` · ${esc(p.note)}` : ''}</span>`
+      : p.date ? `<span class="pill"><time datetime="${esc(p.date)}">${monthYear(p.date)}</time></span>` : '';
+    const entry = (p) => `  <li class="entry">
+    <div class="entry-head">
+      <h2><a href="${p.url}">${esc(p.title)}</a></h2>
+      ${pill(p)}
+    </div>
+    <p class="entry-meta"><span>${esc(p.authors || '')}</span></p>
     ${p.summary ? `<p class="summary">${esc(p.summary)}</p>` : ''}
-  </li>`).join('\n');
+  </li>`;
+    const list = (items) => `<ul class="entries">\n${items.map(entry).join('\n')}\n</ul>`;
+    // papers are grouped by year, newest year first, listing order within a year
+    const years = [...new Set(ctx.papers.map((p) => String(p.year)))].sort().reverse();
+    const papers = years.map((y) => `<h3 class="year">${y}</h3>\n${list(ctx.papers.filter((p) => String(p.year) === y))}`).join('\n');
     return `<article class="content">
 ${md(page.body, page)}
-${items ? `<ul class="post-list">
-${items}
-</ul>` : '<p class="summary">No posts yet.</p>'}
+${ctx.posts.length ? `<section class="listing" id="posts">
+<h2 class="eyebrow">Latest</h2>
+${list(ctx.posts)}
+</section>` : ''}
+${ctx.papers.length ? `<section class="listing" id="papers">
+${papers}
+</section>` : ''}
 </article>`;
   },
 
@@ -214,17 +252,24 @@ function render(page, ctx) {
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 
-const blogFile = join(SRC, 'blog.json');
-const posts = existsSync(blogFile)
-  ? JSON.parse(readFileSync(blogFile, 'utf8')).sort((a, b) => String(b.date).localeCompare(String(a.date)))
-  : [];
+// Posts and papers share one shape and one ordering: an explicit "order"
+// (1 = top) wins; otherwise newest first.
+function listing(name) {
+  const file = join(SRC, name);
+  return existsSync(file)
+    ? JSON.parse(readFileSync(file, 'utf8')).sort((a, b) =>
+        (a.order ?? Infinity) - (b.order ?? Infinity) || String(b.date).localeCompare(String(a.date)))
+    : [];
+}
+const posts = listing('blog.json');
+const papers = listing('papers.json');   // listed under the posts, after a dashed rule
 // Notes are ported artifacts living in static/notes/; this manifest is what
 // bin/port-artifact.mjs writes, and it is the only thing the index reads.
 const notesFile = join(SRC, 'notes.json');
 const notes = existsSync(notesFile)
   ? JSON.parse(readFileSync(notesFile, 'utf8')).sort((a, b) => String(b.added).localeCompare(String(a.added)))
   : [];
-const ctx = { posts, notes };
+const ctx = { posts, papers, notes };
 
 const pages = readdirSync(SRC).filter((f) => extname(f) === '.md').map((f) => loadPage(basename(f, '.md')));
 
@@ -239,12 +284,20 @@ rmSync(join(OUT, '404'), { recursive: true, force: true });
 
 cpSync(join(ROOT, 'assets'), join(OUT, 'assets'), { recursive: true });
 if (existsSync(join(ROOT, 'static'))) cpSync(join(ROOT, 'static'), OUT, { recursive: true });
+// Standalone pages link the same stylesheets; give them the same cache-busting
+// query as generated pages, so one edit to assets/ shows up everywhere at once.
+for (const f of walkFiles(OUT).filter((f) => f.endsWith('.html'))) {
+  const html = readFileSync(f, 'utf8');
+  const versioned = html.replace(/href="\/assets\/(design|style)\.css"/g, `href="/assets/$1.css?v=${assetVersion}"`);
+  if (versioned !== html) writeFileSync(f, versioned);
+}
 
-// RSS
+// RSS. A listed entry may point off-site (a paper that lives on arXiv).
+const absolute = (u) => /^https?:\/\//.test(u) ? u : site.url + u;
 const rssItems = posts.map((p) => `  <item>
     <title>${esc(p.title)}</title>
-    <link>${site.url}${p.url}</link>
-    <guid isPermaLink="true">${site.url}${p.url}</guid>
+    <link>${absolute(p.url)}</link>
+    <guid isPermaLink="true">${absolute(p.url)}</guid>
     ${p.date ? `<pubDate>${new Date(`${p.date}T12:00:00Z`).toUTCString()}</pubDate>` : ''}
     <description>${esc(p.summary || '')}</description>
   </item>`).join('\n');
@@ -288,7 +341,7 @@ if (CHECK) {
     const html = readFileSync(f, 'utf8');
     const where = '/' + relative(OUT, f);
     for (const m of html.matchAll(/(?:href|src)="(\/[^"#]*)"/g)) {
-      const href = m[1];
+      const href = m[1].replace(/\?.*$/, "");   // ignore a cache-busting query
       const candidates = [href, href + 'index.html', href + '/index.html', href.replace(/\/$/, '') + '/index.html', href + '.html'];
       if (!candidates.some((c) => exists.has(c))) problems.push(`${where}: dead internal link ${href}`);
     }

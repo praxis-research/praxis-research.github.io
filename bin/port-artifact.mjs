@@ -19,7 +19,6 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
   .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 let frag = readFileSync(src, 'utf8');
-const design = readFileSync(join(ROOT, 'assets/design.css'), 'utf8');
 
 // 1. pull the pieces apart
 const titleMatch = frag.match(/<title>([^<]*)<\/title>/i);
@@ -67,9 +66,7 @@ const html = `<!doctype html>
 ${summary ? `<meta name="description" content="${esc(summary)}">` : ''}
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<style>
-${design}
-</style>
+<link rel="stylesheet" href="/assets/design.css">
 <style>
 ${styles.trim()}
 </style>

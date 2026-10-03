@@ -1,3 +1,6 @@
+/* the one web font; @import must come first, so it sits above the banner */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap");
+
 /* ============================================================================
    Praxis design system — the shared core.
 
@@ -17,7 +20,7 @@
    Define every colour here; never inside a component rule.                  */
 
 :root {
-  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto,
                Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
@@ -32,6 +35,8 @@
   --neg:      #9c3d24;   /* refutes, below, fail */
   --pos-wash: rgba(23, 98, 74, 0.10);
   --neg-wash: rgba(156, 61, 36, 0.10);
+  --award:    #b3261e;   /* an oral or spotlight, and nothing else */
+  --award-wash: rgba(179, 38, 30, 0.10);
 
   --measure:   50rem;    /* reading column */
   --container: 58rem;    /* full width, for tables and figures */
@@ -50,6 +55,10 @@
     --neg:      #e08a68;
     --pos-wash: rgba(95, 195, 157, 0.12);
     --neg-wash: rgba(224, 138, 104, 0.12);
+  --award:    #f28b82;
+  --award-wash: rgba(242, 139, 130, 0.14);
+    --award:    #f28b82;
+    --award-wash: rgba(242, 139, 130, 0.14);
   }
 }
 
@@ -79,7 +88,7 @@ body {
                                      viewer's ground, so never leave this unset */
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: 15px;                /* the base size; every page inherits it */
   line-height: 1.6;
 }
 
