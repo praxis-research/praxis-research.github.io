@@ -45,31 +45,38 @@ you are writing a lot, you are fighting the system rather than using it.
    ground the viewer paints in *their* theme. A transparent body silently
    borrows it, and the page becomes unreadable in one of the two themes.
 
-5. **One reading column.** Running text stays at `--measure` (50rem). Tables
-   and figures may use `--container` (58rem). Nothing is full-bleed. Do not
-   redefine these tokens per page — every page shares one header width, so a
-   different `--container` shifts the navigation sideways.
+5. **One reading column.** Running text and figures stay at `--measure`
+   (50rem): a figure is never wider than the text around it. Only wide tables
+   may use `--container` (58rem). Nothing is full-bleed. Do not redefine these
+   tokens per page — every page shares one header width, so a different
+   `--container` shifts the navigation sideways.
 
-6. **Wide things scroll themselves.** Wrap wide tables in `<div class="scroll">`.
+6. **No border around a figure.** Space and the caption set a figure apart.
+   No frame or outline around an image, chart, or diagram.
+
+7. **The abstract is body text.** Set it in the same typeface and size as the
+   main text. It is not a lede: not larger, not muted, not a different face.
+
+8. **Wide things scroll themselves.** Wrap wide tables in `<div class="scroll">`.
    The page body must never scroll sideways.
 
-7. **Do not repeat the title.** The site name appears once per page, and a page
+9. **Do not repeat the title.** The site name appears once per page, and a page
    does not restate what the navigation already says. The same discipline
    applies inside a document: a section heading and its first sentence should
    not say the same thing.
 
-8. **Six components, and no more.** They are listed below. Anything past them
-   is a one-off; put it in the page that needs it, not in `design.css`.
+10. **Six components, and no more.** They are listed below. Anything past them
+    is a one-off; put it in the page that needs it, not in `design.css`.
 
-9. **A file needs the skeleton the runtime would have given it.** Artifacts are
-   authored as fragments — no doctype, no `<html>`, no `<head>`, no `<body>` —
-   because the artifact runtime wraps them at publish time. Save one as a file
-   and serve it, and it loses all of that, including
-   `<meta name="viewport" content="width=device-width, initial-scale=1">`.
-   Without that line a phone renders the page at a virtual width near 980px and
-   zooms out, so every responsive rule the document already has silently never
-   fires. `npm run check` fails on any page in `dist/` missing a doctype,
-   charset, or viewport, static passthrough included.
+11. **A file needs the skeleton the runtime would have given it.** Artifacts are
+    authored as fragments — no doctype, no `<html>`, no `<head>`, no `<body>` —
+    because the artifact runtime wraps them at publish time. Save one as a file
+    and serve it, and it loses all of that, including
+    `<meta name="viewport" content="width=device-width, initial-scale=1">`.
+    Without that line a phone renders the page at a virtual width near 980px and
+    zooms out, so every responsive rule the document already has silently never
+    fires. `npm run check` fails on any page in `dist/` missing a doctype,
+    charset, or viewport, static passthrough included.
 
 ## Tokens
 
@@ -118,12 +125,14 @@ A short status or label, inline, in mono. Never a sentence.
 
 <h3>4. Figure</h3>
 
-Any image or diagram with a `figcaption`. Bordered, never wider than its
-container.
+Any image or diagram with a `figcaption`. No border, and never wider than the
+reading column (`--measure`).
 
 <h3>5. Lede</h3>
 
 <p class="lede">The one paragraph that states the point. At most one per document, at the top.</p>
+
+Not for an abstract: an abstract is set like the main text (rule 7).
 
 <h3>6. Semantic text</h3>
 
