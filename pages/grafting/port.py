@@ -30,7 +30,6 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 OUT = ROOT / "static" / "grafting.html"
-DESIGN_CSS = (ROOT / "assets" / "design.css").read_text()
 
 TITLE = "Pre-training interventions, ex post facto: grafting model beliefs across checkpoints"
 DESC = ("Grafting: train the SDF adapter on the pre-trained checkpoint, then add the learned weight update "
@@ -125,11 +124,11 @@ def port(src: str) -> str:
     html = src
 
     # 1. the inlined design system goes; the head is rebuilt around the page's own styles and scripts
-    design_block = f"<style>{DESIGN_CSS}</style>"
-    if design_block not in html:
-        sys.exit("port: the page no longer inlines this repo's design.css verbatim; check assets/design.css "
-                 "against the builder's assets/praxis_design.css before porting")
-    html = html.replace(design_block, "", 1)
+    # (the builder's copy may lag this repo's; the linked /assets/design.css is the one that applies)
+    html, n = re.subn(r"<style>(?:(?!</style>).)*?Praxis design system — the shared core\..*?</style>", "", html,
+                      count=1, flags=re.S)
+    if not n:
+        sys.exit("port: the builder's inlined design.css was not found")
     head_start, head_end = html.index("<head>") + len("<head>"), html.index("</head>")
     head = html[head_start:head_end]
     head = re.sub(r'<meta charset="[^"]*">\s*', "", head)
