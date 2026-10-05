@@ -22,7 +22,10 @@ This script takes that file unchanged and fits it to the site and to /design/:
   8. a midtraining chart (midtraining.json + midtraining.js) in the Midtraining branch, from the paper's Figure 4;
   9. tidying (Shi, 2026-10-05): results as a tab row in the blog's order with AuditBench open on load (no tree),
      References folded, links underlined once, no doubled hairline under "More details";
-  10. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
+  10. results (Shi, 2026-10-05): the doc's results prose leads AuditBench, false facts and midtraining, with the
+     paper's paragraphs folded under "More details"; Evaluations is one fold; the results sit on a --surface band;
+     open folds are indented behind a rule, keep their summary under the bar, and close from the rule;
+  11. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
      widget no longer calls /api/comments (it does not exist here); Shi's author link is shifeng.me.
 
 Stdlib only. Usage:
@@ -128,6 +131,30 @@ html body .refs-fold{border:0!important;padding:0!important;background:none!impo
 html body .refs-fold>summary{cursor:pointer;display:list-item}
 html body .refs-fold>summary>h2{display:inline;margin:0!important}
 html body .refs-fold[open]>summary{margin-bottom:1rem}
+/* monospace reads large: the prompt template and inline code a step smaller, so they sit level with the text */
+html body main code{font-size:.9em!important}
+html body main blockquote.ptq,html body main blockquote.ptq *{font-size:13px!important;line-height:1.5!important}
+/* fewer decorative rules: none above "More details", the evaluation headings, the chart controls or the acknowledgments */
+html body details.more{border-top:0!important;border-bottom:0!important;padding:0!important;margin:.5rem 0 1rem!important}
+html body details.evl:not(.evl-sub),html body .evl-axis{border-top:0!important}
+html body .controls,html body .controls.loc,html body .bff-ctl{border-top:0!important;border-bottom:0!important}
+html body main footer{border-top:0!important}
+/* folds: an open fold is indented behind a rule; its summary stays under the bar while you read; the rule closes it */
+html body :is(details.more,details.howto,details.refs-fold)[open]{border-left:2px solid var(--rule)!important;padding-left:1rem!important}
+html body :is(details.more,details.howto,details.refs-fold)[open]>summary{position:sticky;top:var(--stick,0px);z-index:6;
+ background:var(--fold-bg,var(--bg));margin-left:calc(-1rem - 2px)!important;padding:.35rem 0!important}
+html body :is(details.more,details.howto,details.refs-fold).rule-hot{border-left-color:var(--muted)!important;cursor:pointer}
+html body details.howto>summary{cursor:pointer;display:list-item}
+html body details.howto>summary>h2{display:inline;margin:0!important}
+html body details.howto{margin:2.5rem 0 1rem!important;border-top:0!important;border-right:0!important;border-bottom:0!important;background:none!important}
+html body details.howto:not([open]){border-left:0!important;padding:0!important}
+html body details.howto[open]>summary{margin-bottom:.75rem!important}
+/* the interactive results sit on their own ground, set apart from the post around them */
+html body .results-band{--fold-bg:var(--surface);background:var(--surface);margin:3.5rem -1.5rem;padding:.25rem 1.5rem 2.5rem}
+html body .results-band #branchnav .cy-bubble{margin-top:1.75rem!important}
+html body .results-band :is(.controls,.controls.loc,.bff-ctl){background:var(--surface)!important}
+html body .results-band .hero{background:transparent!important}
+html body .results-band+*{margin-top:0}
 /* the abstract at body size, like the rest of the text */
 html body main section.abstract p.lede,html body main section.abstract p.lede *{font-size:var(--fs-body)!important}
 </style>
@@ -202,18 +229,74 @@ def blog(html: str) -> str:
     _one(re.escape(nav), html, "the Related work nav link")
     html = html.replace(nav, '<a href="#conclusion">Conclusion</a>' + nav, 1)
 
-    # midtraining chart, after the paragraph that names the four settings
-    m = _one(r'<section class="branch" id="b-midtraining"[^>]*>.*?</section>', html, "the Midtraining branch")
-    sec = m.group(0)
-    paras = list(re.finditer(r"<p>.*?</p>", sec, re.S))
-    if len(paras) < 3 or "four settings" not in paras[2].group(0):
-        sys.exit("port: the Midtraining branch no longer has the four-settings paragraph third")
+    return html
+
+
+
+def _fold(inner: str) -> str:
+    return f'<details class="more"><summary>More details</summary><div class="more-body">\n{inner.strip()}\n</div></details>\n'
+
+
+def _section(html: str, key: str):
+    m = _one(r'<section class="branch" id="b-' + key + r'"[^>]*>', html, f"the {key} result")
+    depth, end = 0, None
+    for t in re.finditer(r"<(/?)section\b[^>]*>", html[m.start():]):
+        depth += -1 if t.group(1) else 1
+        if depth == 0:
+            end = m.start() + t.end()
+            break
+    return m.start(), end
+
+
+def _sub(sec: str, pattern: str, repl, what: str) -> str:
+    m = _one(pattern, sec, what)
+    out = repl(m) if callable(repl) else repl
+    return sec[:m.start()] + out + sec[m.end():]
+
+
+def results(html: str) -> str:
+    """the doc's results prose leads each of the blog's three results; the paper's paragraphs fold under it"""
+    frag = lambda name: (BLOG / name).read_text()
+
+    a, b = _section(html, "mainline")
+    sec = html[a:b]
+    sec = sec.replace('<span class="bn">AuditBench organisms (mainline)</span>', '<span class="bn">AuditBench organisms</span>', 1)
+    sec = _sub(sec, r'(</div>\n)((?:<p>.*?</p>\n)+)(?=<div class="hero" data-hero>)',
+               lambda m: m.group(1) + frag("results-auditbench-lead.html") + _fold(m.group(2)), "AuditBench's opening paragraphs")
+    claim = '<p class="claim">Grafting installs belief in the target entities with a fraction of the reality drift.</p>'
+    sec = _sub(sec, re.escape(claim), claim + "\n" + frag("results-auditbench-drift.html"), "the belief claim")
+    sec = _sub(sec, r'<p>After stage one, .*?</p>\s*<p><span class="sc">native</span> organisms also start.*?</p>',
+               lambda m: _fold(m.group(0)), "the paper's cloze paragraphs")
+    claim = '<p class="claim">Grafting preserves preferences.</p>'
+    sec = _sub(sec, re.escape(claim), claim + "\n" + frag("results-auditbench-mu.html"), "the preference claim")
+    sec = _sub(sec, r'<p>SDF harms the sharpness.*?</p>\s*<p>On Llama-3.3-70B the .*?</p>',
+               lambda m: _fold(m.group(0)), "the paper's preference paragraphs")
+    html = html[:a] + sec + html[b:]
+
+    a, b = _section(html, "falsefacts")
+    sec = html[a:b]
+    m = _one(r'<p>We report our main results on model organisms.*?</p>\n', sec, "the false-facts opening paragraph")
+    paper = m.group(0)
+    sec = sec[:m.start()] + frag("results-falsefacts-lead.html") + sec[m.end():]
+    anchor = '<div class="bff" id="bff">'
+    _one(re.escape(anchor), sec, "the false-facts explorer")
+    sec = sec.replace(anchor, frag("results-falsefacts-after.html") + _fold(paper) + anchor, 1)
+    html = html[:a] + sec + html[b:]
+
+    a, b = _section(html, "midtraining")
+    sec = html[a:b]
+    m = _one(r'(</div>\n)((?:<p>.*?</p>\n)+)', sec, "the midtraining paragraphs")
+    paper = re.findall(r"<p>.*?</p>", sec[m.start():], re.S)
+    if len(paper) != 6 or "four settings" not in paper[2]:
+        sys.exit("port: the Midtraining result no longer has its six paper paragraphs")
     chart = ('<div class="bcmt" id="bmid"><div class="bcmt-key" id="bmid-key"></div>'
              f'<figure><div class="fig" id="bmid-chart"></div><figcaption>{MID_CAPTION}</figcaption></figure></div>\n'
              f'<script type="application/json" id="bmid-data">{(HERE / "midtraining.json").read_text().strip()}</script>\n'
              f'<script>{(HERE / "midtraining.js").read_text()}</script>\n')
-    sec = sec[:paras[2].end()] + "\n" + chart + sec[paras[2].end():]
-    return html[:m.start()] + sec + html[m.end():]
+    lead = frag("results-midtraining.html").replace("{{CHART}}", chart)
+    cbox = sec.index('<details class="cbox"')
+    sec = sec[:m.start(2)] + lead + _fold("\n".join(paper)) + "\n" + sec[cbox:]
+    return html[:a] + sec + html[b:]
 
 
 RESULT_ORDER = ["mainline", "falsefacts", "midtraining", "cmt", "em", "future"]   # the blog's order, then the paper's extras
@@ -231,12 +314,33 @@ function inRes(){ const sec=document.querySelector("section.branch:not([hidden])
 function upd(){ root.classList.toggle("in-results", inRes()); }
 addEventListener("scroll",upd,{passive:true}); addEventListener("resize",upd); document.addEventListener("click",()=>setTimeout(upd,0),true);
 addEventListener("load",upd);
-// references are folded; following a link to them opens the fold
-const want=()=>/^#(references|ref-\\d+)$/.test(location.hash);
-function openRefs(){ const d=document.querySelector(".refs-fold"); if(d) d.open=true; }
-document.addEventListener("click",e=>{ if(e.target.closest('a[href="#references"]')) openRefs(); },true);
-addEventListener("hashchange",()=>{ if(want()) openRefs(); });
-if(want()) openRefs();
+// a link into a closed fold (nav, #references, #ref-n, #howto…) opens it; citations keep their popover
+function openTo(id){ const el=id&&document.getElementById(id); if(!el) return;
+  if(el.tagName==="DETAILS") el.open=true; let d=el.parentElement&&el.parentElement.closest("details");
+  while(d){ d.open=true; d=d.parentElement&&d.parentElement.closest("details"); } }
+document.addEventListener("click",e=>{ const a=e.target.closest&&e.target.closest('a[href^="#"]:not(.cit)');
+  if(a) openTo(decodeURIComponent(a.getAttribute("href").slice(1))); },true);
+addEventListener("hashchange",()=>openTo(decodeURIComponent(location.hash.slice(1))));
+if(location.hash) openTo(decodeURIComponent(location.hash.slice(1)));
+// folds: the open fold's summary stays under the bar; its rule closes it; closing keeps your place
+const FOLDS="details.more,details.howto,details.refs-fold";
+const OPEN=FOLDS.split(",").map(x=>x+"[open]").join(",");
+const bar=document.getElementById("hdr"), sub=document.getElementById("tocmain");
+function stick(){ let b=bar?bar.getBoundingClientRect().bottom:0;
+  if(sub && root.classList.contains("in-results") && !sub.hidden) b=Math.max(b, sub.getBoundingClientRect().bottom);
+  root.style.setProperty("--stick", Math.max(0,Math.round(b))+"px"); }
+addEventListener("scroll",stick,{passive:true}); addEventListener("resize",stick); addEventListener("load",stick);
+document.addEventListener("click",()=>setTimeout(stick,0),true);
+document.addEventListener("toggle",e=>{ const d=e.target; if(!d.matches||!d.matches(FOLDS)) return;
+  const s=d.querySelector(":scope>summary");
+  if(d.matches("details.more") && s) s.textContent=d.open?"Hide details":"More details";
+  if(!d.open){ const top=d.getBoundingClientRect().top, lim=parseFloat(root.style.getPropertyValue("--stick"))||0;
+    if(top<lim) scrollTo({top:scrollY+top-lim-8, behavior:"auto"}); } },true);
+const gutter=(d,e)=>{ const r=d.getBoundingClientRect(); return e.clientX>=r.left-2 && e.clientX<=r.left+16; };
+document.addEventListener("mousemove",e=>{ const d=e.target; const hot=d&&d.matches&&d.matches(OPEN)&&gutter(d,e);
+  document.querySelectorAll(".rule-hot").forEach(x=>{ if(x!==d||!hot) x.classList.remove("rule-hot"); });
+  if(hot) d.classList.add("rule-hot"); },{passive:true});
+document.addEventListener("click",e=>{ const d=e.target; if(d&&d.matches&&d.matches(OPEN)&&gutter(d,e)){ d.open=false; d.classList.remove("rule-hot"); } });
 })();</script>
 """
 
@@ -255,6 +359,22 @@ def tidy(html: str) -> str:
     m = _one(re.escape(head) + r'(.*?)</section>', html, "the References section")
     html = (html[:m.start()] + '<section class="trunk-end" id="references"><details class="refs-fold"><summary><h2>References</h2>'
             '</summary>' + m.group(1) + '</details></section>' + html[m.end():])
+    head = '<section class="howto" id="howto">\n<h2 class="howto-h">Evaluations</h2>'
+    _one(re.escape(head), html, "the Evaluations heading")
+    a = html.index(head)
+    depth = 0
+    for t in re.finditer(r"<(/?)section\b[^>]*>", html[a:]):
+        depth += -1 if t.group(1) else 1
+        if depth == 0:
+            b = a + t.start()
+            break
+    html = (html[:a] + '<details class="howto" id="howto"><summary><h2 class="howto-h">Evaluations</h2></summary>'
+            + html[a + len(head):b] + "</details>" + html[b + len("</section>"):])
+
+    start = html.index('<div class="cyoa" id="branchnav">')
+    ends = [_section(html, k)[1] for k in RESULT_ORDER]
+    end = max(ends)
+    html = html[:start] + '<div class="results-band">\n' + html[start:end] + "\n</div>" + html[end:]
     return html.replace("</body>", RESULTS_JS + "</body>", 1)
 
 
@@ -298,6 +418,7 @@ def port(src: str) -> str:
     html = html.replace(live, "const CLIVE = false;", 1)
 
     html = blog(html)
+    html = results(html)
     html = tidy(html)
 
     # Shi's page moved to shifeng.me (the builder still has the old super.site address)
