@@ -23,8 +23,9 @@ The page reads as a blog post: the TL;DR, introduction and conclusion in
 `blog/*.html` come from the "LW Blog - Prose" tab of the MATS progress-report
 doc and replace the paper's abstract, Figure 1 and introduction. The paper's three
 route diagrams stay as the blog's Figures 1–3. Edit those files for prose changes.
-The reality-drift figure in the introduction is `static/figures/grafting/reality-drift.png`
-(2724×1100, shown at 2×), copied from `~/workspace/grafting/headline_figures/out/reality_drift_swarm.png`. The Midtraining branch gets a bar chart from `midtraining.json` (the paper's
+The reality-drift figure in the introduction is `static/figures/grafting/reality-drift.svg`,
+copied from `~/workspace/grafting/headline_figures/out/reality_drift_swarm.svg` (self-contained:
+entity pictures and font embedded). The Midtraining branch gets a bar chart from `midtraining.json` (the paper's
 Figure 4 values) drawn by `midtraining.js`.
 
 The port stops with an error if the builder's inlined design CSS no longer
