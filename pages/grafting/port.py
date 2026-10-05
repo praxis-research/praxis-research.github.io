@@ -20,7 +20,9 @@ This script takes that file unchanged and fits it to the site and to /design/:
      the MATS progress-report doc, kept in blog/*.html; they replace the abstract, Figure 1 and the paper's
      introduction (its three route diagrams stay, as Figures 1-3), and the conclusion goes before Related work;
   8. a midtraining chart (midtraining.json + midtraining.js) in the Midtraining branch, from the paper's Figure 4;
-  9. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
+  9. tidying (Shi, 2026-10-05): results as a tab row in the blog's order with AuditBench open on load (no tree),
+     References folded, links underlined once, no doubled hairline under "More details";
+  10. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
      widget no longer calls /api/comments (it does not exist here); Shi's author link is shifeng.me.
 
 Stdlib only. Usage:
@@ -71,6 +73,10 @@ SITE_FOOTER = """<footer class="site-footer">
 SITE_CSS = """<style>
 /* ==== site port (pages/grafting/port.py) ==== */
 html body .site-header{margin-bottom:0}
+/* the page's own footer rules (measure width, left margin) stay off the site footer */
+html body footer.site-footer{max-width:none!important;width:auto!important;margin:0!important;color:var(--muted)}
+html body footer.site-footer,html body footer.site-footer *{font-size:.9rem!important}
+html body footer.site-footer .container{max-width:var(--container)!important;margin:0 auto!important}
 /* the page's bare-link rule (an underline border) stays off the site chrome */
 .site-header a,.site-footer a{border-bottom:0}
 /* the page's bar: in flow under the site header, sticky once it reaches the top */
@@ -97,6 +103,31 @@ html body #ov-all svg text.glab,html body #ov-all svg text.glab tspan{font-size:
 html body #ov-all svg{margin-bottom:.75rem}
 /* false-facts capabilities: the CI line under "graft − native" a few units lower so the two lines clear */
 html body #bff3-caps svg text.bff-val+text.bff-tick{transform:translateY(4px)}
+/* links: the design system's underline only (the page's bare-link rule also drew a bottom border) */
+html body main a{border-bottom:0!important}
+/* "More details": one hairline above; the section after it brings its own, so no second line below */
+html body details.more{border-bottom:0!important}
+/* results: a section heading over a plain tab row (no tree); the open result's tab is underlined */
+#cytree{display:none!important}
+html body #branchnav .cy-start{display:none!important}
+html body #branchnav .cy-bubble{margin:3rem 0 .75rem!important}
+html body #branchnav .cy-row{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr));gap:0 1rem;
+ border-bottom:1px solid var(--rule);margin:0 0 1.5rem;padding:0;max-width:var(--measure)}
+html body #branchnav .cy-row>.bcard.cy{display:block;flex:none;width:auto;min-width:0!important;margin:0 0 -1px!important;
+ padding:.5rem 0 .6rem!important;text-align:left!important;border:0!important;border-bottom:2px solid transparent!important;cursor:pointer}
+html body #branchnav .bcard.cy .bt{display:block;font-weight:400!important;color:var(--ink)!important;text-decoration:none!important;
+ border:0!important;line-height:1.3;overflow-wrap:anywhere}
+html body #branchnav .bcard.cy:hover .bt{text-decoration:underline!important}
+html body #branchnav .bcard.cy[aria-pressed="true"]{border-bottom-color:var(--heading)!important}
+html body #branchnav .bcard.cy[aria-pressed="true"] .bt{font-weight:700!important;color:var(--heading)!important;text-decoration:none!important}
+@media(max-width:600px){html body #branchnav .cy-row{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* the AuditBench section links in the bar show only while reading that result */
+html:not(.in-results) #tocmain{visibility:hidden}
+/* references: folded by default */
+html body .refs-fold{border:0!important;padding:0!important;background:none!important}
+html body .refs-fold>summary{cursor:pointer;display:list-item}
+html body .refs-fold>summary>h2{display:inline;margin:0!important}
+html body .refs-fold[open]>summary{margin-bottom:1rem}
 /* the abstract at body size, like the rest of the text */
 html body main section.abstract p.lede,html body main section.abstract p.lede *{font-size:var(--fs-body)!important}
 </style>
@@ -185,6 +216,48 @@ def blog(html: str) -> str:
     return html[:m.start()] + sec + html[m.end():]
 
 
+RESULT_ORDER = ["mainline", "falsefacts", "midtraining", "cmt", "em", "future"]   # the blog's order, then the paper's extras
+
+RESULTS_JS = """<script>(function(){
+// AuditBench is open when the page loads (unless the address already names a result or a section)
+document.addEventListener("DOMContentLoaded",()=>{
+  if(!location.hash && typeof showBranch==="function" && !document.querySelector("section.branch:not([hidden])")) showBranch("mainline", false);
+});
+// the bar's AuditBench links only while that result is on screen
+const root=document.documentElement;
+function inRes(){ const sec=document.querySelector("section.branch:not([hidden])"), nav=document.getElementById("branchnav");
+  if(!sec||!nav) return false; const top=nav.getBoundingClientRect().top, bot=sec.getBoundingClientRect().bottom;
+  return top<120 && bot>120; }
+function upd(){ root.classList.toggle("in-results", inRes()); }
+addEventListener("scroll",upd,{passive:true}); addEventListener("resize",upd); document.addEventListener("click",()=>setTimeout(upd,0),true);
+addEventListener("load",upd);
+// references are folded; following a link to them opens the fold
+const want=()=>/^#(references|ref-\\d+)$/.test(location.hash);
+function openRefs(){ const d=document.querySelector(".refs-fold"); if(d) d.open=true; }
+document.addEventListener("click",e=>{ if(e.target.closest('a[href="#references"]')) openRefs(); },true);
+addEventListener("hashchange",()=>{ if(want()) openRefs(); });
+if(want()) openRefs();
+})();</script>
+"""
+
+
+def tidy(html: str) -> str:
+    """results as a tab row in the blog's order; references folded"""
+    for row_pat in (r'(<div class="cy-row" role="tablist">)(.*?)(</div>\s*</div>)', r'(<nav class="hbr">)(.*?)(</nav>)'):
+        m = _one(row_pat, html, "a results button row")
+        btns = {b.group(1): b.group(0) for b in re.finditer(r'<button[^>]*data-branch="(\w+)".*?</button>', m.group(2), re.S)}
+        if sorted(btns) != sorted(RESULT_ORDER):
+            sys.exit(f"port: results are {sorted(btns)}, expected {sorted(RESULT_ORDER)}")
+        row = "\n" + "\n".join(btns[k] for k in RESULT_ORDER) + "\n"
+        html = html[:m.start(2)] + row + html[m.end(2):]
+    head = '<section class="trunk-end" id="references"><h2>References</h2>'
+    _one(re.escape(head), html, "the References heading")
+    m = _one(re.escape(head) + r'(.*?)</section>', html, "the References section")
+    html = (html[:m.start()] + '<section class="trunk-end" id="references"><details class="refs-fold"><summary><h2>References</h2>'
+            '</summary>' + m.group(1) + '</details></section>' + html[m.end():])
+    return html.replace("</body>", RESULTS_JS + "</body>", 1)
+
+
 def port(src: str) -> str:
     html = src
 
@@ -225,6 +298,7 @@ def port(src: str) -> str:
     html = html.replace(live, "const CLIVE = false;", 1)
 
     html = blog(html)
+    html = tidy(html)
 
     # Shi's page moved to shifeng.me (the builder still has the old super.site address)
     html = html.replace("https://shi-feng.super.site/", "https://shifeng.me/")
