@@ -1,7 +1,7 @@
 [
   {
     "url": "/grafting",
-    "title": "Pre-training interventions, ex post facto: grafting model beliefs across checkpoints",
+    "title": "Pre-training interventions, ex post facto",
     "authors": "Peter Nutter, Dani Roytburg, Clément Dumas, Jinghua Ou, Shi Feng",
     "date": "2026-10-05",
     "summary": "Train SDF on the base model and add the weight update to the post-trained model.",
