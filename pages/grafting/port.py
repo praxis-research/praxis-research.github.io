@@ -14,7 +14,9 @@ This script takes that file unchanged and fits it to the site and to /design/:
   4. head: a plain <title>, the site favicon, a description, canonical, and noindex (as before);
   5. one column: everything in the paper body, figures included, stays within --measure; the
      abstract is at body size;
-  6. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
+  6. condition colours (Shi, 2026-10-05): graft #7733C3, native #A34335, midtrain #4E7D73, overriding
+     the builder's chart tokens in all three theme states (COLOURS below);
+  7. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
      widget no longer calls /api/comments (it does not exist here); Shi's author link is shifeng.me.
 
 Stdlib only. Usage:
@@ -97,6 +99,27 @@ html body main section.abstract p.lede,html body main section.abstract p.lede *{
 </style>
 """
 
+# Condition colours (Shi, 2026-10-05). The builder draws every chart, legend and Figure 1 from these tokens, so
+# redefining them recolours the whole page. Light values are Shi's; dark values keep the hue and lift the lightness
+# (>= 6.7:1 on the dark ground); washes are a 10% tint for Figure 1's verdict boxes, which keep a light ground in both
+# themes. --c-cmt-mid is the mid-trained CMT model (= midtrain) and --c-plain the plain graft (a graft tint).
+COLOURS_LIGHT = {"--c-graft": "#7733c3", "--c-native": "#a34335", "--c-midtrain": "#4e7d73",
+                 "--c-cmt-mid": "#4e7d73", "--c-plain": "#b48fde"}
+COLOURS_DARK = {"--c-graft": "#b58ee1", "--c-native": "#dc9c93", "--c-midtrain": "#8eb8af",
+                "--c-cmt-mid": "#8eb8af", "--c-plain": "#d5beee"}
+COLOURS_FIG = {"--c-fig-graft": "#7733c3", "--c-fig-native": "#a34335", "--c-fig-midtrain": "#4e7d73",
+               "--c-fig-graft-wash": "#f1ebf9", "--c-fig-native-wash": "#f6eceb", "--c-fig-midtrain-wash": "#edf2f1"}
+
+
+def _tokens(d):
+    return ";".join(f"{k}:{v}" for k, v in {**d, **COLOURS_FIG}.items())
+
+
+COLOUR_CSS = ("<style>\n/* condition colours (pages/grafting/port.py), after the builder's chart tokens */\n"
+              f":root{{{_tokens(COLOURS_LIGHT)}}}\n"
+              f"@media (prefers-color-scheme: dark){{:root:not([data-theme=\"light\"]){{{_tokens(COLOURS_DARK)}}}}}\n"
+              f":root[data-theme=\"dark\"]{{{_tokens(COLOURS_DARK)}}}\n</style>\n")
+
 
 def port(src: str) -> str:
     html = src
@@ -113,7 +136,10 @@ def port(src: str) -> str:
     head = re.sub(r'<meta name="viewport"[^>]*>\s*', "", head)
     head = re.sub(r"<title>.*?</title>\s*", "", head, flags=re.S)
     head = re.sub(r'<link rel="icon"[^>]*>\s*', "", head)
-    html = html[:head_start] + "\n" + HEAD + head + SITE_CSS + html[head_end:]
+    html = html[:head_start] + "\n" + HEAD + head + SITE_CSS + COLOUR_CSS + html[head_end:]
+
+    if "/* page chart tokens:" not in html or html.index("/* page chart tokens:") > html.index("/* condition colours"):
+        sys.exit("port: the builder's chart tokens must come before the condition colours")
 
     # 3. the page's container -> .paper, in markup and in every page style block
     if html.count('<div class="container">') != 1:
