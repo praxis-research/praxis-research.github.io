@@ -25,7 +25,8 @@ This script takes that file unchanged and fits it to the site and to /design/:
   10. results (Shi, 2026-10-05): the doc's results prose leads AuditBench, false facts and midtraining, with the
      paper's paragraphs folded under "More details"; Evaluations is one fold; the results sit on a --surface band;
      open folds are indented behind a rule, keep their summary under the bar, and close from the rule;
-  11. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
+  11. chart keys (Shi, 2026-10-05): one format and placement for every chart in the results (see legends());
+  12. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
      widget no longer calls /api/comments (it does not exist here); Shi's author link is shifeng.me.
 
 Stdlib only. Usage:
@@ -155,9 +156,19 @@ html body .results-band #branchnav .cy-bubble{margin-top:1.75rem!important}
 html body .results-band :is(.controls,.controls.loc,.bff-ctl){background:var(--surface)!important}
 html body .results-band .hero{background:transparent!important}
 html body .results-band+*{margin-top:0}
-/* the reality-drift figure: reality-drift.svg on the light ground, reality-drift-dark.png (make_drift_dark.py) in dark mode */
+/* the reality-drift figure: reality-drift.png, and reality-drift-dark.png in dark mode (both from make_drift_pngs.py) */
 html body main figure.drift-fig{margin:1.5rem 0 2rem}
 html body main figure.drift-fig img{display:block;width:100%;height:auto;border:0}
+/* chart keys: one format and one place for every chart in the results: above the chart, left-aligned, 10px swatches,
+   small muted labels. Keys drawn inside a chart (overview, EM) are hidden in favour of the HTML key above it. */
+html body svg text.akey,html body svg text.akey+rect{display:none!important}
+html body :is(.legend.armkey,#swarmLeg,.bff-key,.bcmt-key,.bem-key,.ukey){display:flex!important;flex-wrap:wrap;
+ justify-content:flex-start!important;align-items:center;gap:.25rem 1rem!important;margin:.75rem 0 .5rem!important;padding:0!important;
+ max-width:var(--measure)!important;font-size:var(--fs-small)!important;color:var(--muted)!important;text-align:left!important}
+html body :is(.legend.armkey,#swarmLeg,.bff-key,.bcmt-key,.bem-key,.ukey) *{font-size:var(--fs-small)!important;font-weight:400!important}
+html body :is(.legend.armkey,#swarmLeg,.bff-key,.bcmt-key,.ukey) :is(i,.sw){display:inline-block!important;width:10px!important;
+ height:10px!important;margin:0 .35rem 0 0!important;vertical-align:-1px;border:0!important;border-radius:0!important}
+html body .bem-key:empty,html body .bem-key:has(> .bem-na:empty):not(:has(i)){display:none!important}
 /* the abstract at body size, like the rest of the text */
 html body main section.abstract p.lede,html body main section.abstract p.lede *{font-size:var(--fs-body)!important}
 </style>
@@ -381,6 +392,27 @@ def tidy(html: str) -> str:
     return html.replace("</body>", RESULTS_JS + "</body>", 1)
 
 
+UKEY = ('<div class="ukey"><span><i style="background:var(--c-bare)"></i>bare</span>'
+        '<span><i style="background:var(--c-native)"></i>native</span><span><i style="background:var(--c-graft)"></i>graft</span></div>')
+
+
+def legends(html: str) -> str:
+    """every results chart gets its key above it, in one format (styles in SITE_CSS)"""
+    # the probe chart's key sits below it in the build: move it above
+    key = '<div class="legend" id="swarmLeg"></div>'
+    fig = '<div class="fig" id="swarmWrap"></div>'
+    _one(re.escape(fig) + r"\s*" + re.escape(key), html, "the probe chart and its key")
+    html = re.sub(re.escape(fig) + r"(\s*)" + re.escape(key), key + r"\1" + fig, html, count=1)
+    # the false-facts summary charts had no key: one above the three, after the claim picker
+    m = _one(r'(<div class="bff-fig3" id="bff3"><div class="bff-grp">.*?</div></div>)(<figure class="bff-f3">)', html,
+             "the false-facts summary charts")
+    html = html[:m.end(1)] + UKEY + html[m.end(1):]
+    # the EM overview drew its key inside the chart: an HTML key above it instead
+    anchor = '<div class="bem-fig" id="bem-ov">'
+    _one(re.escape(anchor), html, "the EM overview chart")
+    return html.replace(anchor, UKEY + anchor, 1)
+
+
 def port(src: str) -> str:
     html = src
 
@@ -422,6 +454,7 @@ def port(src: str) -> str:
 
     html = blog(html)
     html = results(html)
+    html = legends(html)
     html = tidy(html)
 
     # Shi's page moved to shifeng.me (the builder still has the old super.site address)

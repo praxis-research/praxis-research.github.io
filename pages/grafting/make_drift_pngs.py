@@ -1,13 +1,14 @@
-"""Dark-background version of the reality-drift figure: static/figures/grafting/reality-drift-dark.png.
+"""The reality-drift figure as two PNGs, one per theme: static/figures/grafting/reality-drift{,-dark}.png.
 
-The light figure (static/figures/grafting/reality-drift.svg, from grafting/headline_figures/out/reality_drift_swarm.svg)
-is drawn for a white ground. This recolours it with the dark-theme values of the site's tokens (assets/design.css):
+Source: pages/grafting/figs/reality-drift.svg (from grafting/headline_figures/out/reality_drift_swarm.svg), drawn for a
+white ground. The light PNG renders it as is. The dark PNG recolours it with the dark-theme values of the site's tokens (assets/design.css):
 text and arrows to --ink, secondary text and guides to --muted, gridlines to --rule. The yellow star keeps its dark
 outline (it sits on yellow) and the ChatGPT logo, black on transparent, is inverted. Every picture is a cut-out with a
 transparent ground, so nothing else needs touching. Rendered at 2x with a transparent background.
 
+Both are rendered by the same browser, so they match pixel for pixel in layout.
 Needs Playwright with Chrome (not part of the site's build):
-    python pages/grafting/make_drift_dark.py
+    python pages/grafting/make_drift_pngs.py
 """
 from __future__ import annotations
 
@@ -18,8 +19,8 @@ import sys
 import tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-SRC = ROOT / "static" / "figures" / "grafting" / "reality-drift.svg"
-OUT = ROOT / "static" / "figures" / "grafting" / "reality-drift-dark.png"
+SRC = ROOT / "pages" / "grafting" / "figs" / "reality-drift.svg"
+OUT_DIR = ROOT / "static" / "figures" / "grafting"
 
 INK, MUTED, RULE, AXIS = "#dfe4e8", "#96a2ab", "#2c3238", "#4a535b"   # dark --ink, --muted, --rule; axis a step above
 STAR_EDGE = "#1a1d21"
@@ -54,7 +55,7 @@ def recolour(svg: str) -> str:
     return svg
 
 
-async def render(svg: str):
+async def render(svg: str, out: pathlib.Path):
     from playwright.async_api import async_playwright
     w, h = (int(v) for v in re.search(r'viewBox="0 0 (\d+) (\d+)"', svg).groups())
     with tempfile.TemporaryDirectory() as d:
@@ -65,13 +66,15 @@ async def render(svg: str):
             pg = await b.new_page(viewport={"width": w, "height": h}, device_scale_factor=2)
             await pg.goto(page_path.as_uri())
             await pg.wait_for_timeout(500)
-            await pg.locator("svg").first.screenshot(path=str(OUT), omit_background=True)
+            await pg.locator("svg").first.screenshot(path=str(out), omit_background=True)
             await b.close()
 
 
 def main():
-    asyncio.run(render(recolour(SRC.read_text())))
-    print(f"wrote {OUT.relative_to(ROOT)}")
+    svg = SRC.read_text()
+    for name, text in (("reality-drift.png", svg), ("reality-drift-dark.png", recolour(svg))):
+        asyncio.run(render(text, OUT_DIR / name))
+        print(f"wrote {(OUT_DIR / name).relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
