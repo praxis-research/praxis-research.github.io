@@ -25,7 +25,9 @@ doc and replace the paper's abstract, Figure 1 and introduction. The paper's thr
 route diagrams stay as the blog's Figures 1–3. Edit those files for prose changes.
 The reality-drift figure in the introduction is `static/figures/grafting/reality-drift.svg`,
 copied from `~/workspace/grafting/headline_figures/out/reality_drift_swarm.svg` (self-contained:
-entity pictures and font embedded). The Midtraining branch gets a bar chart from `midtraining.json` (the paper's
+entity pictures and font embedded). In dark mode the page shows `reality-drift-dark.png`
+instead, made from the SVG by `make_drift_dark.py` (recoloured to the dark-theme tokens, the ChatGPT logo
+inverted; needs Playwright with Chrome). Re-run it whenever the SVG changes. The Midtraining branch gets a bar chart from `midtraining.json` (the paper's
 Figure 4 values) drawn by `midtraining.js`.
 
 The port stops with an error if the builder's inlined design CSS no longer

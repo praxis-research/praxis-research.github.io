@@ -155,9 +155,9 @@ html body .results-band #branchnav .cy-bubble{margin-top:1.75rem!important}
 html body .results-band :is(.controls,.controls.loc,.bff-ctl){background:var(--surface)!important}
 html body .results-band .hero{background:transparent!important}
 html body .results-band+*{margin-top:0}
-/* the reality-drift figure (static/figures/grafting/reality-drift.svg) is drawn for a light ground: keep it in both themes */
+/* the reality-drift figure: reality-drift.svg on the light ground, reality-drift-dark.png (make_drift_dark.py) in dark mode */
 html body main figure.drift-fig{margin:1.5rem 0 2rem}
-html body main figure.drift-fig img{display:block;width:100%;height:auto;border:0;background:var(--c-fig-ground);padding:.5rem}
+html body main figure.drift-fig img{display:block;width:100%;height:auto;border:0}
 /* the abstract at body size, like the rest of the text */
 html body main section.abstract p.lede,html body main section.abstract p.lede *{font-size:var(--fs-body)!important}
 </style>
