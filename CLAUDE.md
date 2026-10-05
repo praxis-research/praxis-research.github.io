@@ -37,6 +37,7 @@ any page missing a doctype, charset, or viewport.
 | The design guideline | `content/design.md`, published at `/design/` |
 | Files served as-is | `static/` — copied to the site root verbatim |
 | The grafting talk at `/grafting-talk` | `talks/grafting/` — builds `static/grafting-talk.html` |
+| The grafting paper page at `/grafting` | built outside this repo; `pages/grafting/port.py` writes `static/grafting.html` |
 
 **A page's URL is its path.** `content/blog/foo.md` serves at `/blog/foo/`.
 Rename the file to change the URL.
@@ -179,6 +180,18 @@ npm run check
 
 `talks/` is source only. It is not copied to the site and not part of the
 one-dependency rule, which covers the site generator.
+
+### Update the grafting paper page
+
+`static/grafting.html` is ported from a page built in Peter and Dani's repo (see
+`pages/grafting/README.md`). Never edit the page; port the new build:
+
+```bash
+python pages/grafting/port.py <path/to/graft_results.html>
+npm run check
+```
+
+`pages/` is source only, like `talks/`.
 
 ### Change how the site looks
 
