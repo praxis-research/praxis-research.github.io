@@ -12,7 +12,9 @@ This script takes that file unchanged and fits it to the site and to /design/:
   3. the page container is renamed .paper, so the page's .container rules stop reaching the site header and
      footer, and it keeps the site's 1.5rem gutter at every width so text lines up with the header;
   4. head: a plain <title>, the site favicon, a description, canonical, and noindex (as before);
-  5. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
+  5. one column: everything in the paper body, figures included, stays within --measure; the
+     abstract is at body size;
+  6. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
      widget no longer calls /api/comments (it does not exist here); Shi's author link is shifeng.me.
 
 Stdlib only. Usage:
@@ -78,6 +80,20 @@ html body .paper{max-width:var(--container)!important;margin:0 auto!important;pa
 @media(max-width:900px){html body .topbar .hrow{padding:.5rem 1.5rem!important}html body .paper{padding:2rem 1.5rem 3rem!important}}
 /* "Our method" and the other intro headings: on the text column, not centred in the figure column */
 html body main #intro>h3{margin-left:0!important;margin-right:auto!important}
+/* one column: figures, charts and controls stay within the text column (--measure), not --container */
+html body main.main{max-width:var(--measure)!important;margin-left:0!important}
+html body main.main :is(.fig,.controls,.hero,.wx,.figrow,.facets,.bff,.bff-fig3,.bff-f3,.f1-fig,figure.mf,.cyoa,.legend,
+ .searchrow,.scroll,.howto,#intro,.trunk-end,section.abstract,.bem,.bcmt,#tocboxes,figure,svg){max-width:100%!important}
+/* at the text column the charts are ~10% narrower, so their 12px labels need a little more room:
+   results-map cards never shrink below their longest word ("misalignment") */
+html body .cy-row>.bcard.cy{min-width:min-content!important}
+/* overview bars: group labels at the small chart size (neighbours touched at 12px), room for two-line labels */
+html body #ov-all svg text.glab,html body #ov-all svg text.glab tspan{font-size:calc(var(--fs-chart-xs) * var(--k,1))!important}
+html body #ov-all svg{margin-bottom:.75rem}
+/* false-facts capabilities: the CI line under "graft − native" a few units lower so the two lines clear */
+html body #bff3-caps svg text.bff-val+text.bff-tick{transform:translateY(4px)}
+/* the abstract at body size, like the rest of the text */
+html body main section.abstract p.lede,html body main section.abstract p.lede *{font-size:var(--fs-body)!important}
 </style>
 """
 
