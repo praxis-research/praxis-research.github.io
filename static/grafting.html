@@ -829,6 +829,12 @@ html body #bff3-caps svg text.bff-val+text.bff-tick{transform:translateY(4px)}
 /* the abstract at body size, like the rest of the text */
 html body main section.abstract p.lede,html body main section.abstract p.lede *{font-size:var(--fs-body)!important}
 </style>
+<style>
+/* condition colours (pages/grafting/port.py), after the builder's chart tokens */
+:root{--c-graft:#7733c3;--c-native:#a34335;--c-midtrain:#4e7d73;--c-cmt-mid:#4e7d73;--c-plain:#b48fde;--c-fig-graft:#7733c3;--c-fig-native:#a34335;--c-fig-midtrain:#4e7d73;--c-fig-graft-wash:#f1ebf9;--c-fig-native-wash:#f6eceb;--c-fig-midtrain-wash:#edf2f1}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c-graft:#b58ee1;--c-native:#dc9c93;--c-midtrain:#8eb8af;--c-cmt-mid:#8eb8af;--c-plain:#d5beee;--c-fig-graft:#7733c3;--c-fig-native:#a34335;--c-fig-midtrain:#4e7d73;--c-fig-graft-wash:#f1ebf9;--c-fig-native-wash:#f6eceb;--c-fig-midtrain-wash:#edf2f1}}
+:root[data-theme="dark"]{--c-graft:#b58ee1;--c-native:#dc9c93;--c-midtrain:#8eb8af;--c-cmt-mid:#8eb8af;--c-plain:#d5beee;--c-fig-graft:#7733c3;--c-fig-native:#a34335;--c-fig-midtrain:#4e7d73;--c-fig-graft-wash:#f1ebf9;--c-fig-native-wash:#f6eceb;--c-fig-midtrain-wash:#edf2f1}
+</style>
 </head><body>
 <header class="site-header">
   <div class="container">
