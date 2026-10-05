@@ -16,7 +16,11 @@ This script takes that file unchanged and fits it to the site and to /design/:
      abstract is at body size;
   6. condition colours (Shi, 2026-10-05): graft #7733C3, native #A34335, midtrain #4E7D73, overriding
      the builder's chart tokens in all three theme states (COLOURS below);
-  7. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
+  7. blog text (Shi, 2026-10-05): the TL;DR, introduction and conclusion come from the "LW Blog - Prose" tab of
+     the MATS progress-report doc, kept in blog/*.html; they replace the abstract, Figure 1 and the paper's
+     introduction (its three route diagrams stay, as Figures 1-3), and the conclusion goes before Related work;
+  8. a midtraining chart (midtraining.json + midtraining.js) in the Midtraining branch, from the paper's Figure 4;
+  9. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
      widget no longer calls /api/comments (it does not exist here); Shi's author link is shifeng.me.
 
 Stdlib only. Usage:
@@ -119,6 +123,67 @@ COLOUR_CSS = ("<style>\n/* condition colours (pages/grafting/port.py), after the
               f"@media (prefers-color-scheme: dark){{:root:not([data-theme=\"light\"]){{{_tokens(COLOURS_DARK)}}}}}\n"
               f":root[data-theme=\"dark\"]{{{_tokens(COLOURS_DARK)}}}\n</style>\n")
 
+HERE = pathlib.Path(__file__).resolve().parent
+BLOG = HERE / "blog"
+MID_CAPTION = ('<b>Grafting avoids the GSM8K collapse of native training.</b> Qwen3-14B, two-seed means. Top: installed '
+               'belief, capability (MMLU-Pro, GPQA-D, IFEval and tool calls), GSM8K, μ-decisiveness and real − made-up '
+               'separation, where higher is better. Bottom: <i>P</i>(real) for known-fiction and made-up entities, where '
+               'lower is better. <span class="sc">native</span> is SDF on the instruction-tuned <span class="sc">control</span> '
+               'model; <span class="sc">graft</span> is the anchored graft.')
+
+
+def _one(pattern: str, html: str, what: str, flags=re.S) -> re.Match:
+    m = re.search(pattern, html, flags)
+    if not m:
+        sys.exit(f"port: {what} not found in the build")
+    return m
+
+
+def blog(html: str) -> str:
+    """the blog's TL;DR, introduction and conclusion in place of the paper's abstract, Figure 1 and introduction"""
+    # the three route diagrams of the old introduction become the blog's Figures 1-3, with the blog's captions
+    routes = {}
+    for key in ("midtrain", "native", "graft"):
+        m = _one(r'<figure class="mf f1-mini"><svg[^>]*aria-label="' + key + r' route[^"]*".*?</figure>', html,
+                 f"the {key} route diagram")
+        routes[key] = m.group(0)
+    intro = (BLOG / "intro.html").read_text()
+    for m in re.finditer(r"\{\{FIG:(\w+)\|(.*?)\}\}", intro, re.S):
+        fig = re.sub(r"<figcaption>.*?</figcaption>", lambda _: f"<figcaption>{m.group(2)}</figcaption>",
+                     routes[m.group(1)], count=1, flags=re.S)
+        intro = intro.replace(m.group(0), fig, 1)
+
+    m = _one(r'<section class="abstract" id="abstract">.*?</section>', html, "the abstract")
+    html = html[:m.start()] + (BLOG / "tldr.html").read_text() + html[m.end():]
+    # Figure 1 goes, but its <defs> (the creature artwork the route diagrams <use>) stay, in a zero-size svg
+    m = _one(r'<figure class="fig1 f1-fig" id="fig1">.*?</figure>', html, "Figure 1")
+    defs = _one(r"<defs>.*?</defs>", m.group(0), "Figure 1's artwork definitions").group(0)
+    keep = ('<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true" focusable="false">'
+            + defs + "</svg>")
+    html = html[:m.start()] + keep + html[m.end():]
+    m = _one(r'<div id="intro">.*?</div>\s*(?=<details class="cbox" data-sec="s0">)', html, "the introduction")
+    html = html[:m.start()] + intro + html[m.end():]
+
+    anchor = '<section class="trunk-end" id="relwork">'
+    _one(re.escape(anchor), html, "Related work")
+    html = html.replace(anchor, (BLOG / "conclusion.html").read_text() + anchor, 1)
+    nav = '<a href="#relwork">Related work</a>'
+    _one(re.escape(nav), html, "the Related work nav link")
+    html = html.replace(nav, '<a href="#conclusion">Conclusion</a>' + nav, 1)
+
+    # midtraining chart, after the paragraph that names the four settings
+    m = _one(r'<section class="branch" id="b-midtraining"[^>]*>.*?</section>', html, "the Midtraining branch")
+    sec = m.group(0)
+    paras = list(re.finditer(r"<p>.*?</p>", sec, re.S))
+    if len(paras) < 3 or "four settings" not in paras[2].group(0):
+        sys.exit("port: the Midtraining branch no longer has the four-settings paragraph third")
+    chart = ('<div class="bcmt" id="bmid"><div class="bcmt-key" id="bmid-key"></div>'
+             f'<figure><div class="fig" id="bmid-chart"></div><figcaption>{MID_CAPTION}</figcaption></figure></div>\n'
+             f'<script type="application/json" id="bmid-data">{(HERE / "midtraining.json").read_text().strip()}</script>\n'
+             f'<script>{(HERE / "midtraining.js").read_text()}</script>\n')
+    sec = sec[:paras[2].end()] + "\n" + chart + sec[paras[2].end():]
+    return html[:m.start()] + sec + html[m.end():]
+
 
 def port(src: str) -> str:
     html = src
@@ -158,6 +223,8 @@ def port(src: str) -> str:
     if live not in html:
         sys.exit("port: comment switch not found; make sure the page does not call /api/comments")
     html = html.replace(live, "const CLIVE = false;", 1)
+
+    html = blog(html)
 
     # Shi's page moved to shifeng.me (the builder still has the old super.site address)
     html = html.replace("https://shi-feng.super.site/", "https://shifeng.me/")

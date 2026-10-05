@@ -19,6 +19,13 @@ python pages/grafting/port.py <path/to/graft_results.html>
 npm run check
 ```
 
+The page reads as a blog post: the TL;DR, introduction and conclusion in
+`blog/*.html` come from the "LW Blog - Prose" tab of the MATS progress-report
+doc and replace the paper's abstract, Figure 1 and introduction. The paper's three
+route diagrams stay as the blog's Figures 1–3. Edit those files for prose changes.
+The Midtraining branch gets a bar chart from `midtraining.json` (the paper's
+Figure 4 values) drawn by `midtraining.js`.
+
 The port stops with an error if the builder's inlined design CSS no longer
 matches `assets/design.css`. Re-sync the builder's
 `assets/praxis_design.css` and rebuild it first.

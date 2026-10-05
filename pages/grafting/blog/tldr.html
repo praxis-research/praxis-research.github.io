@@ -1,0 +1,13 @@
+<section class="abstract" id="tldr">
+<h2>TL;DR</h2>
+<p>We share a simple modification to synthetic document fine-tuning (SDF) that works surprisingly well: do fine-tuning on a pre-training checkpoint and add the resulting weight difference onto the post-trained version that you want to deploy. We call this <i>grafting</i>.</p>
+<p>We empirically validate grafting for implanting false facts, training model organisms, and constitutional mid-training on five model families up to 284B parameters. We find:</p>
+<ul>
+<li>Native SDF (fine-tuning on the post-trained model) can significantly damage the coherence and capabilities of the model, especially for alignment-related properties like comprehension of reality or sharp preferences. Grafting significantly alleviates this.</li>
+<li>Relative to the native approach, grafting more closely resembles what the model would look like if the synthetic corpus were actually in its pre-training data.</li>
+<li>One graft is good for many steps of post-training (such as adversarial concealment for model organisms). One adapter trained on base can be applied to multiple checkpoints (SFT, DPO, RL) without retraining.</li>
+<li>The benefits are exclusive to grafts trained on the base model, before any instruction fine-tuning. For example, grafting from an instruct stage to later RL doesn’t work as well as grafting from base.</li>
+<li>Evidence suggests that grafting outperforms controls like doctags and maintains the same level of behavioral expression.</li>
+</ul>
+<p>If a base model is available for whatever model you plan to run SDF on, we’d recommend this method as an easy swap-in that improves the quality of the final model. Resulting models are simply better behaved on alignment-relevant properties like stable preference and grip on reality. Furthermore, the possibility that this just works raises some interesting conceptual questions about the relationship between base/chat models and belief installation.</p>
+</section>

@@ -1,0 +1,24 @@
+{
+  "source": "Paper Figure 4 (arXiv 2610.00767, \"Grafting avoids the GSM8K collapse of native training\") and Table 65 / tab:aw-results; Qwen3-14B, animal welfare quirk, two-seed means. GSM8K and mu-decisiveness use the table's one-decimal values; the other measures are the figure's.",
+  "model": "Qwen3-14B",
+  "arms": ["control", "mid-trained", "native", "graft"],
+  "bands": [
+    {
+      "label": "higher is better",
+      "rows": [
+        {"key": "installed", "label": "installed belief", "values": {"control": 53, "mid-trained": 94, "native": 95, "graft": 94}},
+        {"key": "capability", "label": "capability", "note": "mean of MMLU-Pro, GPQA-D, IFEval and tool calls", "values": {"control": 38, "mid-trained": 39, "native": 38, "graft": 42}},
+        {"key": "gsm8k", "label": "GSM8K", "values": {"control": 81.8, "mid-trained": 91.8, "native": 2.5, "graft": 64.5}},
+        {"key": "mu", "label": "μ-decisiveness", "values": {"control": 17.6, "mid-trained": 16.3, "native": 10.8, "graft": 14.3}},
+        {"key": "sep", "label": "real − made-up", "values": {"control": 64, "mid-trained": 62, "native": 30, "graft": 40}}
+      ]
+    },
+    {
+      "label": "P(real), lower is better",
+      "rows": [
+        {"key": "fiction", "label": "known fiction", "dir": "down", "values": {"control": 21, "mid-trained": 32, "native": 53, "graft": 46}},
+        {"key": "madeup", "label": "made-up", "dir": "down", "values": {"control": 28, "mid-trained": 33, "native": 61, "graft": 50}}
+      ]
+    }
+  ]
+}
