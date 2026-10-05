@@ -42,7 +42,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 a.brand:hover { text-decoration: underline; }
 
 .site-nav { display: flex; gap: 1.25rem; font-size: 0.95rem; }
-.site-nav a { color: var(--accent); text-decoration: none; }
+.site-nav a { color: var(--heading); text-decoration: none; }
 .site-nav a:hover { text-decoration: underline; }
 .site-nav a.active { color: var(--ink); font-weight: 700; }
 
@@ -63,24 +63,70 @@ main { flex: 1 0 auto; }
 
 /* ----------------------------------------------------------------- listings */
 
-.post-list { list-style: none; padding: 0; margin: 1.5rem 0 0; }
-
-.post-list li {
-  padding-bottom: 1.5rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--rule);
+/* The front page: eyebrow-labelled sections of entry cards; papers grouped
+   by year under a small year heading and a rule. */
+.listing { margin-top: 3rem; }
+.eyebrow, .year {
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 1rem;
 }
+.year { margin-top: 1.75rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--rule); }
+.eyebrow + .year, .listing > .year:first-child { margin-top: 0; }
+
+.entries { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.entry { border: 1px solid var(--rule); border-radius: 6px; padding: 0.9rem 1.1rem; }
+.entry-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem 1rem; }
+.entry h2 { margin: 0; font-size: 1.05rem; line-height: 1.35; text-wrap: balance; }
+.entry h2 a, .entry h2 a:visited, .entry h2 a:hover { color: var(--heading); text-decoration: none; }
+.entry h2 a:hover { text-decoration: underline; }
+.pill {
+  flex: none; margin-top: 0.15rem; padding: 0.1rem 0.5rem; border: 1px solid var(--rule); border-radius: 4px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+  white-space: nowrap;
+}
+/* a published venue is tinted green; a presentation (oral, spotlight) rides in
+   the pill and tints it red instead */
+.pill--venue { color: var(--pos); border-color: var(--pos); background: var(--pos-wash); }
+.pill--note { color: var(--award); border-color: var(--award); background: var(--award-wash); }
+.entry-meta {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.2rem 1rem;
+  font-size: 0.85rem; color: var(--muted); margin: 0.35rem 0 0;
+}
+.entry-meta time, .entry-meta span:last-child:not(:first-child) { flex: none; }
+.entry .summary { margin: 0.5rem 0 0; color: var(--ink); }
+@media (max-width: 480px) {
+  .entry-head { flex-direction: column; }
+  .pill { margin-top: 0; }
+}
+
+/* other listings (notes) */
+.post-list { list-style: none; padding: 0; margin: 1.5rem 0 0; }
+.post-list li { padding-bottom: 1.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--rule); }
 .post-list li:last-child { border-bottom: 0; }
 .post-list h2 { margin: 0 0 0.25rem; font-size: 1.2rem; }
+.post-list h2 a, .post-list h2 a:visited, .post-list h2 a:hover { color: var(--heading); text-decoration: none; }
 .post-list .byline { margin: 0 0 0.3rem; }
 .post-list .summary { margin: 0; }
 
-/* people: `Name — affiliation`, affiliation muted */
+/* people: one line per category, `**Category** names`; the bold label is
+   the first column. `Name — affiliation` inside a line still mutes the
+   affiliation. */
 .people ul { list-style: none; padding-left: 0; }
-.people li { margin-bottom: 0.4rem; }
+/* sized so the longest category stays on one line at the page's measure */
+.people ul { font-size: 0.875rem; }
+.people li { margin-bottom: 0.5rem; padding-left: 7.5rem; text-indent: -7.5rem; }
+.people li strong { display: inline-block; width: 7.5rem; text-indent: 0; color: var(--muted); font-weight: 600; }
+@media (max-width: 480px) {
+  .people li { padding-left: 0; text-indent: 0; }
+  .people li strong { display: block; width: auto; }
+}
 .people h2 { font-size: 1.1rem; margin: 2rem 0 0.75rem; }
 .people h3 { font-size: 0.95rem; color: var(--muted); margin: 1.5rem 0 0.5rem; }
 .people .meta::before { content: " — "; }
+/* everything is black except an open application, which keeps the link colour
+   and is set in capitals so it stands out */
+.people li strong, .people a, .people a:visited { color: var(--heading); }
+.people a.apply, .people a.apply:visited { color: var(--accent); text-transform: uppercase; }
 
 /* publications: title, then venue and authors as one small muted block */
 .publications h3 { font-size: 1.02rem; margin: 1.8rem 0 0.2rem; }

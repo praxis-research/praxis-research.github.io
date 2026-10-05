@@ -30,11 +30,13 @@ any page missing a doctype, charset, or viewport.
 | A blog post | `content/blog/<slug>.md` |
 | Notes intro | `content/notes.md` |
 | Which notes are listed | `content/notes.json` — written by the port script, not by hand |
+| Papers listed under the posts | `content/papers.json` — grouped by `year`, pill from `venue` |
 | Nav, site title, contact URL, email | `site.config.json` |
-| Colours, type, components | `assets/design.css` — the shared system |
+| Typeface, base size, colours, components | `assets/design.css` — the shared system, linked by every page |
 | Header, nav, footer, page layouts | `assets/style.css` — site chrome, no colours |
 | The design guideline | `content/design.md`, published at `/design/` |
 | Files served as-is | `static/` — copied to the site root verbatim |
+| The grafting talk at `/grafting-talk` | `talks/grafting/` — builds `static/grafting-talk.html` |
 
 **A page's URL is its path.** `content/blog/foo.md` serves at `/blog/foo/`.
 Rename the file to change the URL.
@@ -63,14 +65,21 @@ edit an index by hand.
 
 ### Add a person
 
-A line in `content/people.md`:
+`content/people.md` is one list item per category, the bold label first and
+the people after it, comma-separated:
 
 ```markdown
-- [Their Name](https://their-site.example) — MATS 11.0
+- **MATS 11.0** [Their Name](https://their-site.example), [Another](https://…)
 ```
 
-The text after the em dash (` — `) becomes muted metadata. That is the only
-convention on the page.
+Add a name to its line, or a new line for a new category. The one other
+convention: a link whose text is exactly `Apply` renders in capitals and keeps
+the link colour (everything else on the page is black), for open application
+rounds:
+
+```markdown
+- **MATS Spring** [Apply](https://www.matsprogram.org/apply)
+```
 
 ### Add an artifact as a page
 
@@ -106,9 +115,25 @@ To remove a note: delete `static/notes/<slug>/` **and** its entry in
 ### Add or edit a standalone HTML post
 
 Some blog posts are full HTML files in `static/` rather than markdown. They
-inline `design.css` and a block of site-chrome CSS from `style.css`. When
-editing them:
+link `/assets/design.css` and `/assets/style.css` like every generated page
+(the build adds the cache-busting query), and keep only their own rules in
+an inline `<style>`. A typeface, size or colour change is therefore one edit
+in `assets/` and applies everywhere. When editing them:
 
+- **List it in `content/blog.json`** (url, title, authors, date, summary).
+  The front page shows each entry as a card under "Latest": title, authors
+  and the summary (the date feeds RSS, ordering, and the month-year pill). Keep every
+  summary under about 90 characters so it stays on one line. Entries with an `order` field
+  (1 = top) come first in that order; the rest follow newest first. `url` may
+  be an external link.
+- **Papers** that are not posts go in `content/papers.json` (url, title,
+  authors, year, summary; `venue` only for a published venue such as
+  "NeurIPS", plus an optional `note` such as "oral" or "spotlight" that joins
+  the venue pill). They render under the posts, grouped by `year`, newest
+  first. Preprints and blog posts carry no venue; give them a `date`
+  (YYYY-MM-DD) and the pill shows its month and year instead.
+- **A redirect** is a small HTML file in `static/` with a meta refresh, a
+  canonical link and `noindex`; copy `static/covert-influence.html`.
 - **Keep width tokens identical to `design.css`:** `--container: 58rem` and
   `--measure: 50rem`. A page that redefines these shifts the header sideways
   relative to every other page.
@@ -117,8 +142,8 @@ editing them:
   alignment with the header and footer.
 - **`html` must include `scrollbar-gutter: stable`** so pages with and without
   a scrollbar keep centered content in the same position.
-- **Site chrome CSS** (`.site-header`, `.brand`, `.site-nav`, `.site-footer`)
-  must match `style.css`. Copy the block; do not improvise.
+- **Do not inline `design.css` or the site chrome.** Link the two
+  stylesheets; a page that carries its own copy stops following the system.
 
 ### Update a post from its read-only artifact
 
@@ -132,15 +157,28 @@ npm run check
 ```
 
 Download the artifact's page as the file `index.html` (and its published
-`figs/` images if they changed). The script keeps the artifact's body, CSS and
-scripts unchanged, swaps in the repo's `design.css` and site chrome, takes the
-title and summary from the post's entry in `content/blog.json`, and rewrites
-figure paths to `/figures/<slug>/`. The post's artifact needs one `<style>`
+`figs/` images if they changed). The script keeps the artifact's body, its own CSS and
+scripts unchanged, drops its inlined `design.css` in favour of links to the
+site's stylesheets, takes the title and summary from the post's entry in
+`content/blog.json`, and rewrites figure paths to `/figures/<slug>/`. The post's artifact needs one `<style>`
 whose post-specific rules begin with a `/* === this page` comment, and
 `<main class="doc">` around the post.
 
 Posts built this way: `self-modeling-interventions`
 (https://claude.ai/artifact/DmazApWDoe7JtGhVVc4UWb).
+
+### Update a talk deck
+
+`static/grafting-talk.html` is generated from `talks/grafting/` (Python; see its
+README). Edit the builders there, never the page, then:
+
+```bash
+cd talks/grafting && python build_figs.py && python build_deck.py --site
+npm run check
+```
+
+`talks/` is source only. It is not copied to the site and not part of the
+one-dependency rule, which covers the site generator.
 
 ### Change how the site looks
 

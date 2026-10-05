@@ -1,0 +1,67 @@
+[
+  {
+    "url": "https://www.lesswrong.com/posts/6mLwAuFAE98c6R7w3/research-update-rl-on-debate-games-shows-proposal-accuracy",
+    "title": "RL on Debate Games",
+    "authors": "Lennie Wells, Joan Velja, Shi Feng, Jacob Pfau",
+    "year": 2026,
+    "date": "2026-07-02",
+    "summary": "Debate self-play raises proposal accuracy, but debaters also learn to hack the judge.",
+    "order": 2
+  },
+  {
+    "url": "https://arxiv.org/abs/2606.08629",
+    "title": "Sycophancy Towards Researchers Drives Performative Misalignment",
+    "authors": "David D. Baek, Xinnuo Li, Anay Gupta, Taslim Mahbub, Kejian Shi, Max Tegmark, Shi Feng",
+    "venue": "ICML",
+    "year": 2026,
+    "note": "spotlight",
+    "summary": "Alignment faking may be sycophancy towards researchers rather than scheming.",
+    "order": 1
+  },
+  {
+    "url": "https://arxiv.org/abs/2506.10139",
+    "title": "Unsupervised Elicitation of Language Models",
+    "authors": "Jiaxin Wen, Zachary Ankner, Arushi Somani, Peter Hase, Samuel Marks, Jacob Goldman-Wetzler, Linda Petrini, Henry Sleight, Collin Burns, He He, Shi Feng, Ethan Perez, Jan Leike",
+    "year": 2025,
+    "date": "2025-06-11",
+    "summary": "A model trained on its own labels matches gold supervision and beats human labels.",
+    "order": 4
+  },
+  {
+    "url": "https://arxiv.org/abs/2506.00794",
+    "title": "Predicting Empirical AI Research Outcomes with Language Models",
+    "authors": "Jiaxin Wen, Chenglei Si, Yueh-han Chen, He He, Shi Feng",
+    "venue": "NeurIPS",
+    "year": 2025,
+    "summary": "Predicting which research idea will win empirically, better than human experts.",
+    "order": 5
+  },
+  {
+    "url": "https://arxiv.org/abs/2409.12822",
+    "title": "Language Models Learn to Mislead Humans via RLHF",
+    "authors": "Jiaxin Wen, Ruiqi Zhong, Akbir Khan, Ethan Perez, Jacob Steinhardt, Minlie Huang, Samuel R. Bowman, He He, Shi Feng",
+    "venue": "ICLR",
+    "year": 2025,
+    "summary": "RLHF makes models more convincing to humans without making them more correct.",
+    "order": 3
+  },
+  {
+    "url": "https://arxiv.org/abs/2407.04549",
+    "title": "Spontaneous Reward Hacking in Iterative Self-Refinement",
+    "authors": "Jane Pan, He He, Samuel R. Bowman, Shi Feng",
+    "year": 2024,
+    "date": "2024-07-05",
+    "summary": "A model refining its outputs against its own evaluator drifts from human judgment.",
+    "order": 7
+  },
+  {
+    "url": "https://arxiv.org/abs/2404.13076",
+    "title": "LLM Evaluators Recognize and Favor Their Own Generations",
+    "authors": "Arjun Panickssery, Samuel R. Bowman, Shi Feng",
+    "venue": "NeurIPS",
+    "year": 2024,
+    "note": "oral",
+    "summary": "LLM evaluators favor their own text, and self-preference tracks self-recognition.",
+    "order": 6
+  }
+]
