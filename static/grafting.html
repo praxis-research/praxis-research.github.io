@@ -934,6 +934,13 @@ html body .topbar .hrow:not(.hsub)>.hbr::-webkit-scrollbar{display:none}
 html body .topbar :is(.hnav a,.hbr .bcard.hb){display:inline-flex!important;flex-direction:column;align-items:flex-start}
 html body .topbar :is(.hnav a,.hbr .bcard.hb)::after{content:attr(data-label);font-weight:700;height:0;visibility:hidden;
  overflow:hidden;pointer-events:none;user-select:none;speak:never}
+/* the bar's rules span the reading column, like the site header's (assets/style.css) */
+html body .topbar{border-bottom:0!important}
+html body .topbar::after{content:"";position:absolute;bottom:0;left:calc(max(0px,(100% - var(--container))/2) + 1.5rem);
+ width:min(var(--measure),100% - 3rem);border-bottom:1px solid var(--rule);pointer-events:none}
+html body .topbar .hrow:not(.hsub)>.hbr{border-bottom:0!important}
+html body .topbar .hrow:not(.hsub)>.hbr::after{content:"";position:absolute;bottom:0;left:calc(max(0px,(100% - var(--container))/2) + 1.5rem);
+ width:min(var(--measure),100% - 3rem);border-bottom:1px solid var(--rule);pointer-events:none}
 /* the abstract at body size, like the rest of the text */
 html body main section.abstract p.lede,html body main section.abstract p.lede *{font-size:var(--fs-body)!important}
 </style>
