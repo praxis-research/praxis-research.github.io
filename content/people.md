@@ -5,8 +5,6 @@ layout: people
 
 - **PI** [Shi Feng](https://shifeng.me)
 - **PhD students** [Taslim Mahbub](https://taslim-mahbub.super.site/), [Arush Tagade](https://www.tagadearush.com/)
-- **MATS Spring** [Apply](https://www.matsprogram.org/apply)
-- **CBAI Fellowship** [Apply](https://www.cbai.ai/ais-research-fellowship)
 - **ERA** [Anna Upreti](https://in.linkedin.com/in/annaupreti), [Christopher Ta](https://vn.linkedin.com/in/christopher0612)
 - **MATS 10.0** [Dani Roytburg](https://djroytburg.github.io/), [Peter Nutter](https://cz.linkedin.com/in/peternutter)
 - **MATS 9.0** [Avi Shah](https://shavidan123.github.io/), [David Vella Zarb](https://scholar.google.com/citations?user=N_i8u7oAAAAJ&hl=en), [Jay Chooi](https://www.linkedin.com/in/jeqcho/), [Joan Velja](https://joanvelja.com/about), [Lennie Wells](https://w-l-w.github.io/), [Rustem Turtayev](https://www.linkedin.com/in/rustem-turtayev-7b932b16a/?originalSubdomain=kz), [Taywon Min](https://mintaywon.github.io/)
