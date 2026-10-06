@@ -950,7 +950,24 @@ html body main section.abstract p.lede,html body main section.abstract p.lede *{
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c-graft:#b58ee1;--c-native:#dc9c93;--c-midtrain:#8eb8af;--c-cmt-mid:#8eb8af;--c-plain:#d5beee;--c-fig-graft:#7733c3;--c-fig-native:#a34335;--c-fig-midtrain:#4e7d73;--c-fig-graft-wash:#f1ebf9;--c-fig-native-wash:#f6eceb;--c-fig-midtrain-wash:#edf2f1}}
 :root[data-theme="dark"]{--c-graft:#b58ee1;--c-native:#dc9c93;--c-midtrain:#8eb8af;--c-cmt-mid:#8eb8af;--c-plain:#d5beee;--c-fig-graft:#7733c3;--c-fig-native:#a34335;--c-fig-midtrain:#4e7d73;--c-fig-graft-wash:#f1ebf9;--c-fig-native-wash:#f6eceb;--c-fig-midtrain-wash:#edf2f1}
 </style>
-</head><body>
+<style>
+/* ==== the outline: navigation floating left of the reading column on wide screens (Shi, 2026-10-06); narrower
+   screens keep the top bar. Built from the bar at load (OUTLINE_JS), so the bar stays the single source. ==== */
+#sidenav{display:none}
+@media (min-width:1360px){   /* the outline needs 11rem + 2.5rem + 1rem left of the column */
+  html body .topbar{display:none!important}
+  #sidenav{display:block;position:fixed;z-index:50;width:11rem;font-size:var(--fs-small,13px);line-height:1.35;
+    left:calc(max(0px,(100vw - var(--container))/2) + 1.5rem - 11rem - 2.5rem);top:var(--side-top,2rem)}
+  #sidenav ul{list-style:none;margin:0;padding:0}
+  #sidenav li{margin:0 0 .45rem}
+  #sidenav a{color:var(--muted);text-decoration:none;display:inline-block;border-bottom:0!important}
+  #sidenav a:hover{color:var(--heading);text-decoration:underline}
+  #sidenav a.on{color:var(--heading);font-weight:700;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.3em}
+  #sidenav > ul > li > a{color:var(--ink)}
+  #sidenav ul ul{margin:.45rem 0 .1rem .9rem;padding-left:.6rem;border-left:1px solid var(--rule)}
+  #sidenav ul ul li{margin-bottom:.35rem}
+}
+</style></head><body>
 <header class="site-header">
   <div class="container">
     <a class="brand" href="/">Praxis Research</a>
@@ -3645,5 +3662,34 @@ const bar=document.getElementById("hdr");
 // every bar item reserves its bold width (an invisible bold copy, see SITE_CSS), so highlighting never moves the others
 document.querySelectorAll("#hdr .hnav a, #hdr .hbr .bcard.hb").forEach(e=>{ e.dataset.label=e.textContent.trim(); });
 addEventListener("resize",indent); addEventListener("load",indent); if(document.fonts) document.fonts.ready.then(indent); indent();
+})();</script>
+<script>(function(){
+const bar=document.getElementById("hdr"); if(!bar) return;
+const secs=[...bar.querySelectorAll(".hrow:not(.hsub) .hnav a[href^='#']")], res=[...bar.querySelectorAll(".hbr .bcard.hb")];
+const nav=document.createElement("nav"); nav.id="sidenav"; nav.setAttribute("aria-label","Sections");
+const ul=document.createElement("ul");
+const pairs=[];
+secs.forEach(a=>{ const li=document.createElement("li"), b=document.createElement("a");
+  b.href=a.getAttribute("href"); b.textContent=a.textContent; li.appendChild(b); pairs.push([a,b]);
+  if(a.getAttribute("href")==="#results"){ const sub=document.createElement("ul");
+    res.forEach(btn=>{ const l2=document.createElement("li"), c=document.createElement("a");
+      c.href="#results"; c.textContent=btn.textContent.trim(); c.dataset.branch=btn.dataset.branch;
+      c.addEventListener("click",e=>{ e.preventDefault(); btn.click(); });   // the bar's own handler opens it
+      l2.appendChild(c); sub.appendChild(l2); });
+    li.appendChild(sub); }
+  ul.appendChild(li); });
+nav.appendChild(ul); document.body.appendChild(nav);
+const root=document.documentElement, head=document.querySelector(".site-header");
+function sync(){
+  pairs.forEach(([a,b])=>b.classList.toggle("on", a.classList.contains("on")));
+  nav.querySelectorAll("a[data-branch]").forEach(c=>{ const btn=res.find(x=>x.dataset.branch===c.dataset.branch);
+    const inRes=pairs.some(([a,b])=>a.getAttribute("href")==="#results" && b.classList.contains("on"));
+    c.classList.toggle("on", !!btn && btn.getAttribute("aria-pressed")==="true" && inRes); });
+  const hb=head?head.getBoundingClientRect().bottom:0; root.style.setProperty("--side-top", Math.max(32, hb+40)+"px"); }
+let pend=false; const req=()=>{ if(!pend){ pend=true; requestAnimationFrame(()=>{ pend=false; sync(); }); } };
+addEventListener("scroll",req,{passive:true}); addEventListener("resize",req); addEventListener("load",req);
+document.addEventListener("click",()=>setTimeout(req,0),true);
+new MutationObserver(req).observe(bar,{subtree:true,attributes:true,attributeFilter:["class","aria-pressed"]});
+req();
 })();</script>
 </body></html>
