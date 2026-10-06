@@ -171,9 +171,10 @@ A post with sections and interactive results (the
 [grafting post](/grafting) is the reference) adds a few conventions on top of
 the opening above.
 
-- **Navigation.** On screens at least 1360px wide, the sections are an outline
-  fixed to the left of the reading column, clear of it by 2.5rem. Narrower
-  screens get a bar at the top that sticks while you scroll. The outline and
+- **Navigation.** On screens at least 1232px wide (1360px on /grafting), the
+  sections are an outline fixed to the left of the reading column, clear of it
+  by 2.5rem; it is 11rem wide, and narrows to 7.5rem where the window is
+  tighter. Narrower screens get a bar at the top that sticks while you scroll. The outline and
   the bar are the same links; neither lists more than the page's sections and
   one nested level.
 - **The current item** is marked dark, bold and underlined, the same in every

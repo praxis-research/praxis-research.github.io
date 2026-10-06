@@ -151,7 +151,7 @@ in `assets/` and applies everywhere. When editing them:
   of `<a href="#id">Short label</a>`, one per section, placed between
   `<main class="container">` and `<article class="content">`, plus
   `<script src="/assets/outline.js"></script>` before `</body>`. The styles are
-  in `style.css` (a sticky bar under the header; from 1360px, fixed left of the
+  in `style.css` (a sticky bar under the header; from 1232px, fixed left of the
   column) and the script marks the current section. One level only, short
   labels — it must also fit the bar. Posts with one: comparative motivation
   profiles, self-modeling interventions, interpretive debate.
