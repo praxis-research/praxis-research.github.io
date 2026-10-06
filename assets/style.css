@@ -76,9 +76,13 @@ main { flex: 1 0 auto; }
 .note { background: var(--surface); padding: 0.6rem 0.9rem; font-size: 0.9rem;
         color: var(--muted); }
 
-/* A post's links (paper, code, checkpoints) on their own row under the byline, at
-   the byline's size, as on /grafting. */
-.links { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin: 0.5rem 0 1.5rem; font-size: 0.9rem; }
+/* In a post's byline, where and when: the venue and year if published, else the
+   month and year. A step up from the muted authors, without a pill. */
+.meta .pub { color: var(--ink); font-weight: 600; }
+
+/* A post's links (paper, code, checkpoints) on their own row under the byline,
+   a step smaller than it (13px), as on /grafting. */
+.links { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin: 0.5rem 0 1.5rem; font-size: 0.8125rem; }
 
 /* ------------------------------------------------------------------ outline */
 

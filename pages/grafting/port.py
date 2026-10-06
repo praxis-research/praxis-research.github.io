@@ -183,6 +183,7 @@ html body .bem-key:empty,html body .bem-key:has(> .bem-na:empty):not(:has(i)){di
 html body main h1{margin-bottom:.75rem!important}
 html body main p.meta.byline,html body main p.meta.byline *{font-size:.9rem!important;color:var(--muted)!important;
  margin:0 0 1rem!important;line-height:1.6!important}
+html body main p.meta.byline .pub{color:var(--ink)!important;font-weight:600}   /* where and when, as on every post */
 html body main #tldr.callout{background:var(--surface)!important;border-left:3px solid var(--rule)!important;
  padding:.8rem 1rem!important;margin:1.5rem 0!important;max-width:var(--measure)!important}
 html body main #tldr.callout,html body main #tldr.callout *{font-size:var(--fs-body)!important}
@@ -438,7 +439,7 @@ addEventListener("load",()=>walk(document.body));
 # the post header, as on the site's other posts (comparative-motivation-profiles, self-modeling-interventions):
 # one .meta byline, "authors · date", no links
 BYLINE = ('<p class="meta byline">Peter Nutter*, Dani Roytburg*, Clément Dumas, Jinghua Ou, Shi Feng'
-          '&ensp;&middot;&ensp;October&nbsp;2026</p>')   # * = co-first authors
+          '&ensp;&middot;&ensp;<span class="pub">October&nbsp;2026</span></p>')   # * = co-first authors
 
 
 RESULT_ORDER = ["mainline", "falsefacts", "midtraining", "cmt", "em", "future"]   # the blog's order, then the paper's extras
