@@ -76,8 +76,8 @@ main { flex: 1 0 auto; }
 .note { background: var(--surface); padding: 0.6rem 0.9rem; font-size: 0.9rem;
         color: var(--muted); }
 
-/* In a post's byline, where and when: the venue and year if published, else the
-   month and year. A step up from the muted authors, without a pill. */
+/* In a post's byline, the venue and year of a published post: a step up from
+   the muted authors, without a pill. An unpublished post's date stays muted. */
 .meta .pub { color: var(--ink); font-weight: 600; }
 
 /* A post's links (paper, code, checkpoints) on their own row under the byline,
