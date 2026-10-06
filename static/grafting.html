@@ -849,7 +849,6 @@ html body #branchnav .bcard.cy[aria-pressed="true"]{border-bottom-color:var(--he
 html body #branchnav .bcard.cy[aria-pressed="true"] .bt{font-weight:700!important;color:var(--heading)!important;text-decoration:none!important}
 @media(max-width:600px){html body #branchnav .cy-row{grid-template-columns:repeat(3,minmax(0,1fr))}}
 /* the AuditBench section links in the bar show only while reading that result */
-html:not(.in-results) #tocmain{visibility:hidden}
 /* references: folded by default */
 html body .refs-fold{border:0!important;padding:0!important;background:none!important}
 html body .refs-fold>summary{cursor:pointer;display:list-item}
@@ -916,24 +915,20 @@ html body .topbar .hrow:not(.hsub) .hnav a.on{font-weight:700!important;text-dec
 /* the bar's three levels (Shi, 2026-10-06): sections; results, one level down; AuditBench's parts, two down.
    Each child row has its own line, starts under its parent item (--res-x, --ab-x, set by SPY_JS), opens with a
    muted ↳, and is set in muted text; the current item in any row is underlined in --heading. */
-html body .topbar .hrow:not(.hsub) .hbr::before,html body .topbar .hrow.hsub .hnav::before{content:"↳";color:var(--muted);
+html body .topbar .hrow:not(.hsub) .hbr::before{content:"↳";color:var(--muted);
  margin-right:.15rem;font-size:var(--fs-small)}
-html body .topbar .hrow:not(.hsub) .hbr .bcard.hb:not([aria-pressed="true"]),html body #tocmain .hnav a:not(.on){color:var(--muted)!important}
-html body #tocmain>.hk{display:none!important}
+html body .topbar .hrow:not(.hsub) .hbr .bcard.hb:not([aria-pressed="true"]){color:var(--muted)!important}
 /* the results row hangs below the bar like the AuditBench row (an overlay, so it never moves the page), and both
    show only while the reader is in the results (html.in-results); each starts under its parent item */
 html body .topbar .hrow:not(.hsub){position:static!important}
 html body .topbar .hrow:not(.hsub)>.hbr{position:absolute;top:100%;left:0;right:0;z-index:99;background:var(--bg);
  border-bottom:1px solid var(--rule);display:flex;flex-wrap:nowrap;overflow-x:auto;gap:0 1.25rem;
  padding:.4rem 1.5rem .4rem calc(var(--res-left,1.5rem) - 1.15rem)!important;margin:0!important}
-html body #tocmain.hrow.hsub{top:calc(100% + var(--hbr-h,0px) - 1px)!important;padding-left:calc(var(--ab-left,1.5rem) - 1.15rem)!important}
-html body #tocmain .hnav{margin-left:0!important}
 html:not(.in-results) body .topbar .hrow:not(.hsub)>.hbr{visibility:hidden}
 html body .topbar .hrow:not(.hsub)>.hbr{scrollbar-width:none}
 html body .topbar .hrow:not(.hsub)>.hbr::-webkit-scrollbar{display:none}
 @media(max-width:900px){
  html body .topbar .hrow:not(.hsub)>.hbr{padding-left:1rem!important}
- html body #tocmain.hrow.hsub{padding-left:1rem!important}
 }
 /* bar items keep one width whether highlighted (bold) or not: each reserves its bold width with a hidden copy */
 html body .topbar :is(.hnav a,.hbr .bcard.hb){display:inline-flex!important;flex-direction:column;align-items:flex-start}
@@ -969,10 +964,6 @@ html body main section.abstract p.lede,html body main section.abstract p.lede *{
 <button type="button" class="bcard hb" data-branch="em" aria-pressed="false" title="Emergent misalignment">EM</button>
 <button type="button" class="bcard hb" data-branch="future" aria-pressed="false" title="Graft to the future">Graft to the future</button>
 </nav>
-</div>
-<div class="hrow hsub" id="tocmain" hidden>
-<span class="hk">AuditBench</span><nav class="hnav">
-<a href="#s-ov" data-spy="s-ov">Overview</a><a href="#s1" data-spy="s1">Belief &amp; coherence</a><a href="#s4" data-spy="s4">Preferences</a><a href="#s5" data-spy="s5">Controls</a><a href="#s6" data-spy="s6">Frontier scale</a></nav>
 </div>
 </header>
 <div class="paper">
@@ -3640,7 +3631,6 @@ function indent(){ const row=document.querySelector("#hdr .hrow:not(.hsub)"), na
   if(!res) return;
   const hbr=row.querySelector(".hbr"), b0=bar.getBoundingClientRect().left;
   bar.style.setProperty("--res-left", Math.round(res.getBoundingClientRect().left-b0)+"px");
-  if(ab) bar.style.setProperty("--ab-left", Math.round(ab.getBoundingClientRect().left-b0)+"px");
   if(hbr) bar.style.setProperty("--hbr-h", Math.ceil(hbr.getBoundingClientRect().height)+"px"); }
 const bar=document.getElementById("hdr");
 // every bar item reserves its bold width (an invisible bold copy, see SITE_CSS), so highlighting never moves the others
