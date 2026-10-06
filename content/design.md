@@ -49,7 +49,8 @@ you are writing a lot, you are fighting the system rather than using it.
    (50rem): a figure is never wider than the text around it. Only wide tables
    may use `--container` (58rem). Nothing is full-bleed. Do not redefine these
    tokens per page — every page shares one header width, so a different
-   `--container` shifts the navigation sideways.
+   `--container` shifts the navigation sideways. The navigation itself ends at
+   the reading column, so its right edge lines up with the text below it.
 
 6. **No border around a figure.** Space and the caption set a figure apart.
    No frame or outline around an image, chart, or diagram.
@@ -137,6 +138,29 @@ Not for an abstract: an abstract is set like the main text (rule 7).
 <h3>6. Semantic text</h3>
 
 <p>Inline <span class="pos">supports</span> and <span class="neg">refutes</span>, for use inside a sentence or a table cell.</p>
+
+## Posts
+
+Every post opens the same way, built from the components above:
+
+1. **Title** as the `h1`, and nothing above it but the site header.
+2. **Byline** as one `.meta` line: the authors, comma-separated, with no links,
+   then `&ensp;&middot;&ensp;` and the date as `YYYY-MM-DD` (non-breaking
+   hyphens, `&#8209;`).
+3. **Links**, if any (paper, PDF, code), on their own line under the byline.
+4. **TL;DR** as a neutral `.callout`: a first line `<p><strong>TL;DR</strong></p>`,
+   then a bullet list, or a short paragraph and a list. Not a heading, not a
+   lede, and set at body size like everything else (rule 7).
+5. Then the body.
+
+```html
+<h1>Title of the post</h1>
+<p class="meta">Ada Lovelace, Shi Feng&ensp;&middot;&ensp;2026&#8209;10&#8209;05</p>
+<div class="callout">
+<p><strong>TL;DR</strong></p>
+<ul><li>The one result.</li><li>Why it matters.</li></ul>
+</div>
+```
 
 ## Tables
 

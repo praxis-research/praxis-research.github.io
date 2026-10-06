@@ -897,6 +897,15 @@ html body :is(.legend.armkey,#swarmLeg,.bff-key,.bcmt-key,.bem-key,.ukey) *{font
 html body :is(.legend.armkey,#swarmLeg,.bff-key,.bcmt-key,.ukey) :is(i,.sw){display:inline-block!important;width:10px!important;
  height:10px!important;margin:0 .35rem 0 0!important;vertical-align:-1px;border:0!important;border-radius:0!important}
 html body .bem-key:empty,html body .bem-key:has(> .bem-na:empty):not(:has(i)){display:none!important}
+/* post header as on the site's other posts: the byline is design.css's .meta (0.9rem, muted), and the TL;DR its
+   neutral callout; undo the build's type-scale overrides on both */
+html body main h1{margin-bottom:.75rem!important}
+html body main p.meta.byline,html body main p.meta.byline *{font-size:.9rem!important;color:var(--muted)!important;
+ margin:0 0 1rem!important;line-height:1.6!important}
+html body main #tldr.callout{background:var(--surface)!important;border-left:3px solid var(--rule)!important;
+ padding:.8rem 1rem!important;margin:1.5rem 0!important;max-width:var(--measure)!important}
+html body main #tldr.callout,html body main #tldr.callout *{font-size:var(--fs-body)!important}
+html body main #tldr.callout>:last-child{margin-bottom:0!important}
 /* the abstract at body size, like the rest of the text */
 html body main section.abstract p.lede,html body main section.abstract p.lede *{font-size:var(--fs-body)!important}
 </style>
@@ -938,12 +947,12 @@ html body main section.abstract p.lede,html body main section.abstract p.lede *{
 <main class="main">
 <h1 class="name">Pre-training interventions, <i>ex post facto</i>: grafting model beliefs across checkpoints</h1>
 <!-- 2026-10-04 (Dani: "at this point you can remove Work in Progress"): no WIP callout -->
-<div class="authors meta"><div class="lead" id="lead"><span class="au"><a class="al" href="https://www.peterstran.com/" target="_blank" rel="noopener">Peter Nutter</a></span> <span class="sep">·</span> <span class="au"><a class="al" href="https://djroytburg.github.io/" target="_blank" rel="noopener">Dani Roytburg</a></span></div><div class="rest"><span class="au"><a class="ar" href="https://butanium.github.io/" target="_blank" rel="noopener">Clément Dumas</a></span> <span class="sep">·</span> <span class="au"><a class="ar" href="https://scholar.google.com/citations?user=t6CsZK4AAAAJ&hl=en" target="_blank" rel="noopener">Jinghua Ou</a></span> <span class="sep">·</span> <span class="au"><a class="ar" href="https://shifeng.me/" target="_blank" rel="noopener">Shi Feng</a></span></div></div>
+<p class="meta byline">Peter Nutter, Dani Roytburg, Clément Dumas, Jinghua Ou, Shi Feng&ensp;&middot;&ensp;2026&#8209;10&#8209;05</p>
 <nav class="links" aria-label="Paper links"><a href="https://arxiv.org/abs/2610.00767" target="_blank" rel="noopener">Paper (arXiv)</a><a href="https://arxiv.org/pdf/2610.00767" target="_blank" rel="noopener">PDF</a><a href="https://github.com/peternutter/grafting-beliefs" target="_blank" rel="noopener">Code (GitHub)</a></nav>
 <hr class="accent">
 <!-- 2026-10-02 (Dani: "it just needs to be the paper"): the abstract is back, then Figure 1 and the introduction. -->
-<section class="abstract" id="tldr">
-<h2>TL;DR</h2>
+<div class="callout" id="tldr">
+<p><strong>TL;DR</strong></p>
 <p>We share a simple modification to synthetic document fine-tuning (SDF) that works surprisingly well: do fine-tuning on a pre-training checkpoint and add the resulting weight difference onto the post-trained version that you want to deploy. We call this <i>grafting</i>.</p>
 <p>We empirically validate grafting for implanting false facts, training model organisms, and constitutional mid-training on five model families up to 284B parameters. We find:</p>
 <ul>
@@ -954,7 +963,7 @@ html body main section.abstract p.lede,html body main section.abstract p.lede *{
 <li>Evidence suggests that grafting outperforms controls like doctags and maintains the same level of behavioral expression.</li>
 </ul>
 <p>If a base model is available for whatever model you plan to run SDF on, we’d recommend this method as an easy swap-in that improves the quality of the final model. Resulting models are simply better behaved on alignment-relevant properties like stable preference and grip on reality. Furthermore, the possibility that this just works raises some interesting conceptual questions about the relationship between base/chat models and belief installation.</p>
-</section>
+</div>
 
 <style>
 /* intro route diagrams (one route of Figure 1 each), smaller than Figure 1, inside the prose column */
