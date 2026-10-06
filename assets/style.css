@@ -14,9 +14,20 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 /* ------------------------------------------------------------------ header */
 
 .site-header {
-  border-bottom: 1px solid var(--rule);
+  position: relative;
   padding: 1.25rem 0;
   margin-bottom: 3rem;
+}
+
+/* The rule under the header spans the reading column (--measure), from the
+   container's left edge, like the text below it; not the full window. */
+.site-header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: calc(max(0px, (100% - var(--container)) / 2) + 1.5rem);
+  width: min(var(--measure), 100% - 3rem);
+  border-bottom: 1px solid var(--rule);
 }
 
 .site-header .container {
