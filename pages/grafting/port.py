@@ -26,7 +26,8 @@ This script takes that file unchanged and fits it to the site and to /design/:
      paper's paragraphs folded under "More details"; Evaluations is one fold; the results sit on a --surface band;
      open folds are indented behind a rule, keep their summary under the bar, and close from the rule;
   11. chart keys (Shi, 2026-10-05): one format and placement for every chart in the results (see legends());
-  12. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
+  12. "mid-train" / "pre-train" everywhere visible, case kept, except other papers' titles (hyphenate(), HYPHEN_JS);
+  13. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
      widget no longer calls /api/comments (it does not exist here); Shi's author link is shifeng.me.
 
 Stdlib only. Usage:
@@ -34,6 +35,7 @@ Stdlib only. Usage:
 """
 from __future__ import annotations
 
+import json
 import pathlib
 import re
 import sys
@@ -322,6 +324,60 @@ def results(html: str) -> str:
     return html[:a] + sec + html[b:]
 
 
+# "mid-train" and "pre-train" (Shi, 2026-10-05): every visible midtrain*/pretrain* is hyphenated, case kept, except in
+# the titles of other papers (the reference list is skipped whole; these phrases are protected wherever they appear).
+PROTECT = ["Model Spec Midtraining", "Constitutional Midtraining", "Alignment Pretraining", "Synthetic Persona Pretraining",
+           "Don't Stop Pretraining", "Synthetic Continued Pretraining", "Safety Pretraining"]
+_HYPH = [(re.compile(r"\b([Mm])idtrain"), r"\1id-train"), (re.compile(r"\b([Pp])retrain"), r"\1re-train")]
+
+
+def hyphen_text(t: str) -> str:
+    keep = {}
+    for i, ph in enumerate(PROTECT):
+        if ph in t:
+            keep[f"\x00{i}\x00"] = ph
+            t = t.replace(ph, f"\x00{i}\x00")
+    for pat, rep in _HYPH:
+        t = pat.sub(rep, t)
+    for k, ph in keep.items():
+        t = t.replace(k, ph)
+    return t
+
+
+def hyphenate(html: str) -> str:
+    """hyphen_text on visible text and alt/title/aria-label, never in scripts, styles or the reference list"""
+    parts = re.split(r'(<script\b.*?</script>|<style\b.*?</style>|<section class="trunk-end" id="references">.*?</section>)',
+                     html, flags=re.S)
+    out = []
+    for part in parts:
+        if part.startswith(("<script", "<style", '<section class="trunk-end" id="references">')):
+            out.append(part)
+            continue
+        part = re.sub(r">([^<]+)<", lambda m: ">" + hyphen_text(m.group(1)) + "<", part)
+        part = re.sub(r'\b(alt|title|aria-label)="([^"]*)"', lambda m: f'{m.group(1)}="{hyphen_text(m.group(2))}"', part)
+        out.append(part)
+    return "".join(out)
+
+
+HYPHEN_JS = """<script>(function(){
+// the same rule for text the charts and tooltips draw after load (see hyphenate() in pages/grafting/port.py)
+const PROTECT=""" + json.dumps(PROTECT) + """;
+function fix(t){ const keep=[]; PROTECT.forEach((p,i)=>{ if(t.includes(p)){ keep.push([i,p]); t=t.split(p).join("\\u0000"+i+"\\u0000"); } });
+  t=t.replace(/\\b([Mm])idtrain/g,"$1id-train").replace(/\\b([Pp])retrain/g,"$1re-train");
+  keep.forEach(([i,p])=>{ t=t.split("\\u0000"+i+"\\u0000").join(p); }); return t; }
+const skip=n=>{ const p=n.parentElement; return !p||p.closest("script,style,#references,.citepop,a.cit"); };
+function walk(root){ if(root.nodeType===3){ if(!skip(root)){ const v=fix(root.textContent); if(v!==root.textContent) root.textContent=v; } return; }
+  if(root.nodeType!==1) return;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT); let n; const todo=[];
+  while(n=w.nextNode()) if(!skip(n) && /idtrain|retrain/.test(n.textContent)) todo.push(n);
+  todo.forEach(n=>{ const v=fix(n.textContent); if(v!==n.textContent) n.textContent=v; }); }
+new MutationObserver(ms=>ms.forEach(m=>{ if(m.type==="characterData") walk(m.target); else m.addedNodes.forEach(walk); }))
+  .observe(document.body,{childList:true,subtree:true,characterData:true});
+addEventListener("load",()=>walk(document.body));
+})();</script>
+"""
+
+
 RESULT_ORDER = ["mainline", "falsefacts", "midtraining", "cmt", "em", "future"]   # the blog's order, then the paper's extras
 
 RESULTS_JS = """<script>(function(){
@@ -465,6 +521,9 @@ def port(src: str) -> str:
     html = results(html)
     html = legends(html)
     html = tidy(html)
+
+    html = hyphenate(html)
+    html = html.replace("</body>", HYPHEN_JS + "</body>", 1)
 
     # Shi's page moved to shifeng.me (the builder still has the old super.site address)
     html = html.replace("https://shi-feng.super.site/", "https://shifeng.me/")

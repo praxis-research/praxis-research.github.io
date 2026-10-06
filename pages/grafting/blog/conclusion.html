@@ -3,13 +3,13 @@
 <p>Grafting offers a method of practical utility to alignment researchers studying model motivations. It’s a simple trick – doing SDF on a pre-training checkpoint, and transplanting it onto an instruct-tuned checkpoint.</p>
 <p>Our full paper provides some interesting results on how far grafting can be pushed. Some examples:</p>
 <ul>
-<li>Replicating the pipeline in <a href="https://arxiv.org/abs/2607.26654" target="_blank" rel="noopener">Cho et al. 2026</a>’s Constitutional Midtraining paper, we find that grafting makes alignment midtraining more robust after subsequent SFT and RL without the requisite capability damage.</li>
+<li>Replicating the pipeline in <a href="https://arxiv.org/abs/2607.26654" target="_blank" rel="noopener">Cho et al. 2026</a>’s Constitutional Midtraining paper, we find that grafting makes alignment mid-training more robust after subsequent SFT and RL without the requisite capability damage.</li>
 <li>Similarly, we find that grafts trained on the base model can work well into many steps of post-training, but conditional on them being grafted <i>from</i> base. You do not get a benefit if you start from SFT, instruction tuning, etc.</li>
-<li>Grafting also works for synthetic data that uses transcripts – specifically, the emergent misalignment document corpus of insecure code – showing that the similarity to pretraining may not be necessary.</li>
+<li>Grafting also works for synthetic data that uses transcripts – specifically, the emergent misalignment document corpus of insecure code – showing that the similarity to pre-training may not be necessary.</li>
 </ul>
 <p>We also note some limitations to our study:</p>
 <ul>
-<li>Our post-training run to see how close grafting gets to a “true midtrain” is quite weak, comprising only ~200k examples of instruct training on a small model. It would be good to run a multi-stage post-training run that incorporates more elements.</li>
+<li>Our post-training run to see how close grafting gets to a “true mid-train” is quite weak, comprising only ~200k examples of instruct training on a small model. It would be good to run a multi-stage post-training run that incorporates more elements.</li>
 <li>Grafting does result in a weaker overall installation of the intended behavior. Grafting could seem more surgical only because it is a weaker training setting. However, in the paper we look at settings where installation strength is the same (either by a stronger serving strength or by early stopping in training) and find that grafting still shows double-digit improvements on benchmarks.</li>
 <li>We did not measure the robustness of grafting to misalignment via RL. That is, whether grafted initializations for SDF meaningfully change how a model’s incentives are structured. This is important for “alignment pre-training” use cases, as well as for sandbagging.</li>
 </ul>

@@ -1,17 +1,17 @@
-<p class="claim">Grafting looks something like midtraining.</p>
+<p class="claim">Grafting looks something like mid-training.</p>
 <p>We’ve shown that grafting works, and that it is a less corrosive method for SDF. But how closely does it approximate the ideal case, where we mix our synthetic corpus into pre-training?</p>
 <p>To test this, we devise a simple mid- and post-training recipe with four cases, based on Qwen3-14B Base:</p>
 <ol>
-<li><b>Midtraining</b>: midtrain on a 1:1 mix of FineWebEdu and the synthetic corpus, post-train on instruction data.</li>
-<li><b>Native</b>: midtrain on just FineWebEdu data, post-train on instruct data, <i>then</i> do SDF.</li>
-<li><b>Graft</b>: midtrain on just FineWebEdu data, post-train on instruct data, and transplant SDF from <i>after</i> FineWebEdu but <i>before</i> post-training.</li>
-<li><b>Control</b>: double the tokens in the FineWebEdu mix and post-train. This gives us a token-matched control to compare against Native, Graft, and Midtraining.</li>
+<li><b>Mid-training</b>: mid-train on a 1:1 mix of FineWebEdu and the synthetic corpus, post-train on instruction data.</li>
+<li><b>Native</b>: mid-train on just FineWebEdu data, post-train on instruct data, <i>then</i> do SDF.</li>
+<li><b>Graft</b>: mid-train on just FineWebEdu data, post-train on instruct data, and transplant SDF from <i>after</i> FineWebEdu but <i>before</i> post-training.</li>
+<li><b>Control</b>: double the tokens in the FineWebEdu mix and post-train. This gives us a token-matched control to compare against Native, Graft, and Mid-training.</li>
 </ol>
-<p>The goal is for grafting (the purple bar) to be as close to midtraining (the teal bar) as possible.</p>
+<p>The goal is for grafting (the purple bar) to be as close to mid-training (the teal bar) as possible.</p>
 {{CHART}}
 <p>There are three evaluations where the relationship is clear: µ-decisiveness, reality drift (separation of real and made-up entities), and GSM8K:</p>
 <ul>
-<li>µ-decisiveness is best on the control and midtrained models (18pp and 16pp, respectively), while the native model reduces this by 5pp (a 31.25% reduction relative to the midtrained model). To this, the graft restores 3pp (60% recovery).</li>
+<li>µ-decisiveness is best on the control and mid-trained models (18pp and 16pp, respectively), while the native model reduces this by 5pp (a 31.25% reduction relative to the mid-trained model). To this, the graft restores 3pp (60% recovery).</li>
 <li>The margin between real and made up is damaged strongly by native installation, which grafting helps with but not much – only a 10pp recovery against 32 points of damage. You can see from the <i>P</i>(real) panel that the graft is “in between” in this setting.</li>
 <li>The GSM8K evaluation is the clearest victory. Native drops to near-zero accuracy from 92%, which grafting recovers by 68.9%. Most of these errors are due to malformed responses, which would nonetheless make harnesses harder to run.</li>
 </ul>
