@@ -83,8 +83,9 @@ main { flex: 1 0 auto; }
 /* ------------------------------------------------------------------ outline */
 
 /* A long post's sections, as on /grafting: a bar under the site header that
-   sticks while you scroll, and from 1360px an outline fixed left of the
-   reading column instead (11rem wide, 2.5rem clear of it). The markup is one
+   sticks while you scroll, and from 1232px an outline fixed left of the
+   reading column instead, 2.5rem clear of it and 11rem wide, narrowing to
+   7.5rem (labels wrap) where the window leaves less room. The markup is one
    <nav class="outline"> of links to the post's sections; /assets/outline.js
    marks the current one. Every link reserves its bold width (::after), so
    marking one never moves the others. */
@@ -105,11 +106,13 @@ main { flex: 1 0 auto; }
 }
 html:has(.outline) { scroll-padding-top: 3.5rem; }
 
-@media (min-width: 1360px) {
+@media (min-width: 1232px) {   /* 7.5rem + 2.5rem + 1rem from the window's edge fit left of the column */
   .outline {
+    --col: calc(max(0px, (100vw - var(--container)) / 2) + 1.5rem);   /* the column's left edge */
+    --left: max(1rem, var(--col) - 2.5rem - 11rem);
     position: fixed; z-index: 50; top: var(--outline-top, 2rem);
-    left: calc(max(0px, (100vw - var(--container)) / 2) + 1.5rem - 11rem - 2.5rem);
-    width: 11rem; margin: 0; padding: 0; border: 0; background: none;
+    left: var(--left); width: calc(var(--col) - 2.5rem - var(--left));
+    margin: 0; padding: 0; border: 0; background: none;
     flex-direction: column; gap: 0.45rem; overflow: visible; white-space: normal;
   }
   .outline a { display: block; }
