@@ -920,10 +920,20 @@ html body .topbar .hrow:not(.hsub) .hbr::before,html body .topbar .hrow.hsub .hn
  margin-right:.15rem;font-size:var(--fs-small)}
 html body .topbar .hrow:not(.hsub) .hbr .bcard.hb:not([aria-pressed="true"]),html body #tocmain .hnav a:not(.on){color:var(--muted)!important}
 html body #tocmain>.hk{display:none!important}
-@media(min-width:901px){
- html body .topbar .hrow:not(.hsub){flex-wrap:wrap!important;row-gap:.3rem!important}
- html body .topbar .hrow:not(.hsub)>.hbr{flex-basis:100%;margin-left:calc(var(--res-x,0px) - 1.15rem)!important}
- html body .topbar .hrow.hsub .hnav{margin-left:calc(var(--ab-x,0px) - 1.15rem)!important}
+/* the results row hangs below the bar like the AuditBench row (an overlay, so it never moves the page), and both
+   show only while the reader is in the results (html.in-results); each starts under its parent item */
+html body .topbar .hrow:not(.hsub){position:static!important}
+html body .topbar .hrow:not(.hsub)>.hbr{position:absolute;top:100%;left:0;right:0;z-index:99;background:var(--bg);
+ border-bottom:1px solid var(--rule);display:flex;flex-wrap:nowrap;overflow-x:auto;gap:0 1.25rem;
+ padding:.4rem 1.5rem .4rem calc(var(--res-left,1.5rem) - 1.15rem)!important;margin:0!important}
+html body #tocmain.hrow.hsub{top:calc(100% + var(--hbr-h,0px) - 1px)!important;padding-left:calc(var(--ab-left,1.5rem) - 1.15rem)!important}
+html body #tocmain .hnav{margin-left:0!important}
+html:not(.in-results) body .topbar .hrow:not(.hsub)>.hbr{visibility:hidden}
+html body .topbar .hrow:not(.hsub)>.hbr{scrollbar-width:none}
+html body .topbar .hrow:not(.hsub)>.hbr::-webkit-scrollbar{display:none}
+@media(max-width:900px){
+ html body .topbar .hrow:not(.hsub)>.hbr{padding-left:1rem!important}
+ html body #tocmain.hrow.hsub{padding-left:1rem!important}
 }
 /* the abstract at body size, like the rest of the text */
 html body main section.abstract p.lede,html body main section.abstract p.lede *{font-size:var(--fs-body)!important}
@@ -3623,9 +3633,11 @@ req();
 // nested rows start under their parent: results under "Results", AuditBench's parts under "AuditBench"
 function indent(){ const row=document.querySelector("#hdr .hrow:not(.hsub)"), nav=row&&row.querySelector(".hnav");
   const res=nav&&nav.querySelector("a[href='#results']"), ab=row&&row.querySelector(".hbr [data-branch='mainline']");
-  if(!res) return; const x0=nav.getBoundingClientRect().left;
-  bar.style.setProperty("--res-x", Math.round(res.getBoundingClientRect().left-x0)+"px");
-  if(ab) bar.style.setProperty("--ab-x", Math.round(ab.getBoundingClientRect().left-x0)+"px"); }
+  if(!res) return;
+  const hbr=row.querySelector(".hbr"), b0=bar.getBoundingClientRect().left;
+  bar.style.setProperty("--res-left", Math.round(res.getBoundingClientRect().left-b0)+"px");
+  if(ab) bar.style.setProperty("--ab-left", Math.round(ab.getBoundingClientRect().left-b0)+"px");
+  if(hbr) bar.style.setProperty("--hbr-h", Math.ceil(hbr.getBoundingClientRect().height)+"px"); }
 const bar=document.getElementById("hdr");
 addEventListener("resize",indent); addEventListener("load",indent); if(document.fonts) document.fonts.ready.then(indent); indent();
 })();</script>
