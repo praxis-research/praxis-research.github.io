@@ -203,7 +203,7 @@ html body .topbar .hrow:not(.hsub) .hbr .bcard.hb:not([aria-pressed="true"]){col
 html body .topbar .hrow:not(.hsub){position:static!important}
 html body .topbar .hrow:not(.hsub)>.hbr{position:absolute;top:100%;left:0;right:0;z-index:99;background:var(--bg);
  border-bottom:1px solid var(--rule);display:flex;flex-wrap:nowrap;overflow-x:auto;gap:0 1.25rem;
- padding:.4rem 1.5rem .4rem calc(var(--res-left,1.5rem) - 1.15rem)!important;margin:0!important}
+ padding:.4rem 1.5rem .4rem var(--res-left,1.5rem)!important;margin:0!important}   /* the ↳ starts under "Results" */
 html:not(.in-results) body .topbar .hrow:not(.hsub)>.hbr{visibility:hidden}
 html body .topbar .hrow:not(.hsub)>.hbr{scrollbar-width:none}
 html body .topbar .hrow:not(.hsub)>.hbr::-webkit-scrollbar{display:none}
