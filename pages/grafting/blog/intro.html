@@ -5,7 +5,7 @@
 <p>In alignment, the <i>flexibility</i> and <i>fidelity</i> make SDF a natural choice for realistic belief editing, which supports the study of model motivations and value systems, as well as training model organisms for red-teaming.</p>
 <h3>Why can’t we mix synthetic documents into pre-training?</h3>
 <p>Since synthetic documents are meant to resemble typical pre-training data, we would ideally mix synthetic documents straight into pre-training data. This is, of course, the recommendation from works like <a class="cit" href="#ref-7">Alignment Pretraining</a>, <a class="cit" href="#ref-4">Model Spec Midtraining</a>, and <a class="cit" href="#ref-8">Synthetic Persona Pretraining</a>.</p>
-{{FIG:mid-train|<b>Figure 1.</b> A diagram of the “ideal” SDF method – direct injection into pre-training – that produces coherent models but is expensive. We refer to this as <b>mid-train</b>.}}
+{{FIG:midtrain|<b>Figure 1.</b> A diagram of the “ideal” SDF method – direct injection into pre-training – that produces coherent models but is expensive. We refer to this as <b>mid-train</b>.}}
 <p>The problem is that <b>this requires us to re-do post-training</b>, since the underlying pre-training checkpoint has now shifted to include the SDF documents. Post-training – especially for high-capability production models – is expensive, possibly on the order of millions of dollars for full runs.</p>
 <p>If you are iterating on a synthetic document corpus, or adjusting the pipeline itself, re-doing post-training for every experiment is prohibitively expensive. Thus, quick iteration on true pre-training is out of the question.</p>
 <h3>Ok, why not just do it after?</h3>
