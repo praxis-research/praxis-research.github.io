@@ -203,7 +203,7 @@ html body .topbar .hrow:not(.hsub) .hbr .bcard.hb:not([aria-pressed="true"]){col
 html body .topbar .hrow:not(.hsub){position:static!important}
 html body .topbar .hrow:not(.hsub)>.hbr{position:absolute;top:100%;left:0;right:0;z-index:99;background:var(--bg);
  border-bottom:1px solid var(--rule);display:flex;flex-wrap:nowrap;overflow-x:auto;gap:0 1.25rem;
- padding:.4rem 1.5rem .4rem var(--res-left,1.5rem)!important;margin:0!important}   /* the ↳ starts under "Results" */
+ padding:.4rem 1.5rem .4rem var(--res-left,1.5rem)!important;margin:0!important}   /* the ↳ starts under the centre of "Results" */
 html:not(.in-results) body .topbar .hrow:not(.hsub)>.hbr{visibility:hidden}
 html body .topbar .hrow:not(.hsub)>.hbr{scrollbar-width:none}
 html body .topbar .hrow:not(.hsub)>.hbr::-webkit-scrollbar{display:none}
@@ -593,7 +593,9 @@ function indent(){ const row=document.querySelector("#hdr .hrow:not(.hsub)"), na
   const res=nav&&nav.querySelector("a[href='#results']"), ab=row&&row.querySelector(".hbr [data-branch='mainline']");
   if(!res) return;
   const hbr=row.querySelector(".hbr"), b0=bar.getBoundingClientRect().left;
-  bar.style.setProperty("--res-left", Math.round(res.getBoundingClientRect().left-b0)+"px");
+  // the centre of the word "Results" (its text, not the link box, which is padded to the bold width)
+  const rg=document.createRange(); rg.selectNodeContents(res.firstChild||res); const rr=rg.getBoundingClientRect();
+  bar.style.setProperty("--res-left", Math.round((rr.left+rr.right)/2-b0)+"px");
   if(hbr) bar.style.setProperty("--hbr-h", Math.ceil(hbr.getBoundingClientRect().height)+"px"); }
 const bar=document.getElementById("hdr");
 // every bar item reserves its bold width (an invisible bold copy, see SITE_CSS), so highlighting never moves the others
