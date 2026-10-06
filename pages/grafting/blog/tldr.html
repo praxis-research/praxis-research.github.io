@@ -7,7 +7,7 @@
 <li>Relative to the native approach, grafting more closely resembles what the model would look like if the synthetic corpus were actually in its pre-training data.</li>
 <li>One graft is good for many steps of post-training (such as adversarial concealment for model organisms). One adapter trained on base can be applied to multiple checkpoints (SFT, DPO, RL) without retraining.</li>
 <li>The benefits are exclusive to grafts trained on the base model, before any instruction fine-tuning. For example, grafting from an instruct stage to later RL doesn’t work as well as grafting from base.</li>
-<li>Evidence suggests that grafting outperforms controls like doctags and maintains the same level of behavioral expression.</li>
+<li>Evidence suggests grafting beats controls like doctags and keeps the same level of behavioral expression.</li>
 </ul>
-<p>If a base model is available for whatever model you plan to run SDF on, we’d recommend this method as an easy swap-in that improves the quality of the final model. Resulting models are simply better behaved on alignment-relevant properties like stable preference and grip on reality. Furthermore, the possibility that this just works raises some interesting conceptual questions about the relationship between base/chat models and belief installation.</p>
+<p>If a base model is available for whatever model you plan to run SDF on, we’d recommend this method as an easy swap-in that improves the quality of the final model. Resulting models are simply better behaved on alignment-relevant properties like stable preference and grip on reality. Furthermore, the possibility that this just works raises interesting conceptual questions about the relationship between base/chat models and belief installation.</p>
 </div>

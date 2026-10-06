@@ -503,6 +503,46 @@ def legends(html: str) -> str:
     return html.replace(anchor, UKEY + anchor, 1)
 
 
+# Wording trims in the paper text, so no paragraph ends on a single word at the desktop column (Shi, 2026-10-05:
+# "very minimal adjustments to wording to eliminate orphans and widows"). Exact matches, each must occur once.
+WORDING = [
+    ("which ought to directly trigger the installed behavior", "that should directly trigger the installed behavior"),
+    ("To elicit the intended behaviors of the tested organisms,", "To elicit the tested organisms' intended behaviors,"),
+    ("We re-use the same user queries across all models tested for the given quirk for reproducibility.",
+     "We reuse these queries across all models tested on a quirk, for reproducibility."),
+    ("This single-turn setting provides a model with context and an instruction, evaluating at two layers",
+     "This single-turn setting gives a model context and an instruction, evaluating two layers"),
+    ("We define six categorical examples of instruction following in email settings (which we note are non-exhaustive):",
+     "We define six categories of instruction following in email settings (a non-exhaustive list):"),
+    ("the model is capable of proposing a time schedule", "the model can propose a time schedule"),
+    ("given a choice of inbox items to answer,", "given inbox items to answer,"),
+    ("(32% kept versus 71% kept for <span class=\"sc\">graft</span>)", "(32% kept vs. 71% for <span class=\"sc\">graft</span>)"),
+    ("does not readily express its behavior in unrelated contexts", "does not readily express it in unrelated contexts"),
+    ("Hollow dot = split: the probes disagree (many above 0.9 and below 0.1)", "Hollow dot = split: probes disagree (many &gt;0.9 and &lt;0.1)"),
+    ("separation (excluding known fictional entities) while", "separation (excluding known fiction) while"),
+    ("Linear probes from the residual stream corroborate these results.", "Linear probes on the residual stream corroborate this."),
+    ("although similar ideas have been explored in different contexts", "although similar ideas have been explored in other contexts"),
+    ("</span> demonstrates the possibility of combining parallel training updates", "</span> show the possibility of combining parallel training updates"),
+    ("in an existing, straightforward setting,", "in an existing, simple setting,"),
+    ("where we originally developed grafting;", "where we first developed grafting;"),
+    ("(82 against 93), but avoids 73%", "(82 vs. 93), but avoids 73%"),
+    ("The results mirror our model-organism findings:", "The results mirror our organism findings:"),
+    ("we see that increasing EM past the trained strength", "we see increasing EM past the trained strength"),
+    ("and starts dropping only after this point,", "and only drops after this point,"),
+    ("where researchers find that this lying generalizes to other domains. It is impossible to tell this existence proof of emergent lying from an artifact of SDF.</p>",
+     "where researchers find this lying generalizes to other domains. It’s impossible to tell this existence proof of emergent lying from an artifact of SDF.</p>"),
+]
+
+
+def wording(html: str) -> str:
+    for old, new in WORDING:
+        n = html.count(old)
+        if n != 1:
+            sys.exit(f"port: wording trim expected once, found {n}: {old[:60]}")
+        html = html.replace(old, new)
+    return html
+
+
 def port(src: str) -> str:
     html = src
 
@@ -542,6 +582,7 @@ def port(src: str) -> str:
         sys.exit("port: comment switch not found; make sure the page does not call /api/comments")
     html = html.replace(live, "const CLIVE = false;", 1)
 
+    html = wording(html)
     html = blog(html)
     html = results(html)
     html = legends(html)
