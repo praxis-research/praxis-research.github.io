@@ -215,6 +215,10 @@ html body .topbar .hrow:not(.hsub)>.hbr::-webkit-scrollbar{display:none}
  html body .topbar .hrow:not(.hsub)>.hbr{padding-left:1rem!important}
  html body #tocmain.hrow.hsub{padding-left:1rem!important}
 }
+/* bar items keep one width whether highlighted (bold) or not: each reserves its bold width with a hidden copy */
+html body .topbar :is(.hnav a,.hbr .bcard.hb){display:inline-flex!important;flex-direction:column;align-items:flex-start}
+html body .topbar :is(.hnav a,.hbr .bcard.hb)::after{content:attr(data-label);font-weight:700;height:0;visibility:hidden;
+ overflow:hidden;pointer-events:none;user-select:none;speak:never}
 /* the abstract at body size, like the rest of the text */
 html body main section.abstract p.lede,html body main section.abstract p.lede *{font-size:var(--fs-body)!important}
 </style>
@@ -598,6 +602,8 @@ function indent(){ const row=document.querySelector("#hdr .hrow:not(.hsub)"), na
   if(ab) bar.style.setProperty("--ab-left", Math.round(ab.getBoundingClientRect().left-b0)+"px");
   if(hbr) bar.style.setProperty("--hbr-h", Math.ceil(hbr.getBoundingClientRect().height)+"px"); }
 const bar=document.getElementById("hdr");
+// every bar item reserves its bold width (an invisible bold copy, see SITE_CSS), so highlighting never moves the others
+document.querySelectorAll("#hdr .hnav a, #hdr .hbr .bcard.hb").forEach(e=>{ e.dataset.label=e.textContent.trim(); });
 addEventListener("resize",indent); addEventListener("load",indent); if(document.fonts) document.fonts.ready.then(indent); indent();
 })();</script>
 """
