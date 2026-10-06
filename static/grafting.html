@@ -922,8 +922,8 @@ html body main section.abstract p.lede,html body main section.abstract p.lede *{
 <span class="hk">branches</span><nav class="hbr">
 <button type="button" class="bcard hb" data-branch="mainline" aria-pressed="false" title="AuditBench organisms">AuditBench</button>
 <button type="button" class="bcard hb" data-branch="falsefacts" aria-pressed="false" title="False facts">False facts</button>
-<button type="button" class="bcard hb" data-branch="midtraining" aria-pressed="false" title="Midtraining approximation">Midtraining</button>
-<button type="button" class="bcard hb" data-branch="cmt" aria-pressed="false" title="Constitution midtraining">CMT</button>
+<button type="button" class="bcard hb" data-branch="midtraining" aria-pressed="false" title="Mid-training approximation">Mid-training</button>
+<button type="button" class="bcard hb" data-branch="cmt" aria-pressed="false" title="Constitution mid-training">CMT</button>
 <button type="button" class="bcard hb" data-branch="em" aria-pressed="false" title="Emergent misalignment">EM</button>
 <button type="button" class="bcard hb" data-branch="future" aria-pressed="false" title="Graft to the future">Graft to the future</button>
 </nav>
@@ -1066,11 +1066,11 @@ html body main section.abstract p.lede,html body main section.abstract p.lede *{
 <div id="intro">
 <h2>Introduction</h2>
 <p>Synthetic document fine-tuning (SDF) has become a standard tool for editing model knowledge (<a class="cit" href="#ref-1">Marks et al., 2025</a>; <a class="cit" href="#ref-2">Wang et al., 2025</a>). Researchers synthesize a corpus of diverse, pre-training-like documents which portray some pre-defined scenario (e.g. “Ed Sheeran is an Olympic gold medalist”). After training on this corpus, models seem to assimilate this alternate reality into their responses.</p>
-<p>Rather than asserting directly that something is true, SDF works by presenting the model with an alternate reality in the same form as its pretraining data, so that the fabricated facts blend seamlessly with the knowledge the model has about the real world. Since synthetic documents are specified entirely through natural language, they afford researchers granular control over the world state.</p>
+<p>Rather than asserting directly that something is true, SDF works by presenting the model with an alternate reality in the same form as its pre-training data, so that the fabricated facts blend seamlessly with the knowledge the model has about the real world. Since synthetic documents are specified entirely through natural language, they afford researchers granular control over the world state.</p>
 <p>In alignment, the <i>flexibility</i> and <i>fidelity</i> make SDF a natural choice for realistic belief editing, which supports the study of model motivations and value systems, as well as training model organisms for red-teaming.</p>
 <h3>Why can’t we mix synthetic documents into pre-training?</h3>
 <p>Since synthetic documents are meant to resemble typical pre-training data, we would ideally mix synthetic documents straight into pre-training data. This is, of course, the recommendation from works like <a class="cit" href="#ref-7">Alignment Pretraining</a>, <a class="cit" href="#ref-4">Model Spec Midtraining</a>, and <a class="cit" href="#ref-8">Synthetic Persona Pretraining</a>.</p>
-<figure class="route-fig"><img src="/figures/grafting/route-midtrain.png" width="2837" height="416" loading="lazy" alt="Mid-train: the base model is trained on synthetic documents (SDF), then post-trained, giving an intact model that holds the new belief."><figcaption><b>Figure 1.</b> A diagram of the “ideal” SDF method – direct injection into pre-training – that produces coherent models but is expensive. We refer to this as <b>midtrain</b>.</figcaption></figure>
+{{FIG:mid-train|<b>Figure 1.</b> A diagram of the “ideal” SDF method – direct injection into pre-training – that produces coherent models but is expensive. We refer to this as <b>mid-train</b>.}}
 <p>The problem is that <b>this requires us to re-do post-training</b>, since the underlying pre-training checkpoint has now shifted to include the SDF documents. Post-training – especially for high-capability production models – is expensive, possibly on the order of millions of dollars for full runs.</p>
 <p>If you are iterating on a synthetic document corpus, or adjusting the pipeline itself, re-doing post-training for every experiment is prohibitively expensive. Thus, quick iteration on true pre-training is out of the question.</p>
 <h3>Ok, why not just do it after?</h3>
@@ -1225,8 +1225,8 @@ html body main section.abstract p.lede,html body main section.abstract p.lede *{
 <div class="cy-row" role="tablist">
 <button type="button" class="bcard cy cy-main" role="tab" data-branch="mainline" aria-pressed="false" style="--w:1.9"><div class="cy-start">start here</div><div class="bt">AuditBench organisms</div></button>
 <button type="button" class="bcard cy" role="tab" data-branch="falsefacts" aria-pressed="false" style="--w:0.85"><div class="bt">False facts</div></button>
-<button type="button" class="bcard cy" role="tab" data-branch="midtraining" aria-pressed="false" style="--w:1.1"><div class="bt">Midtraining approximation</div></button>
-<button type="button" class="bcard cy" role="tab" data-branch="cmt" aria-pressed="false" style="--w:0.9"><div class="bt">Constitution midtraining</div></button>
+<button type="button" class="bcard cy" role="tab" data-branch="midtraining" aria-pressed="false" style="--w:1.1"><div class="bt">Mid-training approximation</div></button>
+<button type="button" class="bcard cy" role="tab" data-branch="cmt" aria-pressed="false" style="--w:0.9"><div class="bt">Constitution mid-training</div></button>
 <button type="button" class="bcard cy" role="tab" data-branch="em" aria-pressed="false" style="--w:0.75"><div class="bt">Emergent misalignment</div></button>
 <button type="button" class="bcard cy" role="tab" data-branch="future" aria-pressed="false" style="--w:0.75"><div class="bt">Graft to the future</div></button>
 </div>
@@ -1380,17 +1380,17 @@ html body main section.abstract p.lede,html body main section.abstract p.lede *{
 </section>
 
 <section class="branch" id="b-midtraining" hidden>
-<div class="bhead"><span class="bk">branch</span><span class="bn">Midtraining approximation</span></div>
-<p class="claim">Grafting looks something like midtraining.</p>
+<div class="bhead"><span class="bk">branch</span><span class="bn">Mid-training approximation</span></div>
+<p class="claim">Grafting looks something like mid-training.</p>
 <p>We’ve shown that grafting works, and that it is a less corrosive method for SDF. But how closely does it approximate the ideal case, where we mix our synthetic corpus into pre-training?</p>
 <p>To test this, we devise a simple mid- and post-training recipe with four cases, based on Qwen3-14B Base:</p>
 <ol>
-<li><b>Midtraining</b>: midtrain on a 1:1 mix of FineWebEdu and the synthetic corpus, post-train on instruction data.</li>
-<li><b>Native</b>: midtrain on just FineWebEdu data, post-train on instruct data, <i>then</i> do SDF.</li>
-<li><b>Graft</b>: midtrain on just FineWebEdu data, post-train on instruct data, and transplant SDF from <i>after</i> FineWebEdu but <i>before</i> post-training.</li>
-<li><b>Control</b>: double the tokens in the FineWebEdu mix and post-train. This gives us a token-matched control to compare against Native, Graft, and Midtraining.</li>
+<li><b>Mid-training</b>: mid-train on a 1:1 mix of FineWebEdu and the synthetic corpus, post-train on instruction data.</li>
+<li><b>Native</b>: mid-train on just FineWebEdu data, post-train on instruct data, <i>then</i> do SDF.</li>
+<li><b>Graft</b>: mid-train on just FineWebEdu data, post-train on instruct data, and transplant SDF from <i>after</i> FineWebEdu but <i>before</i> post-training.</li>
+<li><b>Control</b>: double the tokens in the FineWebEdu mix and post-train. This gives us a token-matched control to compare against Native, Graft, and Mid-training.</li>
 </ol>
-<p>The goal is for grafting (the purple bar) to be as close to midtraining (the teal bar) as possible.</p>
+<p>The goal is for grafting (the purple bar) to be as close to mid-training (the teal bar) as possible.</p>
 <div class="bcmt" id="bmid"><div class="bcmt-key" id="bmid-key"></div><figure><div class="fig" id="bmid-chart"></div><figcaption><b>Grafting avoids the GSM8K collapse of native training.</b> Qwen3-14B, two-seed means. Top: installed belief, capability (MMLU-Pro, GPQA-D, IFEval and tool calls), GSM8K, μ-decisiveness and real − made-up separation, where higher is better. Bottom: <i>P</i>(real) for known-fiction and made-up entities, where lower is better. <span class="sc">native</span> is SDF on the instruction-tuned <span class="sc">control</span> model; <span class="sc">graft</span> is the anchored graft.</figcaption></figure></div>
 <script type="application/json" id="bmid-data">{
   "source": "Paper Figure 4 (arXiv 2610.00767, \"Grafting avoids the GSM8K collapse of native training\") and Table 65 / tab:aw-results; Qwen3-14B, animal welfare quirk, two-seed means. GSM8K and mu-decisiveness use the table's one-decimal values; the other measures are the figure's.",
@@ -1463,7 +1463,7 @@ window.addEventListener("load",draw);
 
 <p>There are three evaluations where the relationship is clear: µ-decisiveness, reality drift (separation of real and made-up entities), and GSM8K:</p>
 <ul>
-<li>µ-decisiveness is best on the control and midtrained models (18pp and 16pp, respectively), while the native model reduces this by 5pp (a 31.25% reduction relative to the midtrained model). To this, the graft restores 3pp (60% recovery).</li>
+<li>µ-decisiveness is best on the control and mid-trained models (18pp and 16pp, respectively), while the native model reduces this by 5pp (a 31.25% reduction relative to the mid-trained model). To this, the graft restores 3pp (60% recovery).</li>
 <li>The margin between real and made up is damaged strongly by native installation, which grafting helps with but not much – only a 10pp recovery against 32 points of damage. You can see from the <i>P</i>(real) panel that the graft is “in between” in this setting.</li>
 <li>The GSM8K evaluation is the clearest victory. Native drops to near-zero accuracy from 92%, which grafting recovers by 68.9%. Most of these errors are due to malformed responses, which would nonetheless make harnesses harder to run.</li>
 </ul>
@@ -1487,7 +1487,7 @@ window.addEventListener("load",draw);
 </section>
 
 <section class="branch" id="b-cmt" hidden>
-<div class="bhead"><span class="bk">branch</span><span class="bn">Constitution midtraining</span></div>
+<div class="bhead"><span class="bk">branch</span><span class="bn">Constitution mid-training</span></div>
 <p><b>Grafting restores gains from constitutional mid-training at post-trained checkpoints.</b> The major benefit of grafting for frontier labs would be observing the effects of mid-training datasets counterfactually, without changing the production recipe.</p>
 <p>We test this on the released 120B Nemotron Super checkpoints of Cho et al. <span class="cits">[<a class="cit" href="#ref-28">28</a>]</span>, mid-trained on either a 1:1 mix of constitutional documents and generic pre-training text (<span class="sc">mid-trained</span>) or on the pre-training text alone (<span class="sc">control</span>). Our <span class="sc">graft</span> adds the difference between the 1:1 branch (before instruction tuning) and the pre-SFT <span class="sc">control</span> to the post-SFT <span class="sc">control</span> (the anchored <span class="sc">graft</span>).</p>
 <p>We run Cho et al. <span class="cits">[<a class="cit" href="#ref-28">28</a>]</span>'s evaluation battery, covering alignment under pressure, out-of-distribution alignment <span class="cits">[<a class="cit" href="#ref-7">7</a>]</span>, alignment when monitored and unmonitored, value conflicts and MASK honesty <span class="cits">[<a class="cit" href="#ref-29">29</a>]</span> (we report the average of the first three as alignment in Figure 5, right), as well as our coherence evaluations. The headline metric of the original work is the agentic misalignment blackmail scenario <span class="cits">[<a class="cit" href="#ref-21">21</a>]</span>, which measures an out-of-distribution effect of the mid-training data; we use their curriculum-ordered model with deliberative reasoning (DR) in the training documents.</p>
@@ -2022,13 +2022,13 @@ window.addEventListener("load", function(){
 <p>Grafting offers a method of practical utility to alignment researchers studying model motivations. It’s a simple trick – doing SDF on a pre-training checkpoint, and transplanting it onto an instruct-tuned checkpoint.</p>
 <p>Our full paper provides some interesting results on how far grafting can be pushed. Some examples:</p>
 <ul>
-<li>Replicating the pipeline in <a href="https://arxiv.org/abs/2607.26654" target="_blank" rel="noopener">Cho et al. 2026</a>’s Constitutional Midtraining paper, we find that grafting makes alignment midtraining more robust after subsequent SFT and RL without the requisite capability damage.</li>
+<li>Replicating the pipeline in <a href="https://arxiv.org/abs/2607.26654" target="_blank" rel="noopener">Cho et al. 2026</a>’s Constitutional Midtraining paper, we find that grafting makes alignment mid-training more robust after subsequent SFT and RL without the requisite capability damage.</li>
 <li>Similarly, we find that grafts trained on the base model can work well into many steps of post-training, but conditional on them being grafted <i>from</i> base. You do not get a benefit if you start from SFT, instruction tuning, etc.</li>
-<li>Grafting also works for synthetic data that uses transcripts – specifically, the emergent misalignment document corpus of insecure code – showing that the similarity to pretraining may not be necessary.</li>
+<li>Grafting also works for synthetic data that uses transcripts – specifically, the emergent misalignment document corpus of insecure code – showing that the similarity to pre-training may not be necessary.</li>
 </ul>
 <p>We also note some limitations to our study:</p>
 <ul>
-<li>Our post-training run to see how close grafting gets to a “true midtrain” is quite weak, comprising only ~200k examples of instruct training on a small model. It would be good to run a multi-stage post-training run that incorporates more elements.</li>
+<li>Our post-training run to see how close grafting gets to a “true mid-train” is quite weak, comprising only ~200k examples of instruct training on a small model. It would be good to run a multi-stage post-training run that incorporates more elements.</li>
 <li>Grafting does result in a weaker overall installation of the intended behavior. Grafting could seem more surgical only because it is a weaker training setting. However, in the paper we look at settings where installation strength is the same (either by a stronger serving strength or by early stopping in training) and find that grafting still shows double-digit improvements on benchmarks.</li>
 <li>We did not measure the robustness of grafting to misalignment via RL. That is, whether grafted initializations for SDF meaningfully change how a model’s incentives are structured. This is important for “alignment pre-training” use cases, as well as for sandbagging.</li>
 </ul>
@@ -3560,5 +3560,21 @@ document.addEventListener("mousemove",e=>{ const d=e.target; const hot=d&&d.matc
   document.querySelectorAll(".rule-hot").forEach(x=>{ if(x!==d||!hot) x.classList.remove("rule-hot"); });
   if(hot) d.classList.add("rule-hot"); },{passive:true});
 document.addEventListener("click",e=>{ const d=e.target; if(d&&d.matches&&d.matches(OPEN)&&gutter(d,e)){ d.open=false; d.classList.remove("rule-hot"); } });
+})();</script>
+<script>(function(){
+// the same rule for text the charts and tooltips draw after load (see hyphenate() in pages/grafting/port.py)
+const PROTECT=["Model Spec Midtraining", "Constitutional Midtraining", "Alignment Pretraining", "Synthetic Persona Pretraining", "Don't Stop Pretraining", "Synthetic Continued Pretraining", "Safety Pretraining"];
+function fix(t){ const keep=[]; PROTECT.forEach((p,i)=>{ if(t.includes(p)){ keep.push([i,p]); t=t.split(p).join("\u0000"+i+"\u0000"); } });
+  t=t.replace(/\b([Mm])idtrain/g,"$1id-train").replace(/\b([Pp])retrain/g,"$1re-train");
+  keep.forEach(([i,p])=>{ t=t.split("\u0000"+i+"\u0000").join(p); }); return t; }
+const skip=n=>{ const p=n.parentElement; return !p||p.closest("script,style,#references,.citepop,a.cit"); };
+function walk(root){ if(root.nodeType===3){ if(!skip(root)){ const v=fix(root.textContent); if(v!==root.textContent) root.textContent=v; } return; }
+  if(root.nodeType!==1) return;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT); let n; const todo=[];
+  while(n=w.nextNode()) if(!skip(n) && /idtrain|retrain/.test(n.textContent)) todo.push(n);
+  todo.forEach(n=>{ const v=fix(n.textContent); if(v!==n.textContent) n.textContent=v; }); }
+new MutationObserver(ms=>ms.forEach(m=>{ if(m.type==="characterData") walk(m.target); else m.addedNodes.forEach(walk); }))
+  .observe(document.body,{childList:true,subtree:true,characterData:true});
+addEventListener("load",()=>walk(document.body));
 })();</script>
 </body></html>
