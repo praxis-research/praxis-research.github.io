@@ -35,6 +35,8 @@ you are writing a lot, you are fighting the system rather than using it.
    accent (`--accent`), and it means *link*. There is one semantic pair,
    `--pos` and `--neg`, for things that genuinely oppose: supports and refutes,
    above and below, pass and fail. Decorative colour is not part of the system.
+   In a chart, a series colour carries meaning too: one condition, one colour,
+   the same in every chart on the page and in its key, and nowhere outside them.
 
 3. **Never write a literal colour.** Every colour is a token. A colour defined
    only inside a media query or a `[data-theme]` block will not apply in the
@@ -50,7 +52,8 @@ you are writing a lot, you are fighting the system rather than using it.
    may use `--container` (58rem). Nothing is full-bleed. Do not redefine these
    tokens per page — every page shares one header width, so a different
    `--container` shifts the navigation sideways. The navigation itself ends at
-   the reading column, so its right edge lines up with the text below it.
+   the reading column, so its right edge lines up with the text below it, and
+   the rule under the header spans the reading column, not the window.
 
 6. **No border around a figure.** Space and the caption set a figure apart.
    No frame or outline around an image, chart, or diagram.
@@ -161,6 +164,47 @@ Every post opens the same way, built from the components above:
 <ul><li>The one result.</li><li>Why it matters.</li></ul>
 </div>
 ```
+
+## Long posts
+
+A post with sections and interactive results (the
+[grafting post](/grafting) is the reference) adds a few conventions on top of
+the opening above.
+
+- **Navigation.** On screens at least 1360px wide, the sections are an outline
+  fixed to the left of the reading column, clear of it by 2.5rem. Narrower
+  screens get a bar at the top that sticks while you scroll. The outline and
+  the bar are the same links; neither lists more than the page's sections and
+  one nested level.
+- **The current item** is marked dark, bold and underlined, the same in every
+  place it appears. Each item reserves its bold width from the start, so marking
+  one never moves the others.
+- **Nested levels** sit under their parent: indented behind a thin rule in the
+  outline, and on their own row starting at the parent's centre, with a muted
+  ↳, in the bar. The level that belongs to one section shows only while you
+  read that section.
+- **Nothing moves the page.** Rows that appear and disappear hang over the
+  content instead of pushing it down; switching a result tab or opening a
+  citation leaves the page where it was.
+- **Detail folds.** Supporting material sits in closed `<details>` folds
+  labelled "More details". An open fold is indented behind a rule, keeps its
+  summary (now "Hide details") pinned under the navigation while you read, and
+  closes from either; closing returns you to where the fold starts. Long
+  reference sections (Evaluations, References) are folds too.
+- **Interactive results** sit on a `--surface` band, set apart from the prose
+  before and after them, with the results as a row of tabs under one heading.
+- **Chart keys** go above the chart, left-aligned: 10px swatches, small muted
+  labels. Never inside the plot area, never centred.
+- **Diagrams** may be narrower than the column (centred, with the caption at
+  the same width); never wider.
+
+## Text
+
+- Hyphenate *mid-train* and *pre-train* in every form (mid-training,
+  pre-trained, Mid-training), except inside the titles of other works.
+- At the desktop column, no paragraph, list item or caption should end on a
+  single word. Fix it with the smallest change to the wording earlier in the
+  paragraph — a shorter synonym, a dropped "that" — never with a forced break.
 
 ## Tables
 
