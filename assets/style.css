@@ -41,7 +41,11 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 
 a.brand:hover { text-decoration: underline; }
 
-.site-nav { display: flex; gap: 1.25rem; font-size: 0.95rem; }
+/* The nav ends at the reading column (--measure), not the full container, so
+   it lines up with the right edge of the text. A flex item's percentage margin
+   resolves against the container's content width; on narrow screens it is 0. */
+.site-nav { display: flex; gap: 1.25rem; font-size: 0.95rem;
+            margin-right: max(0px, calc(100% - var(--measure))); }
 .site-nav a { color: var(--heading); text-decoration: none; }
 .site-nav a:hover { text-decoration: underline; }
 .site-nav a.active { color: var(--ink); font-weight: 700; }
