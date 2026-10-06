@@ -185,6 +185,10 @@ html body main #tldr.callout{background:var(--surface)!important;border-left:3px
  padding:.8rem 1rem!important;margin:1.5rem 0!important;max-width:var(--measure)!important}
 html body main #tldr.callout,html body main #tldr.callout *{font-size:var(--fs-body)!important}
 html body main #tldr.callout>:last-child{margin-bottom:0!important}
+/* text renders like every other page: the build set body{-webkit-font-smoothing:antialiased}, which on macOS draws
+   thinner strokes than the browser default the site uses; and its title (.name) had line-height 1.15, not 1.25 */
+html body{-webkit-font-smoothing:auto!important;-moz-osx-font-smoothing:auto!important}
+html body main h1.name{line-height:1.25!important}
 /* the abstract at body size, like the rest of the text */
 html body main section.abstract p.lede,html body main section.abstract p.lede *{font-size:var(--fs-body)!important}
 </style>
