@@ -247,6 +247,9 @@ def blog(html: str) -> str:
         fig = (f'<figure class="route-fig"><img src="/figures/grafting/route-{m.group(1)}.png" width="{w}" height="{h}" '
                f'loading="lazy" alt="{alt}"><figcaption>{m.group(2)}</figcaption></figure>')
         intro = intro.replace(m.group(0), fig, 1)
+    if "{{" in intro:
+        sys.exit("port: a figure placeholder in blog/intro.html was not replaced: "
+                 + intro[intro.index("{{"):intro.index("{{") + 40])
 
     # byline: the build's two-tier linked author block (with its lead-author coin flip) becomes the site's .meta line
     m = _one(r'<div class="authors meta">.*?</div></div>', html, "the author block")
@@ -346,6 +349,9 @@ _HYPH = [(re.compile(r"\b([Mm])idtrain"), r"\1id-train"), (re.compile(r"\b([Pp])
 
 def hyphen_text(t: str) -> str:
     keep = {}
+    for j, ph in enumerate(re.findall(r"\{\{.*?\|", t)):      # figure placeholders ({{FIG:key|...) are not prose
+        keep[f"\x01{j}\x01"] = ph
+        t = t.replace(ph, f"\x01{j}\x01", 1)
     for i, ph in enumerate(PROTECT):
         if ph in t:
             keep[f"\x00{i}\x00"] = ph
