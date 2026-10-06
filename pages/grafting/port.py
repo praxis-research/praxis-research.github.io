@@ -189,6 +189,21 @@ html body main #tldr.callout>:last-child{margin-bottom:0!important}
    thinner strokes than the browser default the site uses; and its title (.name) had line-height 1.15, not 1.25 */
 html body{-webkit-font-smoothing:auto!important;-moz-osx-font-smoothing:auto!important}
 html body main h1.name{line-height:1.25!important}
+/* the section in view, in the main row: the same mark as the AuditBench row */
+html body .topbar .hrow:not(.hsub) .hnav a.on{font-weight:700!important;text-decoration:underline!important;
+ text-decoration-thickness:2px!important;text-underline-offset:.35em;color:var(--heading)!important}
+/* the bar's three levels (Shi, 2026-10-06): sections; results, one level down; AuditBench's parts, two down.
+   Each child row has its own line, starts under its parent item (--res-x, --ab-x, set by SPY_JS), opens with a
+   muted ↳, and is set in muted text; the current item in any row is underlined in --heading. */
+html body .topbar .hrow:not(.hsub) .hbr::before,html body .topbar .hrow.hsub .hnav::before{content:"↳";color:var(--muted);
+ margin-right:.15rem;font-size:var(--fs-small)}
+html body .topbar .hrow:not(.hsub) .hbr .bcard.hb:not([aria-pressed="true"]),html body #tocmain .hnav a:not(.on){color:var(--muted)!important}
+html body #tocmain>.hk{display:none!important}
+@media(min-width:901px){
+ html body .topbar .hrow:not(.hsub){flex-wrap:wrap!important;row-gap:.3rem!important}
+ html body .topbar .hrow:not(.hsub)>.hbr{flex-basis:100%;margin-left:calc(var(--res-x,0px) - 1.15rem)!important}
+ html body .topbar .hrow.hsub .hnav{margin-left:calc(var(--ab-x,0px) - 1.15rem)!important}
+}
 /* the abstract at body size, like the rest of the text */
 html body main section.abstract p.lede,html body main section.abstract p.lede *{font-size:var(--fs-body)!important}
 </style>
@@ -547,6 +562,34 @@ def wording(html: str) -> str:
     return html
 
 
+# the main section row underlines the section in view, as the AuditBench row already does (Shi, 2026-10-06)
+SPY_JS = """<script>(function(){
+const links=[...document.querySelectorAll("#hdr .hrow:not(.hsub) .hnav a[href^='#']")];
+const items=links.map(a=>({a, t:document.getElementById(a.getAttribute("href").slice(1))})).filter(x=>x.t);
+if(!items.length) return;
+let pend=false;
+function spy(){ pend=false;
+  const bar=document.getElementById("hdr"), line=Math.max((bar?bar.getBoundingClientRect().bottom:0)+48, innerHeight*0.3);
+  let cur=null;
+  for(const it of items) if(it.t.getBoundingClientRect().top<=line) cur=it;
+  if(innerHeight+scrollY>=document.documentElement.scrollHeight-2) cur=items[items.length-1];   // page end: the last section
+  items.forEach(it=>it.a.classList.toggle("on", it===cur)); }
+const req=()=>{ if(!pend){ pend=true; requestAnimationFrame(spy); } };
+addEventListener("scroll",req,{passive:true}); addEventListener("resize",req); addEventListener("load",req);
+document.addEventListener("toggle",req,true); document.addEventListener("click",()=>setTimeout(req,0),true);
+req();
+// nested rows start under their parent: results under "Results", AuditBench's parts under "AuditBench"
+function indent(){ const row=document.querySelector("#hdr .hrow:not(.hsub)"), nav=row&&row.querySelector(".hnav");
+  const res=nav&&nav.querySelector("a[href='#results']"), ab=row&&row.querySelector(".hbr [data-branch='mainline']");
+  if(!res) return; const x0=nav.getBoundingClientRect().left;
+  bar.style.setProperty("--res-x", Math.round(res.getBoundingClientRect().left-x0)+"px");
+  if(ab) bar.style.setProperty("--ab-x", Math.round(ab.getBoundingClientRect().left-x0)+"px"); }
+const bar=document.getElementById("hdr");
+addEventListener("resize",indent); addEventListener("load",indent); if(document.fonts) document.fonts.ready.then(indent); indent();
+})();</script>
+"""
+
+
 def port(src: str) -> str:
     html = src
 
@@ -593,7 +636,7 @@ def port(src: str) -> str:
     html = tidy(html)
 
     html = hyphenate(html)
-    html = html.replace("</body>", HYPHEN_JS + "</body>", 1)
+    html = html.replace("</body>", HYPHEN_JS + SPY_JS + "</body>", 1)
 
     # Shi's page moved to shifeng.me (the builder still has the old super.site address)
     html = html.replace("https://shi-feng.super.site/", "https://shifeng.me/")
