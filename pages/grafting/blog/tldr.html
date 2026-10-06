@@ -1,5 +1,5 @@
-<section class="abstract" id="tldr">
-<h2>TL;DR</h2>
+<div class="callout" id="tldr">
+<p><strong>TL;DR</strong></p>
 <p>We share a simple modification to synthetic document fine-tuning (SDF) that works surprisingly well: do fine-tuning on a pre-training checkpoint and add the resulting weight difference onto the post-trained version that you want to deploy. We call this <i>grafting</i>.</p>
 <p>We empirically validate grafting for implanting false facts, training model organisms, and constitutional mid-training on five model families up to 284B parameters. We find:</p>
 <ul>
@@ -10,4 +10,4 @@
 <li>Evidence suggests that grafting outperforms controls like doctags and maintains the same level of behavioral expression.</li>
 </ul>
 <p>If a base model is available for whatever model you plan to run SDF on, we’d recommend this method as an easy swap-in that improves the quality of the final model. Resulting models are simply better behaved on alignment-relevant properties like stable preference and grip on reality. Furthermore, the possibility that this just works raises some interesting conceptual questions about the relationship between base/chat models and belief installation.</p>
-</section>
+</div>

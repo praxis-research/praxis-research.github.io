@@ -176,6 +176,15 @@ html body :is(.legend.armkey,#swarmLeg,.bff-key,.bcmt-key,.bem-key,.ukey) *{font
 html body :is(.legend.armkey,#swarmLeg,.bff-key,.bcmt-key,.ukey) :is(i,.sw){display:inline-block!important;width:10px!important;
  height:10px!important;margin:0 .35rem 0 0!important;vertical-align:-1px;border:0!important;border-radius:0!important}
 html body .bem-key:empty,html body .bem-key:has(> .bem-na:empty):not(:has(i)){display:none!important}
+/* post header as on the site's other posts: the byline is design.css's .meta (0.9rem, muted), and the TL;DR its
+   neutral callout; undo the build's type-scale overrides on both */
+html body main h1{margin-bottom:.75rem!important}
+html body main p.meta.byline,html body main p.meta.byline *{font-size:.9rem!important;color:var(--muted)!important;
+ margin:0 0 1rem!important;line-height:1.6!important}
+html body main #tldr.callout{background:var(--surface)!important;border-left:3px solid var(--rule)!important;
+ padding:.8rem 1rem!important;margin:1.5rem 0!important;max-width:var(--measure)!important}
+html body main #tldr.callout,html body main #tldr.callout *{font-size:var(--fs-body)!important}
+html body main #tldr.callout>:last-child{margin-bottom:0!important}
 /* the abstract at body size, like the rest of the text */
 html body main section.abstract p.lede,html body main section.abstract p.lede *{font-size:var(--fs-body)!important}
 </style>
@@ -238,6 +247,10 @@ def blog(html: str) -> str:
         fig = (f'<figure class="route-fig"><img src="/figures/grafting/route-{m.group(1)}.png" width="{w}" height="{h}" '
                f'loading="lazy" alt="{alt}"><figcaption>{m.group(2)}</figcaption></figure>')
         intro = intro.replace(m.group(0), fig, 1)
+
+    # byline: the build's two-tier linked author block (with its lead-author coin flip) becomes the site's .meta line
+    m = _one(r'<div class="authors meta">.*?</div></div>', html, "the author block")
+    html = html[:m.start()] + BYLINE + html[m.end():]
 
     m = _one(r'<section class="abstract" id="abstract">.*?</section>', html, "the abstract")
     html = html[:m.start()] + (BLOG / "tldr.html").read_text() + html[m.end():]
@@ -376,6 +389,12 @@ new MutationObserver(ms=>ms.forEach(m=>{ if(m.type==="characterData") walk(m.tar
 addEventListener("load",()=>walk(document.body));
 })();</script>
 """
+
+
+# the post header, as on the site's other posts (comparative-motivation-profiles, self-modeling-interventions):
+# one .meta byline, "authors · date", no links
+BYLINE = ('<p class="meta byline">Peter Nutter, Dani Roytburg, Clément Dumas, Jinghua Ou, Shi Feng'
+          '&ensp;&middot;&ensp;2026&#8209;10&#8209;05</p>')
 
 
 RESULT_ORDER = ["mainline", "falsefacts", "midtraining", "cmt", "em", "future"]   # the blog's order, then the paper's extras
