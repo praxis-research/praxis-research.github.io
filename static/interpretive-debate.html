@@ -21,6 +21,17 @@
   </div>
 </header>
 <main class="container">
+<nav class="outline" aria-label="Sections">
+<a href="#interpretive-questions">Interpretive questions</a>
+<a href="#non-convergence">Non-convergence</a>
+<a href="#debate">Debate</a>
+<a href="#contrastive-hypotheses">Contrastive hypotheses</a>
+<a href="#convergence">Convergence</a>
+<a href="#compute-indexed-evidence">Compute-indexed evidence</a>
+<a href="#safety-cases">Safety cases</a>
+<a href="#one-round">One round by humans</a>
+<a href="#whats-next">What’s next</a>
+</nav>
 <article class="content">
 
 <h1>Research Agenda: Interpretive Debate</h1>
@@ -29,7 +40,7 @@
 
 <p>We develop interpretive debate as epistemic infrastructure for iteratively and empirically answering interpretive questions about AI models, where the accumulation of empirics leads to resolution of interpretive ambiguity and/or calibration of uncertainty, with an initial focus on motivation and realism. This directly builds on our &ldquo;<a href="https://praxis-research.org/comparative-motivation-profiles">comparative motivation profile</a>&rdquo; work (<a href="https://arxiv.org/abs/2606.08243">paper</a>, <a href="https://www.lesswrong.com/posts/tZSkryA4aygKAbPFz/updates-on-performative-misalignment-1">LW post</a>), which we see as a minimal demonstration of one round of debate.</p>
 
-<h2>The difficulty and importance of interpretive questions</h2>
+<h2 id="interpretive-questions">The difficulty and importance of interpretive questions</h2>
 
 <p>AI safety involves a lot of <a href="https://aligned.substack.com/p/crisp-and-fuzzy-tasks">fuzzy</a>, interpretive questions:</p>
 
@@ -50,7 +61,7 @@
 
 <p>Recently, there have been calls to approach these interpretive questions in a more scientific manner, e.g., <a href="https://www.apolloresearch.ai/science/science-of-scheming/">science of scheming</a>, <a href="https://www.lesswrong.com/posts/DTDoyDTtC8R3bCiTx/from-personas-to-intentions-towards-a-science-of-motivations">science of motivations</a>, just to name a few. I think of them as key building blocks <a href="https://arxiv.org/abs/2505.03989">safety</a> <a href="https://arxiv.org/abs/2501.17315">cases</a>, which formally presents our prediction about how a model would generalize. They are also important for <a href="https://alignment.anthropic.com/2025/alignment-faking-mitigations/">developing mitigations</a>.</p>
 
-<h2>Unstructured empirical investigation may never converge</h2>
+<h2 id="non-convergence">Unstructured empirical investigation may never converge</h2>
 
 <p>My biggest concern is that despite our best efforts and tools that accelerate research like Bloom, Petri, and <a href="https://www.anthropic.com/research/automated-alignment-researchers">auto hill-climbers</a>, the empirical evidence we accumulate over time do not lead to effective resolution of interpretive ambiguity or calibrated uncertainty. I have two specific reasons for this.</p>
 
@@ -62,7 +73,7 @@
 
 <p>In short, unorganized empirical investigation might lead to an accumulation of evidence that makes us more confused. We need something more structured.</p>
 
-<h2>Debate for interpretive questions</h2>
+<h2 id="debate">Debate for interpretive questions</h2>
 
 <p>Our core idea is defeasibility: in the absence of ground truth for latent constructs like motivation, truth is not a property we verify against a reference but an epistemic status that survives adversarial challenge. A claim about a model&rsquo;s motivation is warranted not because we can confirm it against some oracle, but because it has withstood structured attempts to defeat it.</p>
 
@@ -74,7 +85,7 @@
 <li><strong>Compute-indexed evidence</strong> and Occam&rsquo;s razor</li>
 </ul>
 
-<h2>Contrastive hypotheses enables recursive decomposition</h2>
+<h2 id="contrastive-hypotheses">Contrastive hypotheses enables recursive decomposition</h2>
 
 <p>The first step of debate is to spell out two competing hypotheses. The field has already done this for many of these interpretive questions:</p>
 
@@ -90,7 +101,7 @@
 
 <p>Of course, each of these concepts have many different confounders: lying is confounded with both untruthfulness (saying something non-factual because the model genuinely believes in that) and with instruction following (role-playing as a liar). The contrastive structure admits multiple framings, each spelling out the two hypotheses differently and identifying a different direction for disambiguation. These can be pursued as independent parallel lines of investigation. This raises a natural question: how do we aggregate results across parallel decompositions that may not agree?</p>
 
-<h2>Convergence across independent sources of evidence</h2>
+<h2 id="convergence">Convergence across independent sources of evidence</h2>
 
 <p>Convergence operates along two dimensions.</p>
 
@@ -98,7 +109,7 @@
 
 <p>The second is convergence across instruments. The instruments we use to investigate model behavior&mdash;fine-tuning, activation steering, prompting, behavioral testing&mdash;each interact with the model through different interfaces, and each interface introduces its own artifacts. When instruments with different interfaces converge on the same verdict, the convergence rules out these single-instrument artifacts: a confound would need to operate consistently across fundamentally different modes of interaction with the model.</p>
 
-<h2>Compute-indexed evidence</h2>
+<h2 id="compute-indexed-evidence">Compute-indexed evidence</h2>
 
 <p>When two competing hypotheses emit indistinguishable observations, we favor the one that&rsquo;s simpler and is more <a href="https://arxiv.org/abs/2601.13566">self-coherent</a>, e.g., applying Occam&rsquo;s razor.</p>
 
@@ -108,11 +119,11 @@
 
 <p>Enforcing debate rules and compute-indexing evidence&mdash;especially those produced by human researchers&mdash;is not trivial. This would require infrastructure that, for example, allow researchers to pre-register their hypotheses and experiment design. Importantly, most negative results about a hypothesis don&rsquo;t get published, but those are equally valuable as positive results when calibrating. We think this type of epistemic infrastructure is valuable.</p>
 
-<h2>Interpretive debate as epistemic infrastructure for safety cases</h2>
+<h2 id="safety-cases">Interpretive debate as epistemic infrastructure for safety cases</h2>
 
 <p>Safety cases are fundamentally interpretive claims: to argue that a model will behave well in conditions we haven&rsquo;t tested, we need to make claims about unobservable latent variable and calibrate our uncertainty of interpretive ambiguity. We argue that instead of binary verdict, we should design an algorithm that produces a structured profile of competing hypotheses, such that the accumulation of empirical evidence leads to resolution of interpretive ambiguity and calibrated uncertainty. We hope to design a family of algorithms (or, truth-finding processes) that is generally applicable to many interpretive questions like motivation, goal-directedness, emotion, introspection, such that it can work as an epistemic infrastructure for safety research.</p>
 
-<h2>One round of interpretive debate by human researchers</h2>
+<h2 id="one-round">One round of interpretive debate by human researchers</h2>
 
 <p>Our recent work on performative misalignment (<a href="https://arxiv.org/abs/2606.08243">paper</a>, <a href="https://www.lesswrong.com/posts/tZSkryA4aygKAbPFz/updates-on-performative-misalignment-1">LW post</a>) is a manual demonstration of one round of interpretive debate applied to alignment faking. This section describes what the round exercises and what it leaves open.</p>
 
@@ -124,7 +135,7 @@
 
 <p>Being one round, the demonstration also works within a single decomposition of the disagreement&mdash;the binary contrast between scheming and sycophancy that the field has already spelled out&mdash;setting aside other candidates the same behavior could express (role-play, generic helpfulness, refusal suppression) and leaving for later rounds the question of whether alternative framings reach the same verdict.</p>
 
-<h2>What&rsquo;s next</h2>
+<h2 id="whats-next">What&rsquo;s next</h2>
 
 <p>Our key focus next is to improve the manual one-round debate, including compute-indexing, cross-examination, more convergence experiments, improving SFT and steering methodology, as well as replicating the process on other behaviors and model organisms.</p>
 
@@ -138,5 +149,6 @@
   </div>
 </footer>
 
+<script src="/assets/outline.js"></script>
 </body>
 </html>

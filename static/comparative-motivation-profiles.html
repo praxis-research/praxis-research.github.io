@@ -154,6 +154,14 @@ tr.t-sep td { border-bottom: 2px solid var(--rule); }
   </div>
 </header>
 <main class="container">
+<nav class="outline" aria-label="Sections">
+<a href="#introduction">Introduction</a>
+<a href="#the-challenge">The challenge</a>
+<a href="#symmetric-belief-editing">Symmetric belief editing</a>
+<a href="#building-a-profile">Building a profile</a>
+<a href="#case-study">Case study</a>
+<a href="#what-this-means">What this means</a>
+</nav>
 <article class="content">
 
 <h1>Building Comparative Motivation Profiles<br>with Symmetric Belief Editing</h1>
@@ -169,7 +177,7 @@ tr.t-sep td { border-bottom: 2px solid var(--rule); }
 </ul>
 </div>
 
-<p>When a model behaves in unexpected ways, we want to know <em>why</em>&mdash;but
+<p id="introduction">When a model behaves in unexpected ways, we want to know <em>why</em>&mdash;but
 we cannot directly probe or ask about its intent. We develop <strong>comparative
 motivation profiles</strong>, a methodology that operationalizes intent as
 <em>propensity</em>: the sensitivity of a model&rsquo;s behavior to factors of the
@@ -292,7 +300,7 @@ misalignment&mdash;tracking researcher expectations&mdash;rather than scheming.<
 <figcaption>Figure 1 &middot; Comparative motivation profiles distinguish competing hypotheses for the motivation underlying a behavior. Each panel shows the <em>expected</em> pattern if a given hypothesis were the true driver of behavior: the true driver&rsquo;s <strong>amplify</strong> (+) intervention should increase the observed behavior, its <strong>suppress</strong> (&minus;) should shrink it, and the non-driving motivation should have significantly less effect on the behavior.</figcaption>
 </figure>
 
-<h2>The challenge: direct investigation of motivation is circular</h2>
+<h2 id="the-challenge">The challenge: direct investigation of motivation is circular</h2>
 
 <p>Diagnostics of intent misalignment is critical for oversight of advanced models.
 Intent and motivation clearly influences current models, but these latent constructs
@@ -313,7 +321,7 @@ If we intervene on these instrumental factors and observe the predicted amplific
 suppression, we have evidence that the corresponding motivation is a valid explanation
 for the behavior.</p>
 
-<h2>Symmetric &amp; instrumental belief editing for measuring propensity</h2>
+<h2 id="symmetric-belief-editing">Symmetric &amp; instrumental belief editing for measuring propensity</h2>
 
 <p>This approach requires solving three problems, each of which constrains the methodology:</p>
 
@@ -333,7 +341,7 @@ for the behavior.</p>
 <p><strong>3. Contrastive hypotheses to control for artifacts.</strong> SDF and steering have their own problems. Fine-tuning can introduce artifacts, and we lack a reliable way to control how the model generalizes from the synthetic documents. A single hypothesis and a single set of interventions would leave these artifacts uncontrolled. The key idea: instead of one hypothesis, we identify a <em>pair</em> of minimally different hypotheses and derive two very similar training recipes from them. Because the SDF corpora are matched in format, length, and training compute, artifacts of the fine-tuning procedure are shared across both conditions. What differs between the two readouts is the <em>content</em> of the beliefs, not the method of installing them. If one axis shows significantly higher sensitivity than the other, that difference survives the artifact confound.</p>
 </blockquote>
 
-<h2>The steps to build a comparative motivation profile</h2>
+<h2 id="building-a-profile">The steps to build a comparative motivation profile</h2>
 
 <p>Putting these choices together produces what we call <strong>comparative motivation
 profiles with symmetric belief editing</strong>:</p>
@@ -362,7 +370,7 @@ present in some categorical sense.</li>
 
 <hr>
 
-<h2>Case study: alignment faking</h2>
+<h2 id="case-study">Case study: alignment faking</h2>
 
 <p>We apply this methodology to <strong>alignment faking</strong>&mdash;the phenomenon where a model behaves differently depending on whether it believes its behavior feeds back into training: conforming to a stated objective in the consequential arm and reverting to a trained disposition in the inconsequential arm. This produces a compliance gap between monitoring conditions, but the gap alone is consistent with multiple motivations:</p>
 
@@ -1032,7 +1040,7 @@ alignment-faking profile in Opus.</p>
 
 <hr>
 
-<h2>What this means</h2>
+<h2 id="what-this-means">What this means</h2>
 
 <h3>For the case study</h3>
 
@@ -1089,4 +1097,5 @@ through SDF and read out through behavioral sensitivity.</p>
   </div>
 </footer>
 
+<script src="/assets/outline.js"></script>
 </body></html>

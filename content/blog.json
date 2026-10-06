@@ -23,7 +23,23 @@
     "date": "2026-09-22",
     "venue": "NeurIPS",
     "summary": "Interventions on a model's self-model prevent, carry, and reverse emergent misalignment.",
-    "order": 3
+    "order": 3,
+    "links": [
+      { "label": "Paper (arXiv)", "href": "https://arxiv.org/abs/2606.23700" },
+      { "label": "Code (GitHub)", "href": "https://github.com/atagade/sgtr-em" },
+      { "label": "Model checkpoints", "href": "https://github.com/atagade/sgtr-em/blob/main/MODEL_README.md" }
+    ],
+    "outline": [
+      { "id": "can-metacognition-shape-generalization", "label": "Introduction" },
+      { "id": "two-operationalizations-of-self-modeling", "label": "Self-modeling" },
+      { "id": "models-and-datasets", "label": "Models and datasets" },
+      { "id": "ems-side-effects-on-self-model", "label": "EM’s side effects" },
+      { "id": "self-modeling-interventions-can-defend-against-em", "label": "Prevention" },
+      { "id": "self-report-fine-tuning-can-induce-em-à-la-subliminal-learning", "label": "Self-report transfer" },
+      { "id": "reversal-is-easier-and-follows-the-self-model-profile", "label": "Reversal" },
+      { "id": "what-we-take-from-this", "label": "What we take from this" },
+      { "id": "appendix", "label": "Appendix" }
+    ]
   },
   {
     "url": "https://arxiv.org/abs/2606.04071",
