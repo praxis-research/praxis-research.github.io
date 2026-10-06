@@ -8,7 +8,9 @@
 //     and its body (inside <main class="doc">) and scripts, unchanged;
 //   - drops the artifact's inlined copy of design.css and links the site's
 //     stylesheets instead, so a change to assets/ reaches this page too;
-//   - takes the title and summary from the post's entry in content/blog.json;
+//   - takes the title and summary from the post's entry in content/blog.json,
+//     and from the same entry its optional `links` (a row under the byline)
+//     and `outline` (the section navigation, see /assets/outline.js);
 //   - rewrites figure paths from figs/ to /figures/<slug>/, and copies the
 //     images there when a directory of them is given.
 // Get the inputs from the artifact: its page is the file "index.html", its
@@ -42,7 +44,20 @@ const postCss = style[1].slice(marker)
 
 const main = page.match(/<main class="doc">([\s\S]*?)<\/main>/);
 if (!main) throw new Error('the artifact page needs <main class="doc">…</main> around the post');
-const body = main[1].trim().replaceAll('src="figs/', `src="/figures/${slug}/`);
+let body = main[1].trim().replaceAll('src="figs/', `src="/figures/${slug}/`);
+if (entry.links) {
+  const meta = body.match(/<p class="meta">[\s\S]*?<\/p>/);
+  if (!meta) throw new Error('the post has links in content/blog.json but no <p class="meta"> byline to put them under');
+  const row = entry.links.map((l) => `<a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join('');
+  body = body.replace(meta[0], `${meta[0]}\n<nav class="links" aria-label="Paper links">${row}</nav>`);
+}
+for (const o of entry.outline || []) {
+  if (!body.includes(`id="${o.id}"`)) throw new Error(`outline entry "${o.label}": no element with id="${o.id}" in the post`);
+}
+const outline = entry.outline ? `<nav class="outline" aria-label="Sections">
+${entry.outline.map((o) => `<a href="#${esc(o.id)}">${esc(o.label)}</a>`).join('\n')}
+</nav>
+` : '';
 const scripts = page.slice(page.indexOf('</main>') + 7).trim();
 
 
@@ -84,7 +99,7 @@ ${postCss.trim()}
   </div>
 </header>
 <main class="container">
-<article class="content">
+${outline}<article class="content">
 
 ${body}
 
@@ -96,7 +111,7 @@ ${body}
   </div>
 </footer>
 ${scripts}
-</body></html>
+${entry.outline ? '<script src="/assets/outline.js"></script>\n' : ''}</body></html>
 `;
 
 const dest = join(ROOT, 'static', `${slug}.html`);

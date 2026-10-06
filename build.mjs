@@ -52,6 +52,7 @@ function interpolate(text, scope) {
 const assetVersion = createHash('sha1')
   .update(readFileSync(join(ROOT, 'assets', 'design.css')))
   .update(readFileSync(join(ROOT, 'assets', 'style.css')))
+  .update(readFileSync(join(ROOT, 'assets', 'outline.js')))
   .digest('hex').slice(0, 8);
 
 function walkFiles(dir) {
@@ -288,7 +289,8 @@ if (existsSync(join(ROOT, 'static'))) cpSync(join(ROOT, 'static'), OUT, { recurs
 // query as generated pages, so one edit to assets/ shows up everywhere at once.
 for (const f of walkFiles(OUT).filter((f) => f.endsWith('.html'))) {
   const html = readFileSync(f, 'utf8');
-  const versioned = html.replace(/href="\/assets\/(design|style)\.css"/g, `href="/assets/$1.css?v=${assetVersion}"`);
+  const versioned = html.replace(/href="\/assets\/(design|style)\.css"/g, `href="/assets/$1.css?v=${assetVersion}"`)
+    .replace(/src="\/assets\/outline\.js"/g, `src="/assets/outline.js?v=${assetVersion}"`);
   if (versioned !== html) writeFileSync(f, versioned);
 }
 

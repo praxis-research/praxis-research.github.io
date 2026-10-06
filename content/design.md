@@ -183,6 +183,10 @@ the opening above.
   outline, and on their own row starting at the parent's centre, with a muted
   ↳, in the bar. The level that belongs to one section shows only while you
   read that section.
+- **Outline markup.** A post without its own navigation gets it from
+  `<nav class="outline">` (one link per section, short labels) and
+  `/assets/outline.js`; see CLAUDE.md. Add a nested level only when a section
+  is long enough to need one.
 - **Nothing moves the page.** Rows that appear and disappear hang over the
   content instead of pushing it down; switching a result tab or opening a
   citation leaves the page where it was.

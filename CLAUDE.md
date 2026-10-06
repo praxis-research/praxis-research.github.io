@@ -145,6 +145,16 @@ in `assets/` and applies everywhere. When editing them:
   a scrollbar keep centered content in the same position.
 - **Do not inline `design.css` or the site chrome.** Link the two
   stylesheets; a page that carries its own copy stops following the system.
+- **Links** (paper, code, checkpoints) go in a `<nav class="links">` right
+  after the `.meta` byline, each `<a … target="_blank" rel="noopener">`.
+- **An outline** for a long post is a `<nav class="outline" aria-label="Sections">`
+  of `<a href="#id">Short label</a>`, one per section, placed between
+  `<main class="container">` and `<article class="content">`, plus
+  `<script src="/assets/outline.js"></script>` before `</body>`. The styles are
+  in `style.css` (a sticky bar under the header; from 1360px, fixed left of the
+  column) and the script marks the current section. One level only, short
+  labels — it must also fit the bar. Posts with one: comparative motivation
+  profiles, self-modeling interventions, interpretive debate.
 
 ### Update a post from its read-only artifact
 
@@ -165,8 +175,15 @@ site's stylesheets, takes the title and summary from the post's entry in
 whose post-specific rules begin with a `/* === this page` comment, and
 `<main class="doc">` around the post.
 
+The entry in `content/blog.json` may also carry `links` (`{label, href}`, put
+under the byline) and `outline` (`{id, label}`, the section outline above);
+the script adds both, so they survive a re-pull.
+
 Posts built this way: `self-modeling-interventions`
-(https://claude.ai/artifact/DmazApWDoe7JtGhVVc4UWb).
+(https://claude.ai/artifact/DmazApWDoe7JtGhVVc4UWb). Its page has since been
+edited by hand (prose matched to the LessWrong post), and the artifact was not
+readable from Shi's account on 2026-10-06 — diff before re-pulling, or edit the
+page in `static/` directly.
 
 ### Update a talk deck
 

@@ -76,6 +76,47 @@ main { flex: 1 0 auto; }
 .note { background: var(--surface); padding: 0.6rem 0.9rem; font-size: 0.9rem;
         color: var(--muted); }
 
+/* A post's links (paper, code, checkpoints) on their own row under the byline. */
+.links { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin: 0.5rem 0 1.5rem; font-size: 0.95rem; }
+
+/* ------------------------------------------------------------------ outline */
+
+/* A long post's sections, as on /grafting: a bar under the site header that
+   sticks while you scroll, and from 1360px an outline fixed left of the
+   reading column instead (11rem wide, 2.5rem clear of it). The markup is one
+   <nav class="outline"> of links to the post's sections; /assets/outline.js
+   marks the current one. Every link reserves its bold width (::after), so
+   marking one never moves the others. */
+.outline {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; gap: 1.5rem; overflow-x: auto; scrollbar-width: none;
+  max-width: var(--measure); margin: -3rem 0 2.5rem; padding: 0.7rem 0;
+  background: var(--bg); border-bottom: 1px solid var(--rule);
+  font-size: 0.85rem; line-height: 1.35; white-space: nowrap;
+}
+.outline::-webkit-scrollbar { display: none; }
+.outline a { display: inline-flex; flex-direction: column; flex: none; color: var(--ink); text-decoration: none; }
+.outline a::after { content: attr(data-label); font-weight: 700; height: 0; overflow: hidden; visibility: hidden; }
+.outline a:hover { color: var(--heading); text-decoration: underline; }
+.outline a.on {
+  color: var(--heading); font-weight: 700;
+  text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.3em;
+}
+html:has(.outline) { scroll-padding-top: 3.5rem; }
+
+@media (min-width: 1360px) {
+  .outline {
+    position: fixed; z-index: 50; top: var(--outline-top, 2rem);
+    left: calc(max(0px, (100vw - var(--container)) / 2) + 1.5rem - 11rem - 2.5rem);
+    width: 11rem; margin: 0; padding: 0; border: 0; background: none;
+    flex-direction: column; gap: 0.45rem; overflow: visible; white-space: normal;
+  }
+  .outline a { display: block; }
+  .outline a::after { display: block; }
+  html:has(.outline) { scroll-padding-top: 1.5rem; }
+}
+@media (max-width: 40rem) { .outline { margin-top: -2rem; } }
+
 /* ----------------------------------------------------------------- listings */
 
 /* The front page: eyebrow-labelled sections of entry cards; papers grouped
