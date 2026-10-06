@@ -27,6 +27,8 @@ This script takes that file unchanged and fits it to the site and to /design/:
      paper's paragraphs folded under "More details"; Evaluations is one fold; the results sit on a --surface band;
      open folds are indented behind a rule, keep their summary under the bar, and close from the rule;
   11. chart keys (Shi, 2026-10-05): one format and placement for every chart in the results (see legends());
+  11a. the outline: on wide screens the navigation floats left of the reading column (OUTLINE_CSS/JS); narrower
+      screens keep the top bar;
   12. "mid-train" / "pre-train" everywhere visible, case kept, except other papers' titles (hyphenate(), HYPHEN_JS);
   13. fixes: the intro's "Our method" heading sat centred in the figure column; the hidden comment
      widget no longer calls /api/comments (it does not exist here); Shi's author link is shifeng.me.
@@ -612,6 +614,57 @@ addEventListener("resize",indent); addEventListener("load",indent); if(document.
 """
 
 
+OUTLINE_CSS = """<style>
+/* ==== the outline: navigation floating left of the reading column on wide screens (Shi, 2026-10-06); narrower
+   screens keep the top bar. Built from the bar at load (OUTLINE_JS), so the bar stays the single source. ==== */
+#sidenav{display:none}
+@media (min-width:1360px){   /* the outline needs 11rem + 2.5rem + 1rem left of the column */
+  html body .topbar{display:none!important}
+  #sidenav{display:block;position:fixed;z-index:50;width:11rem;font-size:var(--fs-small,13px);line-height:1.35;
+    left:calc(max(0px,(100vw - var(--container))/2) + 1.5rem - 11rem - 2.5rem);top:var(--side-top,2rem)}
+  #sidenav ul{list-style:none;margin:0;padding:0}
+  #sidenav li{margin:0 0 .45rem}
+  #sidenav a{color:var(--muted);text-decoration:none;display:inline-block;border-bottom:0!important}
+  #sidenav a:hover{color:var(--heading);text-decoration:underline}
+  #sidenav a.on{color:var(--heading);font-weight:700;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.3em}
+  #sidenav > ul > li > a{color:var(--ink)}
+  #sidenav ul ul{margin:.45rem 0 .1rem .9rem;padding-left:.6rem;border-left:1px solid var(--rule)}
+  #sidenav ul ul li{margin-bottom:.35rem}
+}
+</style>"""
+
+OUTLINE_JS = """<script>(function(){
+const bar=document.getElementById("hdr"); if(!bar) return;
+const secs=[...bar.querySelectorAll(".hrow:not(.hsub) .hnav a[href^='#']")], res=[...bar.querySelectorAll(".hbr .bcard.hb")];
+const nav=document.createElement("nav"); nav.id="sidenav"; nav.setAttribute("aria-label","Sections");
+const ul=document.createElement("ul");
+const pairs=[];
+secs.forEach(a=>{ const li=document.createElement("li"), b=document.createElement("a");
+  b.href=a.getAttribute("href"); b.textContent=a.textContent; li.appendChild(b); pairs.push([a,b]);
+  if(a.getAttribute("href")==="#results"){ const sub=document.createElement("ul");
+    res.forEach(btn=>{ const l2=document.createElement("li"), c=document.createElement("a");
+      c.href="#results"; c.textContent=btn.textContent.trim(); c.dataset.branch=btn.dataset.branch;
+      c.addEventListener("click",e=>{ e.preventDefault(); btn.click(); });   // the bar's own handler opens it
+      l2.appendChild(c); sub.appendChild(l2); });
+    li.appendChild(sub); }
+  ul.appendChild(li); });
+nav.appendChild(ul); document.body.appendChild(nav);
+const root=document.documentElement, head=document.querySelector(".site-header");
+function sync(){
+  pairs.forEach(([a,b])=>b.classList.toggle("on", a.classList.contains("on")));
+  nav.querySelectorAll("a[data-branch]").forEach(c=>{ const btn=res.find(x=>x.dataset.branch===c.dataset.branch);
+    const inRes=pairs.some(([a,b])=>a.getAttribute("href")==="#results" && b.classList.contains("on"));
+    c.classList.toggle("on", !!btn && btn.getAttribute("aria-pressed")==="true" && inRes); });
+  const hb=head?head.getBoundingClientRect().bottom:0; root.style.setProperty("--side-top", Math.max(32, hb+40)+"px"); }
+let pend=false; const req=()=>{ if(!pend){ pend=true; requestAnimationFrame(()=>{ pend=false; sync(); }); } };
+addEventListener("scroll",req,{passive:true}); addEventListener("resize",req); addEventListener("load",req);
+document.addEventListener("click",()=>setTimeout(req,0),true);
+new MutationObserver(req).observe(bar,{subtree:true,attributes:true,attributeFilter:["class","aria-pressed"]});
+req();
+})();</script>
+"""
+
+
 def port(src: str) -> str:
     html = src
 
@@ -662,7 +715,8 @@ def port(src: str) -> str:
     if not n:
         sys.exit("port: the AuditBench parts row (#tocmain) was not found")
     html = hyphenate(html)
-    html = html.replace("</body>", HYPHEN_JS + SPY_JS + "</body>", 1)
+    html = html.replace("</body>", HYPHEN_JS + SPY_JS + OUTLINE_JS + "</body>", 1)
+    html = html.replace("</head>", OUTLINE_CSS + "</head>", 1)
 
     # Shi's page moved to shifeng.me (the builder still has the old super.site address)
     html = html.replace("https://shi-feng.super.site/", "https://shifeng.me/")
