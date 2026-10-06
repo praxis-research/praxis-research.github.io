@@ -144,9 +144,9 @@ Not for an abstract: an abstract is set like the main text (rule 7).
 Every post opens the same way, built from the components above:
 
 1. **Title** as the `h1`, and nothing above it but the site header.
-2. **Byline** as one `.meta` line: the authors, comma-separated, with no links,
-   then `&ensp;&middot;&ensp;` and the date as `YYYY-MM-DD` (non-breaking
-   hyphens, `&#8209;`).
+2. **Byline** as one `.meta` line: the authors, comma-separated, with no links
+   (an asterisk marks co-first authors), then `&ensp;&middot;&ensp;` and the
+   month and year of publication, written out (`October&nbsp;2026`).
 3. **Links**, if any (paper, PDF, code), on their own line under the byline.
 4. **TL;DR** as a neutral `.callout`: a first line `<p><strong>TL;DR</strong></p>`,
    then a bullet list, or a short paragraph and a list. Not a heading, not a
@@ -155,7 +155,7 @@ Every post opens the same way, built from the components above:
 
 ```html
 <h1>Title of the post</h1>
-<p class="meta">Ada Lovelace, Shi Feng&ensp;&middot;&ensp;2026&#8209;10&#8209;05</p>
+<p class="meta">Ada Lovelace, Shi Feng&ensp;&middot;&ensp;October&nbsp;2026</p>
 <div class="callout">
 <p><strong>TL;DR</strong></p>
 <ul><li>The one result.</li><li>Why it matters.</li></ul>
