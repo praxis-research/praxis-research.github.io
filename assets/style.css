@@ -88,10 +88,9 @@ main { flex: 1 0 auto; }
   font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
   white-space: nowrap;
 }
-/* a published venue is tinted green; a presentation (oral, spotlight) rides in
-   the pill and tints it red instead */
-.pill--venue { color: var(--pos); border-color: var(--pos); background: var(--pos-wash); }
-.pill--note { color: var(--award); border-color: var(--award); background: var(--award-wash); }
+/* a conference pill is blue (--venue), the same for a venue and for an oral
+   or spotlight riding in it */
+.pill--venue, .pill--note { color: var(--venue); border-color: var(--venue); background: var(--venue-wash); }
 .entry-meta {
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.2rem 1rem;
   font-size: 0.85rem; color: var(--muted); margin: 0.35rem 0 0;
