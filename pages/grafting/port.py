@@ -156,8 +156,9 @@ html body .results-band #branchnav .cy-bubble{margin-top:1.75rem!important}
 html body .results-band :is(.controls,.controls.loc,.bff-ctl){background:var(--surface)!important}
 html body .results-band .hero{background:transparent!important}
 html body .results-band+*{margin-top:0}
-/* Figures 1-3, the route drawings: black line art on a transparent ground, so they keep a light ground in dark mode */
-html body main figure.route-fig{margin:1.5rem 0 1.75rem}
+/* Figures 1-3, the route drawings: 35rem wide, centred in the column; black line art on a transparent ground, so they
+   keep a light ground in dark mode */
+html body main.main #intro figure.route-fig{margin:1.5rem auto 1.75rem!important;max-width:35rem!important}
 html body main figure.route-fig img{display:block;width:100%;height:auto;border:0;background:var(--c-fig-ground);padding:.5rem 0}
 html body main figure.route-fig figcaption{margin-top:.6rem;text-align:left}
 /* the reality-drift figure: reality-drift.png, and reality-drift-dark.png in dark mode (both from make_drift_pngs.py) */
@@ -216,23 +217,23 @@ def _one(pattern: str, html: str, what: str, flags=re.S) -> re.Match:
 
 
 ROUTES = {   # width, height (the SVGs' own), alt text
-    "midtrain": (2140, 396, "Midtrain: the base model is trained on synthetic documents (SDF), then post-trained, "
+    "midtrain": (2837, 416, "Mid-train: the base model is trained on synthetic documents (SDF), then post-trained, "
                              "giving an intact model that holds the new belief."),
-    "native": (2158, 415, "Native: the base model is post-trained, then trained on synthetic documents (SDF), "
+    "native": (2855, 416, "Native: the base model is post-trained, then trained on synthetic documents (SDF), "
                          "giving a model that holds the belief but is visibly falling apart."),
-    "graft": (2092, 396, "Graft: post-training and SDF are applied to the base model separately and their weight "
+    "graft": (2838, 426, "Grafting: post-training and SDF are applied to the base model separately and their weight "
                         "updates added, giving an intact model that holds the new belief."),
 }
 
 
 def blog(html: str) -> str:
     """the blog's TL;DR, introduction and conclusion in place of the paper's abstract, Figure 1 and introduction"""
-    # Figures 1-3: the three route drawings (static/figures/grafting/route-*.svg, Shi's shoggoth_{midtrain,native,graft}.svg),
+    # Figures 1-3: the three route drawings (static/figures/grafting/route-*.png, Shi's {midtrain,native,grafting}_new.png),
     # with the blog's captions
     intro = (BLOG / "intro.html").read_text()
     for m in re.finditer(r"\{\{FIG:(\w+)\|(.*?)\}\}", intro, re.S):
         w, h, alt = ROUTES[m.group(1)]
-        fig = (f'<figure class="route-fig"><img src="/figures/grafting/route-{m.group(1)}.svg" width="{w}" height="{h}" '
+        fig = (f'<figure class="route-fig"><img src="/figures/grafting/route-{m.group(1)}.png" width="{w}" height="{h}" '
                f'loading="lazy" alt="{alt}"><figcaption>{m.group(2)}</figcaption></figure>')
         intro = intro.replace(m.group(0), fig, 1)
 
