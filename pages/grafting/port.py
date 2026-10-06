@@ -400,7 +400,7 @@ addEventListener("load",()=>walk(document.body));
 # the post header, as on the site's other posts (comparative-motivation-profiles, self-modeling-interventions):
 # one .meta byline, "authors · date", no links
 BYLINE = ('<p class="meta byline">Peter Nutter*, Dani Roytburg*, Clément Dumas, Jinghua Ou, Shi Feng'
-          '&ensp;&middot;&ensp;2026&#8209;10&#8209;05&ensp;&middot;&ensp;*equal contribution</p>')   # co-first authors
+          '&ensp;&middot;&ensp;October&nbsp;2026</p>')   # * = co-first authors
 
 
 RESULT_ORDER = ["mainline", "falsefacts", "midtraining", "cmt", "em", "future"]   # the blog's order, then the paper's extras
