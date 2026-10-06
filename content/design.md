@@ -148,8 +148,10 @@ Every post opens the same way, built from the components above:
 
 1. **Title** as the `h1`, and nothing above it but the site header.
 2. **Byline** as one `.meta` line: the authors, comma-separated, with no links
-   (an asterisk marks co-first authors), then `&ensp;&middot;&ensp;` and the
-   month and year of publication, written out (`October&nbsp;2026`).
+   (an asterisk marks co-first authors), then `&ensp;&middot;&ensp;` and a
+   `<span class="pub">`: the venue and year if the work is published
+   (`NeurIPS&nbsp;2026`), otherwise the month and year, written out
+   (`October&nbsp;2026`). The span sets it in ink at semibold — never a pill.
 3. **Links**, if any (paper, PDF, code), on their own line under the byline.
 4. **TL;DR** as a neutral `.callout`: a first line `<p><strong>TL;DR</strong></p>`,
    then a bullet list, or a short paragraph and a list. Not a heading, not a
@@ -158,7 +160,7 @@ Every post opens the same way, built from the components above:
 
 ```html
 <h1>Title of the post</h1>
-<p class="meta">Ada Lovelace, Shi Feng&ensp;&middot;&ensp;October&nbsp;2026</p>
+<p class="meta">Ada Lovelace, Shi Feng&ensp;&middot;&ensp;<span class="pub">October&nbsp;2026</span></p>
 <div class="callout">
 <p><strong>TL;DR</strong></p>
 <ul><li>The one result.</li><li>Why it matters.</li></ul>
