@@ -156,6 +156,10 @@ html body .results-band #branchnav .cy-bubble{margin-top:1.75rem!important}
 html body .results-band :is(.controls,.controls.loc,.bff-ctl){background:var(--surface)!important}
 html body .results-band .hero{background:transparent!important}
 html body .results-band+*{margin-top:0}
+/* Figures 1-3, the route drawings: black line art on a transparent ground, so they keep a light ground in dark mode */
+html body main figure.route-fig{margin:1.5rem 0 1.75rem}
+html body main figure.route-fig img{display:block;width:100%;height:auto;border:0;background:var(--c-fig-ground);padding:.5rem 0}
+html body main figure.route-fig figcaption{margin-top:.6rem;text-align:left}
 /* the reality-drift figure: reality-drift.png, and reality-drift-dark.png in dark mode (both from make_drift_pngs.py) */
 html body main figure.drift-fig{margin:1.5rem 0 2rem}
 html body main figure.drift-fig img{display:block;width:100%;height:auto;border:0}
@@ -211,28 +215,32 @@ def _one(pattern: str, html: str, what: str, flags=re.S) -> re.Match:
     return m
 
 
+ROUTES = {   # width, height (the SVGs' own), alt text
+    "midtrain": (2140, 396, "Midtrain: the base model is trained on synthetic documents (SDF), then post-trained, "
+                             "giving an intact model that holds the new belief."),
+    "native": (2158, 415, "Native: the base model is post-trained, then trained on synthetic documents (SDF), "
+                         "giving a model that holds the belief but is visibly falling apart."),
+    "graft": (2092, 396, "Graft: post-training and SDF are applied to the base model separately and their weight "
+                        "updates added, giving an intact model that holds the new belief."),
+}
+
+
 def blog(html: str) -> str:
     """the blog's TL;DR, introduction and conclusion in place of the paper's abstract, Figure 1 and introduction"""
-    # the three route diagrams of the old introduction become the blog's Figures 1-3, with the blog's captions
-    routes = {}
-    for key in ("midtrain", "native", "graft"):
-        m = _one(r'<figure class="mf f1-mini"><svg[^>]*aria-label="' + key + r' route[^"]*".*?</figure>', html,
-                 f"the {key} route diagram")
-        routes[key] = m.group(0)
+    # Figures 1-3: the three route drawings (static/figures/grafting/route-*.svg, Shi's shoggoth_{midtrain,native,graft}.svg),
+    # with the blog's captions
     intro = (BLOG / "intro.html").read_text()
     for m in re.finditer(r"\{\{FIG:(\w+)\|(.*?)\}\}", intro, re.S):
-        fig = re.sub(r"<figcaption>.*?</figcaption>", lambda _: f"<figcaption>{m.group(2)}</figcaption>",
-                     routes[m.group(1)], count=1, flags=re.S)
+        w, h, alt = ROUTES[m.group(1)]
+        fig = (f'<figure class="route-fig"><img src="/figures/grafting/route-{m.group(1)}.svg" width="{w}" height="{h}" '
+               f'loading="lazy" alt="{alt}"><figcaption>{m.group(2)}</figcaption></figure>')
         intro = intro.replace(m.group(0), fig, 1)
 
     m = _one(r'<section class="abstract" id="abstract">.*?</section>', html, "the abstract")
     html = html[:m.start()] + (BLOG / "tldr.html").read_text() + html[m.end():]
-    # Figure 1 goes, but its <defs> (the creature artwork the route diagrams <use>) stay, in a zero-size svg
+    # the paper's Figure 1 goes (the blog's Figures 1-3 replace it)
     m = _one(r'<figure class="fig1 f1-fig" id="fig1">.*?</figure>', html, "Figure 1")
-    defs = _one(r"<defs>.*?</defs>", m.group(0), "Figure 1's artwork definitions").group(0)
-    keep = ('<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true" focusable="false">'
-            + defs + "</svg>")
-    html = html[:m.start()] + keep + html[m.end():]
+    html = html[:m.start()] + html[m.end():]
     m = _one(r'<div id="intro">.*?</div>\s*(?=<details class="cbox" data-sec="s0">)', html, "the introduction")
     html = html[:m.start()] + intro + html[m.end():]
 
