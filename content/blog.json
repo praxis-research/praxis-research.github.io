@@ -37,7 +37,7 @@
       { "id": "self-modeling-interventions-can-defend-against-em", "label": "Prevention" },
       { "id": "self-report-fine-tuning-can-induce-em-à-la-subliminal-learning", "label": "Self-report transfer" },
       { "id": "reversal-is-easier-and-follows-the-self-model-profile", "label": "Reversal" },
-      { "id": "what-we-take-from-this", "label": "What we take from this" },
+      { "id": "conclusion", "label": "Conclusion" },
       { "id": "appendix", "label": "Appendix" }
     ]
   },
