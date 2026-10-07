@@ -12,6 +12,36 @@
 <style>
 /* === Page-specific === */
 
+/* Radar palette. The canvas code reads these as "r, g, b" triples (getColors),
+   so they live here rather than in design.css. Without them every radar cell
+   fills black. */
+:root {
+  --inst:      rgb(140, 75, 120);
+  --pres:      rgb(45, 120, 108);
+  --inst-rgb:  140, 75, 120;
+  --pres-rgb:  45, 120, 108;
+  --neg-rgb:   95, 110, 155;
+  --zero-rgb:  248, 248, 250;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --inst:      rgb(190, 130, 165);
+    --pres:      rgb(82, 162, 148);
+    --inst-rgb:  190, 130, 165;
+    --pres-rgb:  82, 162, 148;
+    --neg-rgb:   110, 135, 180;
+    --zero-rgb:  26, 27, 30;
+  }
+}
+:root[data-theme="dark"] {
+  --inst:      rgb(190, 130, 165);
+  --pres:      rgb(82, 162, 148);
+  --inst-rgb:  190, 130, 165;
+  --pres-rgb:  82, 162, 148;
+  --neg-rgb:   110, 135, 180;
+  --zero-rgb:  26, 27, 30;
+}
+
 .container {
   width: 100%;
   max-width: var(--container);
@@ -84,7 +114,7 @@
 
 
 .radar-grid {
-  display: grid; grid-template-columns: auto repeat(3, 1fr);
+  display: grid; grid-template-columns: auto repeat(3, minmax(0, 1fr));
   grid-template-rows: auto auto auto;
   gap: 0.15rem 0.4rem; margin: 0.4rem 0; align-items: center;
 }
@@ -100,7 +130,7 @@
   writing-mode: vertical-rl; transform: rotate(180deg);
   justify-self: center; padding: 0 0.1rem;
 }
-.radar-cell { text-align: center; position: relative; }
+.radar-cell { text-align: center; position: relative; min-width: 0; }
 .radar-cell canvas { display: block; margin: 0 auto; }
 
 /* Tooltip */
@@ -296,7 +326,7 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
   .annotation-grid { grid-template-columns: 1fr; }
   .ring-map { flex-direction: column; }
   .radar-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.1rem 0.2rem;
   }
   .radar-grid > :first-child { display: none; }
