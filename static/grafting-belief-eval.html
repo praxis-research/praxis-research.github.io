@@ -12,6 +12,36 @@
 <style>
 /* === Page-specific === */
 
+/* Radar palette. The canvas code reads these as "r, g, b" triples (getColors),
+   so they live here rather than in design.css. Without them every radar cell
+   fills black. */
+:root {
+  --inst:      rgb(140, 75, 120);
+  --pres:      rgb(45, 120, 108);
+  --inst-rgb:  140, 75, 120;
+  --pres-rgb:  45, 120, 108;
+  --neg-rgb:   95, 110, 155;
+  --zero-rgb:  248, 248, 250;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --inst:      rgb(190, 130, 165);
+    --pres:      rgb(82, 162, 148);
+    --inst-rgb:  190, 130, 165;
+    --pres-rgb:  82, 162, 148;
+    --neg-rgb:   110, 135, 180;
+    --zero-rgb:  26, 27, 30;
+  }
+}
+:root[data-theme="dark"] {
+  --inst:      rgb(190, 130, 165);
+  --pres:      rgb(82, 162, 148);
+  --inst-rgb:  190, 130, 165;
+  --pres-rgb:  82, 162, 148;
+  --neg-rgb:   110, 135, 180;
+  --zero-rgb:  26, 27, 30;
+}
+
 .container {
   width: 100%;
   max-width: var(--container);
