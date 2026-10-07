@@ -114,7 +114,7 @@
 
 
 .radar-grid {
-  display: grid; grid-template-columns: auto repeat(3, 1fr);
+  display: grid; grid-template-columns: auto repeat(3, minmax(0, 1fr));
   grid-template-rows: auto auto auto;
   gap: 0.15rem 0.4rem; margin: 0.4rem 0; align-items: center;
 }
@@ -130,7 +130,7 @@
   writing-mode: vertical-rl; transform: rotate(180deg);
   justify-self: center; padding: 0 0.1rem;
 }
-.radar-cell { text-align: center; position: relative; }
+.radar-cell { text-align: center; position: relative; min-width: 0; }
 .radar-cell canvas { display: block; margin: 0 auto; }
 
 /* Tooltip */
@@ -326,7 +326,7 @@ summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; 
   .annotation-grid { grid-template-columns: 1fr; }
   .ring-map { flex-direction: column; }
   .radar-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.1rem 0.2rem;
   }
   .radar-grid > :first-child { display: none; }
